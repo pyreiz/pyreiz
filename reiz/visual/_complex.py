@@ -4,7 +4,7 @@ Pyglet based api to shapes and murals
     
 """
 import pyglet            
-from .primitives import Polygon
+from ._primitives import Polygon
 # %%
 COLORS = {
         "red": [0.9, 0.1, 0.1],

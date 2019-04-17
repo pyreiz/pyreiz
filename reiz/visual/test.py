@@ -1,7 +1,7 @@
 def test():
     import time
     from os.path import join
-    from reiz import IMGPATH
+    from reiz.visual import PATH
     from reiz.visual.primitives import Polygon
     from reiz.visual import Mural, Image, Canvas
     
@@ -14,7 +14,7 @@ def test():
     s.open()
     s.set_fullscreen()
     
-    img = Image(imgpath=join(IMGPATH, 'lablogo.png'))
+    img = Image(imgpath=join(PATH, 'lablogo.png'))
     
     s.show(img)
     time.sleep(5)

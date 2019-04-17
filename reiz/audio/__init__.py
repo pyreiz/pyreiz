@@ -1,12 +1,21 @@
 """
 API to auditory stimuli
 """
-from pyglet.media.player import Player as Speaker
-from reiz.audio.primitives import AudioFile, Hertz
+import pyglet.media.player as _p
+Speaker = _p.Player
+from reiz.audio._primitives import AudioFile, Hertz
+
+def __get_path():
+    from reiz import MEDIAPATH
+    import os
+    return os.path.join(MEDIAPATH, 'wav')
+  
+PATH = __get_path()
+
 # %%
 def __make_library(path=None):
     if path is None:
-        from reiz import AUDIOPATH as path
+        path = PATH
     library = dict()
     from types import SimpleNamespace
     import os
