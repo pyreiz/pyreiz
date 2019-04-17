@@ -10,15 +10,10 @@ canvas = reiz.visual.Canvas()
 cue = reiz.Cue(canvas, 
                audiostim=reiz.audio.library.button,
                visualstim=reiz.visual.Mural('Hallo Welt!'),
-               markerstr='test')
+               markerstr='hello')
 
-cue = reiz.Cue(canvas, 
-               audiostim=reiz.audio.library.button,
-               visualstim=reiz.visual.Mural('Hallo Welt!'),
-               markerstr='test')
-
-
-prep = reiz.Cue(canvas, audiostim=reiz.audio.library.los_laut,
+prep = reiz.Cue(canvas, 
+                audiostim=reiz.audio.library.los_laut,
                 visualstim=reiz.visual.library.los,
                 markerstr=reiz.visual.library.los.text)
 # %%

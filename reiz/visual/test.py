@@ -2,7 +2,7 @@ def test():
     import time
     from os.path import join
     from reiz.visual import PATH
-    from reiz.visual.primitives import Polygon
+    from reiz.visual._primitives import Polygon
     from reiz.visual import Mural, Image, Canvas
     
     p1 = Polygon(v=[(50, 50), (50, 100), (100, 100), (100, 50)], z=0, color=(1,0.3,0.1,1), stroke=0, rotation=0)
