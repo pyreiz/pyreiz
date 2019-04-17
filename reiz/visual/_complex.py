@@ -17,8 +17,8 @@ COLORS = {
         "dark": [0.1, 0.1, 0.1],
         }  #: A dictionary of color strings encoding a tuple in RGB
         
-# %% Complex 
-                
+# %% Complex
+
 class Mural():
     
     def __init__(self, text:str='Hello World', 
@@ -36,6 +36,8 @@ class Mural():
     def draw(self):
         self.label.draw()
 
+    def __repr__(self):
+        return f"Mural('{self.text}')"
 
 class Cross():
     
@@ -72,9 +74,13 @@ class Cross():
         self.ho.render()
         self.ve.render()
 
+    def __repr__(self):
+        return f"Cross(zoom='{self.zoom}', color={self.color})"
+
 class Image():
     
     def __init__(self, imgpath:str):
+        self.imgpath = imgpath
         self.img = pyglet.image.load(imgpath)
         
     def adapt(self, window):        
@@ -85,4 +91,7 @@ class Image():
     
     def draw(self):
         self.sprite.draw()
+        
+    def __repr__(self):
+        return f"Image(imgpath='{self.imgpath}')"
         

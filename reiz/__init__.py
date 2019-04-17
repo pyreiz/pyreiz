@@ -5,7 +5,8 @@ import reiz.marker as marker
 #%%
 class Cue():
     markerstreamer = marker.SoftMarker()    
-    def __init__(self, canvas, audiostim, visualstim, markerstr=''):
+    def __init__(self, canvas=None, audiostim=None, 
+                 visualstim=None, markerstr=None):
         self.canvas = canvas
         self.audio = audiostim
         self.visual = visualstim
@@ -13,7 +14,13 @@ class Cue():
         if not self.markerstreamer.is_alive():
             self.markerstreamer.start()
         
-    def show(self):
-        self.canvas.show(self.visual)
-        self.audio.play()
-        self.markerstreamer.push(self.marker)
+    def show(self, canvas=None):
+        if canvas is not None:
+            self.canvas = canvas
+        if self.visual is not None:
+            self.canvas.show(self.visual)
+        if self.audio is not None:
+            self.audio.play()
+        if self.marker is not None:
+            self.markerstreamer.push(self.marker)
+

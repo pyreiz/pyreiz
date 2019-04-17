@@ -13,20 +13,28 @@ PATH = __get_path()
 def __make_library(path=None):
     if path is None:
         path = PATH
-        print(path)
     library = dict()
     from types import SimpleNamespace
     import os
     for f in os.listdir(path):
         key, ext = os.path.splitext(f)
         if ext == '.ini':
-            import configparser
+            import configparser, json
             ini = configparser.ConfigParser()
             ini.read(os.path.join(path, f))
-            opts = ini.options('Murals')
-            for o  in opts:                
-                val = ini.get('Murals', o)
-                library[o] = Mural(val)
+            sections = ini.sections();
+            if 'Murals' in sections:
+                opts = ini.options('Murals')
+                for o  in opts:                
+                    val = ini.get('Murals', o)
+                    library[o] = Mural(**json.loads(val))
+                
+            if 'Cross' in sections:
+                opts = ini.options('Cross')
+                for o  in opts:                
+                    val = ini.get('Cross', o)
+                    library[o] = Cross(**json.loads(val))
+   
         else:
             val = Image(os.path.join(path, f))
             key = key.replace(" ", "-")            

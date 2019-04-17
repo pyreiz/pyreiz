@@ -19,6 +19,10 @@ class Sound():
     def queue(self, speaker):
         speaker.queue(self.sound)
 
+    def __repr__(self):
+        self.play()
+        return str(self.sound)
+
 class Hertz(Sound):
     def __init__(self, duration_in_ms:float=500, frequency:int=440, volume=1):
         'creates a sine wave with ramp-up and ramp-down period of volume'
