@@ -29,7 +29,8 @@ def __make_library(path=None):
                 library[o] = Mural(val)
         else:
             val = Image(os.path.join(path, f))
-            
+            key = key.replace(" ", "-")            
+            key = key.strip()
         library[key] = val
     library = SimpleNamespace(**library)
     return library
