@@ -1,0 +1,6 @@
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+reiz/media/wav filter=lfs diff=lfs merge=lfs -text
+reiz/media/img filter=lfs diff=lfs merge=lfs -text
