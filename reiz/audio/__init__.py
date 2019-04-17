@@ -6,8 +6,10 @@ Speaker = _p.Player
 from reiz.audio._primitives import AudioFile, Hertz
 
 def __get_path():
-    from reiz import MEDIAPATH
     import os
+    LIBPATH = os.path.dirname(os.path.realpath(__file__))
+    LIBPATH = LIBPATH.split(os.path.sep + 'audio')[0]    
+    MEDIAPATH = os.path.join(LIBPATH, 'media')              
     return os.path.join(MEDIAPATH, 'wav')
   
 PATH = __get_path()
