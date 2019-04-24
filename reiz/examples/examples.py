@@ -24,7 +24,7 @@ rate = reiz.Cue(canvas,
 
 fix = reiz.Cue(canvas,
                audiostim=None,
-               visualstim=[reiz.visual.Background(color='dark'),
+               visualstim=[reiz.visual.Background(color='light'),
                            reiz.visual.library.fixation],
                markerstr='Fixation')
 

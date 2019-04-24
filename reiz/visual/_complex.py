@@ -29,7 +29,8 @@ def get_color(color, opacity=1):
     color = color.copy()
     color.append(opacity)
     return color
-# %% Complex
+# %% Complex parametric visualisations
+#------------------------------------------------------------------------------
 class Background():
     
     def __init__(self, color='white'):
@@ -38,14 +39,13 @@ class Background():
     def adapt(self, window):
         img = pyglet.image.SolidColorImagePattern(color=self.color)
         img = img.create_image(window.width, window.height)
-        x0 = window.width//2
-        y0 = window.height//2
         self.sprite = pyglet.sprite.Sprite(img=img, x=0, y=0,
                                            usage='static')
     
     def draw(self):
         self.sprite.draw()
 
+#------------------------------------------------------------------------------
 class Mural():
     
     def __init__(self, text:str='Hello World', font='Times New Roman', 
@@ -72,7 +72,7 @@ class Mural():
     def __repr__(self):
         return f"Mural('{self.text}')"
 
-
+#------------------------------------------------------------------------------
 class Circle():
     
     def __init__(self, zoom=1, color='red', position:Tuple[float, float]=(0,0)):
@@ -101,6 +101,7 @@ class Circle():
         return (f"Circle(zoom={self.zoom}, color={self.color}, " +
                f"position={self.pos})")
 
+#------------------------------------------------------------------------------
 class Cross():
     
     def __init__(self, zoom=1, color='white'):
@@ -136,7 +137,10 @@ class Cross():
         return f"Cross(zoom='{self.zoom}', color={self.color})"
 
 
-# %% File-based classes
+
+
+#------------------------------------------------------------------------------
+# %% File-based visualisations
 class Image():
     
     def __init__(self, imgpath:str):
@@ -154,4 +158,4 @@ class Image():
         
     def __repr__(self):
         return f"Image(imgpath='{self.imgpath}')"
-        
+#------------------------------------------------------------------------------        
