@@ -24,7 +24,8 @@ rate = reiz.Cue(canvas,
 
 fix = reiz.Cue(canvas,
                audiostim=None,
-               visualstim=reiz.visual.library.fixation,
+               visualstim=[reiz.visual.Background(color='dark'),
+                           reiz.visual.library.fixation],
                markerstr='Fixation')
 
 ball = reiz.Cue(canvas,
@@ -36,7 +37,7 @@ ball = reiz.Cue(canvas,
 
 # %%
 canvas.open()
-canvas.set_fullscreen()
+#canvas.set_fullscreen()
 ball.show()
 time.sleep(1)
 fix.show()

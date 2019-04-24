@@ -115,7 +115,7 @@ class Circle(Base):
         self.rect = Rect(x, y, width, width)
         self.style = style
         self.circleresolution = 60
-        Base.__init__(self, x,y,z,color, stroke, rotation)
+        Base.__init__(self, x, y, z, color, stroke, rotation)
         
     def setWidth(self, w):
         self.radius = w*0.5

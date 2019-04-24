@@ -19,8 +19,32 @@ COLORS = {
         "light": [0.5, 0.5, 0.5],
         "dark": [0.1, 0.1, 0.1],
         }  #: A dictionary of color strings encoding a tuple in RGB
-        
+
+def get_color(color, opacity=1):
+    try:
+        color = COLORS[color]
+    except KeyError:
+         if len(color) != 3:
+             raise ValueError('Not a correct color value')            
+    color = color.copy()
+    color.append(opacity)
+    return color
 # %% Complex
+class Background():
+    
+    def __init__(self, color='white'):
+        self.color = [int(c*255) for c in get_color(color)]            
+        
+    def adapt(self, window):
+        img = pyglet.image.SolidColorImagePattern(color=self.color)
+        img = img.create_image(window.width, window.height)
+        x0 = window.width//2
+        y0 = window.height//2
+        self.sprite = pyglet.sprite.Sprite(img=img, x=0, y=0,
+                                           usage='static')
+    
+    def draw(self):
+        self.sprite.draw()
 
 class Mural():
     
@@ -80,10 +104,7 @@ class Circle():
 class Cross():
     
     def __init__(self, zoom=1, color='white'):
-        try:
-            self.color = COLORS[color]
-        except KeyError:
-            self.color = color
+        self.color = get_color(color)
         self.zoom = zoom
         
     def adapt(self, window):        
@@ -103,9 +124,9 @@ class Cross():
         x4 = x0+armlen            
     
         v = [(x1, y2), (x1, y3), (x4, y3), (x4, y2)]                 
-        self.ho = _Polygon(v=v, z=0, color=(*self.color,1), stroke=0, rotation=0)
+        self.ho = _Polygon(v=v, z=0, color=self.color, stroke=0, rotation=0)
         v = [(x2, y1), (x2, y4), (x3, y4), (x3, y1)]                 
-        self.ve = _Polygon(v=v, z=0, color=(*self.color,1), stroke=0, rotation=0)        
+        self.ve = _Polygon(v=v, z=0, color=self.color, stroke=0, rotation=0)        
     
     def draw(self):
         self.ho.render()
