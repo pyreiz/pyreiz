@@ -26,8 +26,11 @@ def get_color(color, opacity=1):
     except KeyError:
          if len(color) != 3:
              raise ValueError('Not a correct color value')            
-    color = color.copy()
-    color.append(opacity)
+    try:
+        color = color.copy()
+        color.append(opacity)
+    except AttributeError:
+        color = (*color, opacity)
     return color
 # %% Complex parametric visualisations
 #------------------------------------------------------------------------------
@@ -75,13 +78,10 @@ class Mural():
 #------------------------------------------------------------------------------
 class Circle():
     
-    def __init__(self, zoom=1, color='red', position:Tuple[float, float]=(0,0)):
+    def __init__(self, zoom=1, color='red', position:Tuple[float, float]=(0,0),
+                 opacity=1):
         self.pos = position
-        if type(color) is tuple or type(color) is list:
-            self.color = color
-        elif type(color) is str:
-            self.color = COLORS[color].copy()
-        self.color.append(1)        
+        self.color = get_color(color, opacity)
         self.zoom = zoom
         
     

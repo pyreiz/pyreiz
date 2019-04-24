@@ -26,7 +26,14 @@ class Canvas():
         self.start_height = size[1]
         self._create_window()
         self.curbuff = 0
-                
+               
+    def get_fps(self):     
+        dt = pyglet.clock.tick()
+        for i in range(0, 100, 1):
+            self.window.flip()
+            dt = pyglet.clock.tick()
+        return pyglet.clock.get_fps()
+        
     def _create_window(self):
         self.window = pyglet.window.Window(visible=False,
                                            vsync=True,
@@ -69,7 +76,7 @@ class Canvas():
     
     def show(self, frame):
         "after having rendered and drawn into the backbuffer, show this"
-        try:
+        try:            
             for f in frame:
                 if hasattr(f, 'adapt'):
                     f.adapt(self)

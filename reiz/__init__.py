@@ -1,7 +1,7 @@
 import reiz.visual as visual
 import reiz.audio as audio
 import reiz.marker as marker
-
+from reiz.time import clock 
 #%%
 class Cue():
     markerstreamer = marker.SoftMarker()    
@@ -23,4 +23,5 @@ class Cue():
             self.audio.play()
         if self.marker is not None:
             self.markerstreamer.push(self.marker)
-
+                     
+        
