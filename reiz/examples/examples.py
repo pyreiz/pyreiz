@@ -27,9 +27,18 @@ fix = reiz.Cue(canvas,
                visualstim=reiz.visual.library.fixation,
                markerstr='Fixation')
 
+ball = reiz.Cue(canvas,
+               audiostim=None,
+               visualstim=[reiz.visual.Circle(zoom=1, color='red', position=(0, 0.25)),
+                           reiz.visual.Circle(zoom=1, color='blue', position=(0,-.25)),
+                           reiz.visual.Mural('Two Balls!', position=(0.5, 0))],
+               markerstr='Circle')
+
 # %%
 canvas.open()
 canvas.set_fullscreen()
+ball.show()
+time.sleep(1)
 fix.show()
 time.sleep(1)
 hello.show()
