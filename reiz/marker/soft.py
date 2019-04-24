@@ -8,23 +8,25 @@ import threading
 import queue
 import time
 # %%
-def get_outlet():
-    import socket
-    source_id = socket.gethostname()
-    name = source_id + '-softmarkers'
-    info = pylsl.StreamInfo(name, type='Markers', channel_count=1, nominal_srate=0, 
-                            channel_format='string', source_id=source_id)
-    outlet = pylsl.StreamOutlet(info)
-    return outlet
+class Outlet():
+    instance = None    
+    @classmethod
+    def get(cls):
+        if cls.instance is None:
+            import socket, weakref
+            source_id = socket.gethostname()
+            name = source_id + '-softmarkers'
+            info = pylsl.StreamInfo(name, type='Markers', channel_count=1, nominal_srate=0, 
+                                    channel_format='string', source_id=source_id)
+            outlet = pylsl.StreamOutlet(info)
+            cls.instance = weakref.ref(outlet)
+        else:
+            outlet = cls.instance()
+        return outlet
 
 class SoftMarker(threading.Thread):    
     "LSL based software marker as a singleton, to prevent name-stealing"
-    __instance = None    
-    def __new__(cls):
-        if SoftMarker.__instance is None:
-            SoftMarker.__instance = object.__new__(cls)
-        return SoftMarker.__instance
-    
+ 
     def __init__(self): 
         threading.Thread.__init__(self)           
         self.queue = queue.Queue(maxsize=0) # indefinite size
@@ -38,7 +40,7 @@ class SoftMarker(threading.Thread):
         self.is_running.clear()
                 
     def run(self):
-        self._outlet = get_outlet()
+        self._outlet = Outlet.get()
         self.is_running.set()
         while self.is_running.is_set(): 
             try:

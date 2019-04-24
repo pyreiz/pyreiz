@@ -4,15 +4,12 @@ import reiz.marker as marker
 from reiz.time import clock 
 #%%
 class Cue():
-    markerstreamer = marker.SoftMarker()    
     def __init__(self, canvas=None, audiostim=None, 
                  visualstim=None, markerstr=None):
         self.canvas = canvas
         self.audio = audiostim
         self.visual = visualstim
         self.marker = markerstr
-        if not self.markerstreamer.is_alive():
-            self.markerstreamer.start()
         
     def show(self, canvas=None):
         if canvas is not None:
@@ -22,6 +19,6 @@ class Cue():
         if self.audio is not None:
             self.audio.play()
         if self.marker is not None:
-            self.markerstreamer.push(self.marker)
+            marker.push(self.marker)
                      
         
