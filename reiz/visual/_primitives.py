@@ -351,7 +351,7 @@ class Line(LineRel):
         b = x+w*0.5, y+h*0.5
         LineRel.__init__(self, x, y, a, b, z, color, stroke, rotation, style)
 
-        
+
 
 # intersectable shapes (draggable)
 

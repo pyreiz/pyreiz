@@ -30,14 +30,21 @@ fix = reiz.Cue(canvas,
 
 ball = reiz.Cue(canvas,
                audiostim=None,
-               visualstim=[reiz.visual.Circle(zoom=1, color='red', position=(0, 0.25)),
-                           reiz.visual.Circle(zoom=1, color='blue', position=(0,-.25)),
-                           reiz.visual.Mural('Two Balls!', position=(0.5, 0))],
+               visualstim=[reiz.visual.Circle(zoom=1, color='red', position=(0.25, 0)),
+                           reiz.visual.Circle(zoom=1, color='blue', position=(-.25, 0)),
+                           reiz.visual.Mural('Two Balls!', position=(0, .5))],
                markerstr='Circle')
 
+line = reiz.Cue(canvas, 
+                visualstim=[reiz.visual.Line(a=(0,0), b=(-1, -1), color='red'),
+                            reiz.visual.Polygon(positions=[(0,0),(0,.5),(.5,0)], color='red')]
+                )
 # %%
 canvas.open()
 #canvas.set_fullscreen()
+line.show()
+time.sleep(1)
+# %%
 ball.show()
 time.sleep(1)
 fix.show()
