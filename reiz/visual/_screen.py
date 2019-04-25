@@ -28,12 +28,19 @@ class Canvas():
         self.curbuff = 0
                
     def get_fps(self):     
-        dt = pyglet.clock.tick()
+        pyglet.clock.tick()
         for i in range(0, 100, 1):
             self.window.flip()
-            dt = pyglet.clock.tick()
+            pyglet.clock.tick()
         return pyglet.clock.get_fps()
         
+    def __enter__(self):
+        self.open()
+        return self    
+
+    def __exit__(self, type, value, traceback):
+        self.close()
+    
     def _create_window(self):
         self.window = pyglet.window.Window(visible=False,
                                            vsync=True,

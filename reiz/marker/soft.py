@@ -76,7 +76,7 @@ def test():
         print("got %s at time %s" % (sample[0], timestamp))
         
 # %%
-if __name__ == '__main__':
+if __name__ == '__main__':    
     t = threading.Thread(target=test)
     t.start()
     time.sleep(5)

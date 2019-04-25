@@ -21,4 +21,3 @@ class Cue():
         if self.marker is not None:
             marker.push(self.marker)
                      
-        
