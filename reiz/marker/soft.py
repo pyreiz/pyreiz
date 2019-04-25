@@ -24,16 +24,22 @@ class Outlet():
             outlet = cls.instance()
         return outlet
 
+translation = str.maketrans({'ä': 'ae', 'ö': 'oe', 'ü': 'ue',' ':'_'})
+def sanitize(marker:str):
+   return marker.lower().strip().translate(translation)
+    
 class SoftMarker(threading.Thread):    
     "LSL based software marker as a singleton, to prevent name-stealing"
- 
+    
+    
     def __init__(self): 
         threading.Thread.__init__(self)           
         self.queue = queue.Queue(maxsize=0) # indefinite size
         self.is_running = threading.Event()
         
     def push(self, marker:str):
-        self.queue.put_nowait(marker)
+        
+        self.queue.put_nowait(sanitize(marker))
 
     def stop(self):
         self.queue.join()
