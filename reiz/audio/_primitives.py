@@ -11,13 +11,18 @@ import time
 class Sound():
     def play(self):
         self.sound.play()
-        
+        return self.duration
+    
     def play_blocking(self):
         self.sound.play()
         time.sleep(self.sound.duration)
         
     def queue(self, speaker):
         speaker.queue(self.sound)
+
+    @property
+    def duration(self):        
+        return self.sound.duration
 
     def __repr__(self):
         #self.play()

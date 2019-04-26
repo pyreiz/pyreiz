@@ -30,6 +30,18 @@ class Clock():
             t1 = self.time()            
             dt = t1-t0 
         return dt
+    
+    def halfsleep(self, duration, canvas, safetime=.2):
+        t1 = t0 = self.time()
+        dt = 0
+        while dt <= duration:
+            if abs(duration-dt) > safetime: 
+                # flipping quantisizes the sleep duration, therefore we 
+                # don't flip anymore if that would become relevant
+                canvas.dispatch()
+            t1 = self.time()            
+            dt = t1-t0             
+        return dt
         
     def sleep_tick(self, duration):
         bias = self.tick()

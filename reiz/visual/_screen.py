@@ -26,6 +26,14 @@ class Canvas():
         self.start_height = size[1]
         self._create_window()
 
+    def is_fps_feasible(self, fps, throw=True):
+        if fps >= .9*self.get_fps():
+            if throw:
+                raise ResourceWarning('Framerate to high for monitor: decrease fps')    
+            else:
+                return False                  
+        return True
+
     def get_fps(self):     
         pyglet.clock.tick()
         for i in range(0, 100, 1):
@@ -56,13 +64,15 @@ class Canvas():
         self.window.has_exit = True
         self.window.close()
         
-                
+    def dispatch(self):        
+        self.window.dispatch_events()
+        self.window.dispatch_event('on_draw')
+        
     def flip(self):
         "flip the backbuffer to front  and clear the old frontbuffer"
         try:
             self.window.switch_to()        
-            self.window.dispatch_events()
-            self.window.dispatch_event('on_draw')
+            self.dispatch()
             self.window.flip() # flip front to backbuffer                   
             self.window.clear() #clear the current backbuffer: was the old backbuffer
         except AttributeError:
@@ -73,9 +83,8 @@ class Canvas():
         if not hasattr(self, 'window'):
             self._create_window()
         self.window.set_visible(True)        
-        self.window.switch_to()
-        self.window.dispatch_events()
-        self.window.dispatch_event('on_draw')
+        self.window.switch_to()        
+        self.dispatch()
         self.clear()        
     
     def close(self):        
@@ -87,23 +96,17 @@ class Canvas():
         self.flip()
         self.flip()
     
-    def show(self, frame):
+    def show(self, visual):
         "after having rendered and drawn into the backbuffer, show this"
-        try:            
-            for f in frame:
-                if hasattr(f, 'adapt'):
-                    f.adapt(self)
-                f.draw()
+        try:
+            self.window.switch_to()              
+            for v in visual:
+                v.draw_into(self)                
         except TypeError:
-            if hasattr(frame, 'adapt'):
-                frame.adapt(self)
-                frame.draw()
-        
+            visual.draw_into(self)                
         self.flip()
     
     def set_fullscreen(self):   
-        #m = pyglet.canvas.Display().get_screens()[monitor]
-        #self.window.set_fullscreen(fullscreen=True, screen=m)
         self.window.set_fullscreen(fullscreen=True)
         self.flip()
 
