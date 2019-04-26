@@ -39,14 +39,7 @@ class Canvas():
         for i in range(0, 100, 1):
             self.window.flip()
             pyglet.clock.tick()
-        return pyglet.clock.get_fps()
-        
-    def __enter__(self):
-        self.open()
-        return self    
-
-    def __exit__(self, type, value, traceback):
-        self.close()
+        return pyglet.clock.get_fps()    
     
     def _create_window(self):
         self.window = pyglet.window.Window(visible=False,
@@ -76,7 +69,7 @@ class Canvas():
             self.window.flip() # flip front to backbuffer                   
             self.window.clear() #clear the current backbuffer: was the old backbuffer
         except AttributeError:
-            raise KeyboardInterrupt('Window was closed')
+            raise Exception('Window was closed')
             
          
     def open(self):  
@@ -101,9 +94,9 @@ class Canvas():
         try:
             self.window.switch_to()              
             for v in visual:
-                v.draw_into(self)                
+                v.draw(canvas=self)                
         except TypeError:
-            visual.draw_into(self)                
+            visual.draw(canvas=self)                
         self.flip()
     
     def set_fullscreen(self):   

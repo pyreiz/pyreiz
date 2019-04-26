@@ -4,23 +4,25 @@ Pyglet based api to shapes and murals
     
 """
 import pyglet            
-from ._primitives import Polygon as _Polygon
-from ._primitives import Circle as _Circle
+from reiz.visual._primitives import Polygon as _Polygon
+from reiz.visual._primitives import Circle as _Circle
 from reiz.visual._primitives import Line as _Line
 from typing import Tuple
-from .colors import get_color
+from reiz.visual.colors import get_color
 # %%
 class Visual():
 
     def adapt(self, window):
         pass
     
-    def draw(self):
+    def draw(self, canvas=None):
+        if canvas is not None and not canvas.window.has_exit:
+            self.adapt(canvas)
         self.visual.draw()
         
-    def draw_into(self, window):
-        self.adapt(window)
-        self.draw()
+    def draw_into(self, canvas):
+        print(f'Deprecation draw_into: {self}')
+        self.draw(canvas)
 
 # %% Complex parametric visualisations
 #------------------------------------------------------------------------------
@@ -123,6 +125,36 @@ class Circle(Visual):
     def __repr__(self):
         return (f"Circle(zoom={self.zoom}, color={self.color}, " +
                f"position={self.pos})")
+
+class Cylinder(Visual):
+    
+    def __init__(self, pos=(0,0), angle=0, thickness=.05, 
+                 length=.75, color='brown'):
+        self.color = get_color(color)
+        self.length = length
+        self.pos = pos
+        self.angle = angle
+        self.thickness = thickness
+        
+    def adapt(self, canvas):
+        x0 = canvas.width//2
+        y0 = canvas.height//2        
+        x = (x0*self.pos[0]) + x0
+        y = (y0*self.pos[1]) + y0        
+        thickness = int(min([canvas.height, canvas.width]) * self.thickness)
+        length = int(min([canvas.height, canvas.width]) * self.length)
+        
+        vertices = ((x-length//2, y-thickness//2),
+                     (x-length//2, y+thickness//2),
+                     (x+length//2, y+thickness//2),
+                     (x+length//2, y-thickness//2))
+        
+        
+        self.visual = _Polygon(v=vertices, z=0, color=self.color, 
+                               stroke=0, rotation=self.angle)
+
+        
+        
 
 #------------------------------------------------------------------------------
 class Cross(Visual):

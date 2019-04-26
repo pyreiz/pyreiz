@@ -105,12 +105,13 @@ class Pixel(Base):
     def intersects(self, x,y):
         if x==self.x and y==self.y : return True
 
+
 class Circle(Base):
     """ Circle class
         Circle(x=20, y=100, z=1, width=300, color=(1,1,0,0.3), stroke=5, rotation=0, style=GLU_FILL)
         style choices are : GLU_LINE, GLU_FILL, GLU_SILHOUETTE, GLU_POINT
     """
-    def __init__(self, x=10, y=10, z=0, width=2, color=(0,0,0,1), stroke=0, rotation=0.0, style=gl.GLU_FILL):
+    def __init__(self, x=10, y=10, z=0, width=2, color=(0,0,0,1), stroke=0, rotation=(0,0,0,1), style=gl.GLU_FILL):
         self.radius = width*0.5
         self.rect = Rect(x, y, width, width)
         self.style = style
@@ -133,7 +134,7 @@ class Circle(Base):
         gl.glPushMatrix()
 
         gl.glTranslatef(self.x, self.y, -self.z)
-        gl.glRotatef(self.rotation, 0, 0, 0.1)
+        gl.glRotatef(*self.rotation) #angle, bool per axis (x,y,z)
 
 
         if self.radius < 1 : self.radius = 1
@@ -189,7 +190,7 @@ class Arc(Base):
         
         gl.glPopMatrix()
 
-
+#%%
 
 class Polygon(Base):
     def __init__(self, v, z=0, color=(0,0,0,1), stroke=0, rotation=0.0, style=0):
@@ -432,6 +433,8 @@ class Rect(object):
     bottom = property(getBottom, setBottom)
 
 
+        
+#%%
 def calcPolygonRect(pointArray):
     """ receives a point list and returns the rect that contains them as a tupple -> tuple left, top, right, bottom
     """
@@ -458,8 +461,4 @@ def calcRectCenter(l,t,r,b):#,v=()):
 ##    if len(v) : l,t,r,b = v[0],v[1],v[2],v[3]
     return l+((r-l)*0.5), t+((b-t)*0.5)
 
-if __name__=="__main__":
-    pass
-    
-    
-    s.show([p1, p2, l])
+

@@ -1,5 +1,5 @@
 from reiz.visual._complex import Mural, Image, Cross, Circle, Background, Line
-from reiz.visual._complex import Polygon, Trapezoid
+from reiz.visual._complex import Polygon, Trapezoid, Cylinder
 from reiz.visual._screen import Canvas
 
 def __get_path():
@@ -38,7 +38,10 @@ def __make_library(path=None):
    
         else:
             val = Image(os.path.join(path, f))
-            key = key.replace(" ", "-")            
+            key = key.replace("(", "")
+            key = key.replace(")", "")
+            key = key.replace(" ", "_")
+            key = key.replace("-", "_")         
             key = key.strip()
         library[key] = val
     library = SimpleNamespace(**library)
