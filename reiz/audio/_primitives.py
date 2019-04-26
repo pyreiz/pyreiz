@@ -20,7 +20,7 @@ class Sound():
         speaker.queue(self.sound)
 
     def __repr__(self):
-        self.play()
+        #self.play()
         return str(self.sound)
 
 class Hertz(Sound):
@@ -37,6 +37,7 @@ class Hertz(Sound):
         
 class AudioFile(Sound):
     
-    def __init__(self, filepath:str):
+    def __init__(self, filepath:str):        
         self.sound = pyglet.media.load(filepath, streaming=False)
-            
+
+                

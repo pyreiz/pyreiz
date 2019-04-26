@@ -17,7 +17,9 @@ COLORS = {
         "light": [0.5, 0.5, 0.5],
         "dark": [0.1, 0.1, 0.1],
         "brown": [.55, .36, .24],
-        'darkbrown': [.44, .29, .20]
+        'darkbrown': [.44, .29, .20],
+        'turkis': (.28, .82, .8),
+        'celeste': (.69, 1, 1),
         }  #: A dictionary of color strings encoding a tuple in RGB
 
 def resolve_rgb(a, b, n=100):

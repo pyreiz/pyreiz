@@ -96,10 +96,11 @@ class Polygon(Visual):
 class Circle(Visual):
     
     def __init__(self, zoom=1, color='red', position:Tuple[float, float]=(0,0),
-                 opacity=1):
+                 opacity=1, stroke=0):
         self.pos = position
         self.color = get_color(color, opacity)
         self.zoom = zoom
+        self.stroke = stroke
         
     
     def adapt(self, window):
@@ -109,7 +110,8 @@ class Circle(Visual):
         
         x = (x0*self.pos[0]) + x0
         y = (y0*self.pos[1]) + y0        
-        self.visual = _Circle(x=x, y=y, z=0, width=width, color=self.color) 
+        self.visual = _Circle(x=x, y=y, z=0, width=width, color=self.color,
+                              stroke=self.stroke) 
         
  
     def __repr__(self):
@@ -156,7 +158,7 @@ class Cross(Visual):
 # %% File-based visualisations
 class Image(Visual):
     
-    def __init__(self, imgpath:str, position:Tuple[float, float]=(0,0), scale=1):
+    def __init__(self, imgpath:str, position:Tuple[float, float]=(0,0), scale=.5):
         self.imgpath = imgpath
         self.img = pyglet.image.load(imgpath)
         self.scale = scale

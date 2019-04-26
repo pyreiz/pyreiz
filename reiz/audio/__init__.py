@@ -23,7 +23,10 @@ def __make_library(path=None):
     import os
     for f in os.listdir(path):
         key = os.path.splitext(f)[0]
-        key = key.replace(" ", "-")            
+        key = key.replace("(", "")
+        key = key.replace(")", "")
+        key = key.replace(" ", "_")
+        key = key.replace("-", "_")         
         key = key.strip()
         val = AudioFile(os.path.join(path, f))        
         library[key] = val
