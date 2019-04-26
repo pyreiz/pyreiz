@@ -141,8 +141,8 @@ class Cylinder(Visual):
         y0 = canvas.height//2        
         x = (x0*self.pos[0]) + x0
         y = (y0*self.pos[1]) + y0        
-        thickness = int(min([canvas.height, canvas.width]) * self.thickness)
-        length = int(min([canvas.height, canvas.width]) * self.length)
+        thickness = int(canvas.height * self.thickness)
+        length = int(canvas.width * self.length)
         
         vertices = ((x-length//2, y-thickness//2),
                      (x-length//2, y+thickness//2),
