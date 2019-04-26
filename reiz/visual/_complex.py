@@ -12,8 +12,15 @@ from .colors import get_color
 # %%
 class Visual():
 
+    def adapt(self, window):
+        pass
+    
     def draw(self):
         self.visual.draw()
+        
+    def draw_into(self, window):
+        self.adapt(window)
+        self.draw()
 
 # %% Complex parametric visualisations
 #------------------------------------------------------------------------------
@@ -27,8 +34,7 @@ class Background(Visual):
         img = img.create_image(window.width, window.height)
         self.visual = pyglet.sprite.Sprite(img=img, x=0, y=0,
                                            usage='static')
-    
-
+        
 
 #------------------------------------------------------------------------------
 class Mural(Visual):
@@ -154,6 +160,33 @@ class Cross(Visual):
         return f"Cross(zoom='{self.zoom}', color={self.color})"
 
 
+class Trapezoid(Visual):
+    
+    def __init__(self, xpos=(-.33, -.25, .25, .33), ypos=(-.25, .25), color='white'):
+        self.xpos = xpos
+        self.ypos = ypos
+        self.color = get_color(color)
+
+    def adapt(self, window):
+        x0 = window.width//2
+        y0 = window.height//2
+        
+        # generate vertex coordinates
+        positions = []
+        for x,y in zip(self.xpos[0:2], self.ypos):
+            positions.append((x,y))
+        for x,y in zip(self.xpos[2:], reversed(self.ypos)):
+            positions.append((x,y))                          
+
+        # create the trapezoid in the first color (default white)                
+        vertex = []
+        for pos in positions:
+            x = (x0*pos[0]) + x0
+            y = (y0*pos[1]) + y0   
+            vertex.append((x,y))          
+            
+        self.visual = _Polygon(v=vertex, z=0, color=self.color, stroke=0, rotation=0)
+
 #------------------------------------------------------------------------------
 # %% File-based visualisations
 class Image(Visual):
@@ -162,7 +195,7 @@ class Image(Visual):
         self.imgpath = imgpath
         self.img = pyglet.image.load(imgpath)
         self.scale = scale
-        self.pos = position
+        self.pos = position       
         
     def adapt(self, window): 
         base_scale = min(window.width/self.img.width, window.height/self.img.height)
