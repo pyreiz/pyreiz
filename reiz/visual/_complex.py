@@ -8,33 +8,7 @@ from ._primitives import Polygon as _Polygon
 from ._primitives import Circle as _Circle
 from reiz.visual._primitives import Line as _Line
 from typing import Tuple
-# %%
-COLORS = {
-        "red": [0.9, 0.1, 0.1],
-        "pink": [0.9, 0.5, 0.9],
-        "green": [.25, .8, .25],
-        "blue": [0, 0, 1],
-        "white": [1, 1, 1],
-        "black": [0, 0, 0],        
-        "gray": [0.25, 0.25, 0.25],
-        "light": [0.5, 0.5, 0.5],
-        "dark": [0.1, 0.1, 0.1],
-        "brown": [.55, .36, .24],
-        'darkbrown': [.44, .29, .20]
-        }  #: A dictionary of color strings encoding a tuple in RGB
-
-def get_color(color, opacity=1):
-    try:
-        color = COLORS[color]
-    except KeyError:
-         if len(color) != 3:
-             raise ValueError('Not a correct color value')            
-    try:
-        color = color.copy()
-        color.append(opacity)
-    except AttributeError:
-        color = (*color, opacity)
-    return color
+from .colors import get_color
 # %%
 class Visual():
 
