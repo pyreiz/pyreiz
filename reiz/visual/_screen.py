@@ -25,8 +25,7 @@ class Canvas():
         self.start_width = size[0]
         self.start_height = size[1]
         self._create_window()
-        self.curbuff = 0
-               
+
     def get_fps(self):     
         pyglet.clock.tick()
         for i in range(0, 100, 1):
@@ -50,18 +49,25 @@ class Canvas():
                                            caption='Experimental Framework')
         self.window.set_location(*self.origin)
         self.window.dispatch_events()
+        self.window.on_close = self._on_close
+        self.window.has_exit = False
+    
+    def _on_close(self):        
+        self.window.has_exit = True
+        self.window.close()
         
-            
+                
     def flip(self):
         "flip the backbuffer to front  and clear the old frontbuffer"
-        self.window.switch_to()        
-        self.window.dispatch_events()
-        self.window.dispatch_event('on_draw')
-        self.window.flip() # flip front to backbuffer       
-        self.window.clear() #clear the current backbuffer: was the old backbuffer
-        self.curbuff += 1
-        if self.curbuff > 1:
-            self.curbuff = 0        
+        try:
+            self.window.switch_to()        
+            self.window.dispatch_events()
+            self.window.dispatch_event('on_draw')
+            self.window.flip() # flip front to backbuffer                   
+            self.window.clear() #clear the current backbuffer: was the old backbuffer
+        except AttributeError:
+            raise KeyboardInterrupt('Window was closed')
+            
          
     def open(self):  
         if not hasattr(self, 'window'):
@@ -117,7 +123,5 @@ class Canvas():
     width = property(get_width)
     height = property(get_height)
     diag = property(get_diag)
-    
-    def run(self):
-        pyglet.app.run()
                   
+  
