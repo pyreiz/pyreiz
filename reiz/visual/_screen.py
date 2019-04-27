@@ -94,7 +94,8 @@ class Canvas():
         try:
             self.window.switch_to()              
             for v in visual:
-                v.draw(canvas=self)                
+                if v is not None:
+                    v.draw(canvas=self)                
         except TypeError:
             visual.draw(canvas=self)                
         self.flip()
