@@ -1,3 +1,5 @@
+'''Root module for the pyreiz stimulus presentation toolbox
+'''
 import reiz.visual as visual
 import reiz.audio as audio
 import reiz.marker as marker

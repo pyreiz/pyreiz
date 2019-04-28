@@ -15,7 +15,8 @@ def __get_path():
 PATH = __get_path()
 
 # %%
-def __make_library(path=None):
+def make_library(path=None):
+    'create an audio library from path'
     if path is None:
         path = PATH
     library = dict()
@@ -33,4 +34,6 @@ def __make_library(path=None):
     library = SimpleNamespace(**library)
     return library
 
-library = __make_library()
+from os import environ as _env 
+if not int(_env['DOC']):
+    library = __make_library()

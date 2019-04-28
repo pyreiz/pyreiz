@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-color library
+"""color library
 """
 
 # %%
@@ -27,7 +26,32 @@ COLORS = {
         'celeste': (.69, 1, 1),
         }  #: A dictionary of color strings encoding a tuple in RGB
 
-def resolve_rgb(a, b, n=100):
+
+  
+
+def resolve_rgb(a:tuple, b:tuple, n:int=100):
+    '''
+    interpolate a color in steps
+    
+    args
+    ----
+
+    a: tuple
+      rgba tuple
+    b: tuple
+      rgba tuple
+    n: int
+      number of steps
+        
+    returns
+    -------
+    
+    color: list
+        list of interpolated rgba tuples
+       
+    '''
+    
+    
     def linspace(a,b,n):
         if n < 2:
             return b
@@ -48,6 +72,22 @@ def resolve_rgb(a, b, n=100):
     return colors
 
 def get_color(color, opacity=1):
+    '''get rgba tuple based on color name
+    
+    args
+    ----
+    color: str
+        a color name, as from COLORs
+    opacity: float 
+        the alpha value
+        
+    
+    returns
+    -------
+    color: tuple
+        a rgba tuple between 0 and 1            
+    '''
+        
     try:
         color = COLORS[color]
     except KeyError:
