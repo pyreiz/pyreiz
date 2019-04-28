@@ -11,7 +11,7 @@ def __get_path():
   
 PATH = __get_path()
 # %%
-def __make_library(path=None):
+def make_library(path=None):
     'create a library of visual stimuli from path'
     if path is None:
         path = PATH
@@ -49,5 +49,5 @@ def __make_library(path=None):
     return library
 
 from os import environ as _env 
-if not int(_env['DOC']):
-    library = __make_library()
+if not 'pyreiz-doc' in _env.keys():
+    library = make_library()

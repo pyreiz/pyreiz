@@ -35,5 +35,5 @@ def make_library(path=None):
     return library
 
 from os import environ as _env 
-if not int(_env['DOC']):
-    library = __make_library()
+if not 'pyreiz-doc' in _env.keys():
+    library = make_library()
