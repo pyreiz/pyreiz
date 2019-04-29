@@ -1,10 +1,17 @@
-from reiz.marker.soft import SoftMarker as _SoftMarker
-_soft = _SoftMarker()
+from reiz.marker.standalone import Client as _client
+from pylsl import local_clock
+# %%
 
-from os import environ as _env 
-if not 'pyreiz-doc' in _env.keys():
-    _soft.start()
+translation = str.maketrans({'ä': 'ae', 'ö': 'oe', 'ü': 'ue',' ':'_'})
+def sanitize(marker:str):
+   return marker.lower().strip().translate(translation)
 
-def push(markerstr:str):
-    _soft.push(markerstr)
 
+def push(marker:str='', tstamp:float=None):
+    if tstamp is None:
+        tstamp = local_clock()
+    marker = sanitize(marker)
+    c = _client()
+    c.push(marker, tstamp)
+    
+    
