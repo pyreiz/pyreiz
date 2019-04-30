@@ -6,7 +6,7 @@ standalone
 # %%
 if __name__ == '__main__':
     import sys
-    from reiz.marker.standalone import Server
+    from reiz.marker.soft import Server
     import argparse
     parser = argparse.ArgumentParser(description = "Reiz Marker Server")
     parser.add_argument("--host", dest = "host", help="Marker Server IP address.", default=None)

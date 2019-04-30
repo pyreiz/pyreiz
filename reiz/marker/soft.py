@@ -91,7 +91,7 @@ class Client():
     def write(self, marker, tstamp):
         'encode message into ascii and send all bytes'        
         msg = json.dumps((marker, tstamp)).encode('ascii')
-        print(f'Sending {msg}')
+        print(f'Sending {marker} at {tstamp}')
         self.interface.sendall(msg)
 
     def close(self):
@@ -144,7 +144,7 @@ class Server(threading.Thread):
             client, address = self.interface.accept()
             client.settimeout(1)
             try:
-                print(f'Connected with client at {address}')
+                print(f'Connected {address}: ', end='')
                 marker, tstamp = self.read_msg(client)                
                 self.markerstreamer.push(marker, tstamp)
             except socket.timeout:
@@ -187,7 +187,7 @@ def _test_inlet():
     
 def _test_outlet():
     time.sleep(5)
-    sm = SoftMarker()
+    sm = MarkerStreamer()
     sm.start()
     time.sleep(1)
     sm.push('Hallo')    
