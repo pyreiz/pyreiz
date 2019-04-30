@@ -18,13 +18,12 @@ class Visual():
     def draw(self, canvas=None):
         if canvas is not None and not canvas.window.has_exit:
             self.adapt(canvas)
-        self.visual.draw()
+        try:
+            for v in self.visual:
+                v.draw()
+        except TypeError:
+            self.visual.draw()       
         
-    def draw_into(self, canvas):
-        print(f'Deprecation draw_into: {self}')
-        self.draw(canvas)
-
-
     def set_color(self, color:str):
         self.color = get_color(color)
 # %% Complex parametric visualisations
@@ -188,11 +187,9 @@ class Cross(Visual):
         self.ho = _Polygon(v=v, z=0, color=self.color, stroke=0, rotation=0)
         v = [(x2, y1), (x2, y4), (x3, y4), (x3, y1)]                 
         self.ve = _Polygon(v=v, z=0, color=self.color, stroke=0, rotation=0)        
-    
-    def draw(self):
-        self.ho.draw()
-        self.ve.draw()
-
+        
+        self.visual = [self.ho, self.ve]
+        
     def __repr__(self):
         return f"Cross(zoom='{self.zoom}', color={self.color})"
 
