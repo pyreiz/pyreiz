@@ -15,7 +15,7 @@ class Cue():
         self.marker = markerstr
         self.duration = duration
         
-    def show(self, canvas=None, duration:float=None, safetime=.2):
+    def show(self, canvas=None, duration:float=0, safetime=.2):
         if canvas is not None:
             self.canvas = canvas
         if self.visual is not None:
