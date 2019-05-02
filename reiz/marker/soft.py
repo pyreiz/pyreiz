@@ -102,7 +102,8 @@ class Client():
         
 class Server(threading.Thread):
     
-    def __init__(self, host:str=None, port:int=7654, name='reiz_marker_sa'):
+    def __init__(self, host:str=None, port:int=7654, 
+                 name='reiz_marker_sa', timeout=.05):
         threading.Thread.__init__(self)
         self.interface = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.interface.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -110,6 +111,7 @@ class Server(threading.Thread):
             host = myip()
         self.host = host
         self.port = port       
+        
         self.markerstreamer =  MarkerStreamer(name=name)
         self.markerstreamer.start()
         print(f'Server mediating an LSL Outlet opened at {host}:{port}')
@@ -128,7 +130,8 @@ class Server(threading.Thread):
             except json.decoder.JSONDecodeError:
                 pass
             except Exception as e:
-                raise e
+                print(e)
+                break
             
         return ('', None)
 
