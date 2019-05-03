@@ -23,6 +23,7 @@ COLORS = {
         "brown": [.55, .36, .24],
         'darkbrown': [.44, .29, .20],
         'turkis': (.28, .82, .8),
+        'darkturkis': (0., .8, .82),
         'celeste': (.69, 1, 1),
         }  #: A dictionary of color strings encoding a tuple in RGB
 
