@@ -10,6 +10,21 @@ def get_screens():
     return pyglet.canvas.Display().get_screens()
 
 # %%
+class ExperimentalWindow(pyglet.window.Window):
+    start_run = False
+    
+    def on_key_press(self, symbol, modifiers):
+        """Default on_key_press handler."""
+        key = pyglet.window.key
+        if symbol == key.ESCAPE and not (modifiers & ~(key.MOD_NUMLOCK | 
+                                                       key.MOD_CAPSLOCK | 
+                                                       key.MOD_SCROLLLOCK)):
+            self.dispatch_event('on_close')    
+        
+        if symbol == key.F5:
+            self.start_run = True
+        
+
 class Canvas():
     def __init__(self, size:(int, int)=(640, 480), origin=(100, 100)):
         maxsize = (get_screens()[0].width, get_screens()[0].height)
@@ -42,12 +57,13 @@ class Canvas():
         return pyglet.clock.get_fps()    
     
     def _create_window(self):
-        self.window = pyglet.window.Window(visible=False,
-                                           vsync=True,
-                                           width=self.start_width,
-                                           height=self.start_height,
-                                           resizable=True,
-                                           caption='Experimental Framework')
+        self.window = ExperimentalWindow(visible=False,
+                                         vsync=True,
+                                         width=self.start_width,
+                                         height=self.start_height,
+                                         resizable=True,
+                                         caption='Experimental Framework')
+
         self.window.set_location(*self.origin)
         self.window.dispatch_events()
         self.window.on_close = self._on_close
@@ -56,6 +72,9 @@ class Canvas():
     def _on_close(self):        
         self.window.has_exit = True
         self.window.close()
+        
+    def _on_key_press(symbol, modifiers):
+        pass
         
     def dispatch(self):        
         self.window.dispatch_events()
