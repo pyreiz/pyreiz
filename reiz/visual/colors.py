@@ -52,7 +52,6 @@ def resolve_rgb(a:tuple, b:tuple, n:int=100):
        
     '''
     
-    
     def linspace(a,b,n):
         if n < 2:
             return b
