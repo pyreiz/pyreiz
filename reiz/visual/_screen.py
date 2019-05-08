@@ -10,8 +10,9 @@ def get_screens():
     return pyglet.canvas.Display().get_screens()
 
 # %%
-class ExperimentalWindow(pyglet.window.Window):
+class ExperimentalWindow(pyglet.window.Window):    
     start_run = False
+    
     
     def on_key_press(self, symbol, modifiers):
         """Default on_key_press handler."""
@@ -23,9 +24,34 @@ class ExperimentalWindow(pyglet.window.Window):
         
         if symbol == key.F5:
             self.start_run = True
+    
+    def _on_mouse_press_log(self, x, y, button, modifiers):
+        from reiz.marker import push        
+        if button == pyglet.window.mouse.LEFT:
+            push('LEFT_MOUSE_BUTTON')
+        elif button == pyglet.window.mouse.RIGHT:
+            push('RIGHT_MOUSE_BUTTON')
+        elif button == pyglet.window.mouse.MIDDLE:
+            push('MIDDLE_MOUSE_BUTTON')        
         
-
+    def _on_mouse_press_swallow(self, x, y, button, modifiers):
+        pass
+    
+    def enable_mouse_logging(self):
+        self.on_mouse_press = self._on_mouse_press_log
+    
+    def disable_mouse_logging(self):
+        self.on_mouse_press = self._on_mouse_press_swallow
+            
+        
 class Canvas():
+    
+    def set_mouse_logging(self, state=True):
+        if state:
+            self.window.enable_mouse_logging()
+        else:
+            self.window.disable_mouse_logging()
+    
     def __init__(self, size:(int, int)=(640, 480), origin=(100, 100)):
         maxsize = (get_screens()[0].width, get_screens()[0].height)
         if size == 'full':            
@@ -87,7 +113,8 @@ class Canvas():
             self.dispatch()
             self.window.flip() # flip front to backbuffer                   
             self.window.clear() #clear the current backbuffer: was the old backbuffer
-        except AttributeError:
+        except AttributeError as e:
+            print(e)
             raise Exception('Window was closed')
             
          
