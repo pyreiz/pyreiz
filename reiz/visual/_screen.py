@@ -12,6 +12,7 @@ def get_screens():
 # %%
 class ExperimentalWindow(pyglet.window.Window):    
     start_run = False
+    paused = False
     
     
     def on_key_press(self, symbol, modifiers):
@@ -24,6 +25,9 @@ class ExperimentalWindow(pyglet.window.Window):
         
         if symbol == key.F5:
             self.start_run = True
+            
+        if symbol == key.P:
+            self.paused = ~self.paused
     
     def _on_mouse_press_log(self, x, y, button, modifiers):
         from reiz.marker import push        
@@ -42,8 +46,8 @@ class ExperimentalWindow(pyglet.window.Window):
     
     def disable_mouse_logging(self):
         self.on_mouse_press = self._on_mouse_press_swallow
-            
-        
+
+
 class Canvas():
     
     def set_mouse_logging(self, state=True):
@@ -66,6 +70,14 @@ class Canvas():
         self.start_width = size[0]
         self.start_height = size[1]
         self._create_window()
+
+    @property
+    def paused(self):
+        return self.window.paused
+
+    @property
+    def start_run(self):
+        return self.window.start_run
 
     def is_fps_feasible(self, fps, throw=True):
         if fps >= .9*self.get_fps():

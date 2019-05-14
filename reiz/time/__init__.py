@@ -18,7 +18,13 @@ class Clock():
         self.cumulative_time += delta_t
         self.last_ts = ts
         return delta_t
-        
+
+    def pause(self):
+        ts = self.time()
+        delta_t = ts - self.last_ts        
+        self.last_ts = ts
+        return delta_t
+                   
     def reset(self):
         self.cumulative_time = 0
         self.next_ts = self.last_ts = self.time()
@@ -56,7 +62,8 @@ class Clock():
     def frames(self, fps=30):
         tick = self.tick()
         return tick*fps
-           
+    
+
 clock = Clock()
 # %%
 if __name__ == '__main__':
