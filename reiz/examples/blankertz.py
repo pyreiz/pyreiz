@@ -16,6 +16,7 @@ def start(trials=5):
 
     pre = reiz.Cue(canvas, visualstim=reiz.visual.library.pre)
     post = reiz.Cue(canvas, visualstim=reiz.visual.library.post)
+    f5 = reiz.Cue(canvas, visualstim=reiz.visual.Mural('Press F5 to start'))
     augen_auf = reiz.Cue(canvas,
                          audiostim=reiz.audio.library.hint,
                          visualstim=[reiz.visual.Background(color='light'),
@@ -30,7 +31,10 @@ def start(trials=5):
     # %%
     canvas.open()
     #canvas.set_fullscreen()
-    pre.show(duration=5)
+    while not canvas.start_run:
+        f5.show(duration=0.1)
+  
+    pre.show(duration=3)
     for trl_num in range(trials):
         augen_auf.show(duration=30)
         augen_zu.show(duration=30)    

@@ -78,6 +78,10 @@ class Canvas():
     @property
     def start_run(self):
         return self.window.start_run
+    
+    @start_run.setter
+    def start_run(self, value:bool):
+        self.window.start_run = value
 
     def is_fps_feasible(self, fps, throw=True):
         if fps >= .9*self.get_fps():
