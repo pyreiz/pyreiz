@@ -5,6 +5,7 @@ Pyglet based screen and frame drawing
     
 """
 import pyglet            
+from pylsl import local_clock   
 # %%
 def get_screens():
     return pyglet.canvas.Display().get_screens()
@@ -13,8 +14,7 @@ def get_screens():
 class ExperimentalWindow(pyglet.window.Window):    
     start_run = False
     paused = False
-    
-    
+
     def on_key_press(self, symbol, modifiers):
         """Default on_key_press handler."""
         key = pyglet.window.key
@@ -30,30 +30,78 @@ class ExperimentalWindow(pyglet.window.Window):
             self.paused = ~self.paused
     
     def _on_mouse_press_log(self, x, y, button, modifiers):
-        from reiz.marker import push        
+        from reiz.marker import push, local_clock   
+        tstamp = local_clock()
         if button == pyglet.window.mouse.LEFT:
-            push('LEFT_MOUSE_BUTTON')
+            push('LEFT_MOUSE_BUTTON',  tstamp=tstamp)
         elif button == pyglet.window.mouse.RIGHT:
-            push('RIGHT_MOUSE_BUTTON')
+            push('RIGHT_MOUSE_BUTTON', tstamp=tstamp)
         elif button == pyglet.window.mouse.MIDDLE:
-            push('MIDDLE_MOUSE_BUTTON')        
+            push('MIDDLE_MOUSE_BUTTON', tstamp=tstamp)    
+            
+    def _on_mouse_press_log_to_queue(self, x, y, button, modifiers):
+
+        tstamp = local_clock()
+        def push(label, tstamp):
+            print(f"Pushing to queue: {label} at {tstamp}")
+            self.queue.put((label, tstamp))
         
+        if button == pyglet.window.mouse.LEFT:
+            push('LEFT_MOUSE_BUTTON',  tstamp=tstamp)
+        elif button == pyglet.window.mouse.RIGHT:
+            push('RIGHT_MOUSE_BUTTON', tstamp=tstamp)
+        elif button == pyglet.window.mouse.MIDDLE:
+            push('MIDDLE_MOUSE_BUTTON', tstamp=tstamp)  
+    
+    def _on_mouse_press_log_to_queue_and_lsl(self, x, y, button, modifiers):
+        def push(label, tstamp):
+            from reiz.marker import push
+            print(f"Pushing to queue: {label} at {tstamp}")
+            self.queue.put((label, tstamp))
+            print(f"Pushing to LSL: {label} at {tstamp}")
+            push(label, tstamp)
+            
+        tstamp = local_clock()
+        if button == pyglet.window.mouse.LEFT:
+            push('LEFT_MOUSE_BUTTON',  tstamp=tstamp)
+        elif button == pyglet.window.mouse.RIGHT:
+            push('RIGHT_MOUSE_BUTTON', tstamp=tstamp)
+        elif button == pyglet.window.mouse.MIDDLE:
+            push('MIDDLE_MOUSE_BUTTON', tstamp=tstamp)                     
+    
+    def enable_mouse_logging_to_queue(self, queue):
+        self.queue = queue
+        self.on_mouse_press = self._on_mouse_press_log_to_queue
+        
+    def enable_mouse_logging_to_queue_and_lsl(self, queue):
+        self.queue = queue
+        self.on_mouse_press = self._on_mouse_press_log_to_queue_and_lsl
+    
     def _on_mouse_press_swallow(self, x, y, button, modifiers):
         pass
-    
+        
     def enable_mouse_logging(self):
         self.on_mouse_press = self._on_mouse_press_log
     
     def disable_mouse_logging(self):
         self.on_mouse_press = self._on_mouse_press_swallow
 
-
 class Canvas():
     
     def set_mouse_logging(self, state=True):
-        if state:
+        if state == "queue":
+            from queue import Queue
+            queue = Queue()
+            self.window.enable_mouse_logging_to_queue(queue=queue)            
+            return queue
+        if state == "both":
+            from queue import Queue
+            queue = Queue()
+            self.window.enable_mouse_logging_to_queue_and_lsl(queue=queue)            
+            return queue
+        elif state == True:
             self.window.enable_mouse_logging()
-        else:
+        elif state == False:
             self.window.disable_mouse_logging()
     
     def __init__(self, size:(int, int)=(640, 480), origin=(100, 100)):
