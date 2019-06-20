@@ -60,7 +60,7 @@ class Mural(Visual):
         fontsize = int(canvas.width*self.scale)
         self.visual = pyglet.text.Label(self.text, font_name=self.font, 
                            font_size=fontsize, color = color,
-                           x=x, y=y,
+                           x=x, y=y,                        
                            anchor_x='center', anchor_y='center')
 
     def __repr__(self):

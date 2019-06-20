@@ -1,4 +1,5 @@
 #%%
+import reiz.marker as marker
 from reiz.time import Clock  as _Clock
 class Cue():
     def __init__(self, canvas=None, audiostim=None, 

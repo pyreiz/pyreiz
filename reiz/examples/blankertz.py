@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-resting state
+"""resting state switching between eyes open / closed
 """
 
 def start(trials=5):
@@ -30,17 +29,20 @@ def start(trials=5):
                          markerstr='augen_zu')
     # %%
     canvas.open()
-    #canvas.set_fullscreen()
     while not canvas.start_run:
-        f5.show(duration=0.1)
+        f5.show(duration = 0.1)
   
-    pre.show(duration=3)
+    pre.show(duration = 3)
     for trl_num in range(trials):
-        augen_auf.show(duration=30)
-        augen_zu.show(duration=30)    
-    post.show(duration=5)
+        augen_auf.show(duration = 15)
+        augen_zu.show(duration = 15)    
+    post.show(duration = 3)
     canvas.close()
 
-
-if __name__ == '__main__':
+def main()
+    from reiz.marker.__main__ import subprocess
+    subprocess()
     start()
+    
+if __name__ == '__main__':
+    main()

@@ -85,11 +85,11 @@ def test_connection(port:int=7654):
         return False
     
 def ping_connection(port:int=7654):
-    c = Client(port=port)    
+    c = Client(port=port, verbose=False)    
     try: 
         c.push('None', pylsl.local_clock())
         return True
-    except ConnectionRefusedError as e:
+    except Exception:
         return False
 
 def push(marker:str='', tstamp:float=None, 
@@ -106,11 +106,10 @@ def push_locals(marker:dict={'key':'value'}, tstamp:float=None, sanitize=False):
         
 class Client():
     
-    def __init__(self,  host:str=None, port:int=7654):
-        if host is None:
-            host = myip()
-        self.host = host
+    def __init__(self,  port:int=7654, verbose=True):
+        self.host = "127.0.0.1"
         self.port = port       
+        self.verbose = verbose
         
     def push(self, marker:str='', tstamp:float=None):
         'connects, sends a message, and close the connection'        
@@ -127,7 +126,8 @@ class Client():
     def write(self, marker, tstamp):
         'encode message into ascii and send all bytes'        
         msg = json.dumps((marker, tstamp)).encode('ascii')
-        print(f'Sending {marker} at {tstamp}')
+        if self.verbose:
+            print(f'Sending {marker} at {tstamp}')
         self.interface.sendall(msg)
 
     def close(self):
@@ -158,24 +158,30 @@ def read_msg(client):
     
 class Server(threading.Thread):
     
-    def __init__(self, host:str=None, port:int=7654, 
-                 name='reiz_marker_sa', timeout=.05):
+    def __init__(self, port:int=7654, name='reiz_marker_sa', 
+                 timeout=.05):
         threading.Thread.__init__(self)
-
-        if host is None:
-            host = myip()
-        self.host = host
+        self.host = "127.0.0.1"
         self.port = port       
         self.name = name
         self.is_running = threading.Event()      
-
+        self.singleton = threading.Event()      
+    
     def stop(self):
         self.is_running.clear()
 
     def run(self):
         'wait for clients to connect and send messages' 
-        if ping_connection():
-            raise ConnectionError("Server already running on that port")               
+        if ping_connection(self.port):
+            self.singleton.clear()
+            print("Server already running on that port")
+            self.is_running.set()
+            return
+        else:
+            self.singleton.set()
+            print("This server is the original instance")
+           
+    
         markerstreamer =  MarkerStreamer(name=self.name)
         markerstreamer.start()
         interface = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

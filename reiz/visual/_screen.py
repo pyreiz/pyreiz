@@ -28,6 +28,7 @@ class ExperimentalWindow(pyglet.window.Window):
             
         if symbol == key.P:
             self.paused = ~self.paused
+
     
     def _on_mouse_press_log(self, x, y, button, modifiers):
         from reiz.marker import push, local_clock   
