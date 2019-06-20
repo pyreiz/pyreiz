@@ -1,5 +1,0 @@
-# visual and auditory stimuli
-pyglet>=1.3.2
-
-# marker streaming
-pylsl>=1.13

@@ -4,24 +4,35 @@ standalone
 """
 
 # %%
-if __name__ == '__main__':
+def main():
     import sys
+    import time
     from reiz.marker.soft import Server
     import argparse
     parser = argparse.ArgumentParser(description = "Reiz Marker Server")
     parser.add_argument("--host", dest = "host", help="Marker Server IP address.", default=None)
-    parser.add_argument("--port", dest = "port", help="Marker Server port.", default=7654)
+    parser.add_argument("--port", dest = "port", type=int, help="Marker Server port.", default=7654)
     parser.add_argument("--name", dest = "name", help="Marker Server name.", default='reiz_marker_sa')
     args = parser.parse_args()
     server = Server(port=args.port, host=args.host, name=args.name)
-    server.start()    
-    while True:
+    server.start()   
+    while not server.is_running.is_set():
+        pass 
+    time.sleep(1)
+    while server.is_running.is_set():
         try:
             print("Streaming data. Enter 'q' to quit.")
             tmp = input(" > ")
             if tmp == "q":
-                server.stop()
-                print("\nStreaming stopped.\n")
-                sys.exit(0)
-        except KeyboardInterrupt:            
-            sys.exit(0)
+                break
+        except KeyboardInterrupt:
+            break
+
+    server.stop()
+    print("\nStreaming stopped.\n")
+    server.join()
+    print("\nStreaming joined.\n")        
+    sys.exit(0)
+if __name__ == '__main__':
+    main()
+

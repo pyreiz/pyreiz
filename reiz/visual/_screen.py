@@ -126,7 +126,7 @@ class Canvas():
     @property
     def start_run(self):
         return self.window.start_run
-    
+        
     @start_run.setter
     def start_run(self, value:bool):
         self.window.start_run = value
