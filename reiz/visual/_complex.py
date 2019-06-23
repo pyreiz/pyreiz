@@ -11,7 +11,7 @@ from typing import Tuple
 from reiz.visual.colors import get_color
 # %%
 class Visual():
-
+    
     def adapt(self, window):
         pass
     
@@ -26,6 +26,14 @@ class Visual():
         
     def set_color(self, color:str):
         self.color = get_color(color)
+        
+    def __iter__(self):
+        yield self
+    
+    def __next__(self):
+        return self
+        raise StopIteration
+    
 # %% Complex parametric visualisations
 #------------------------------------------------------------------------------
 class Background(Visual):

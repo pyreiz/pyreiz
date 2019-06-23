@@ -213,8 +213,11 @@ class Canvas():
             for v in visual:
                 if v is not None:
                     v.draw(canvas=self)                
-        except TypeError:
-            visual.draw(canvas=self)                
+        #except TypeError: #visual is not iterable
+        #    visual.draw(canvas=self)
+        except AttributeError: #window was closed                     
+            print("Window was closed")
+            return
         self.flip()
     
     def set_fullscreen(self):   
@@ -238,4 +241,7 @@ class Canvas():
     height = property(get_height)
     diag = property(get_diag)
                   
+    @property
+    def available(self):
+        return (hasattr(self, "window") and not self.window.has_exit)
   
