@@ -5,7 +5,7 @@ Pyglet based screen and frame drawing
     
 """
 import pyglet            
-from pylsl import local_clock   
+from pylsl import local_clock
 # %%
 def get_screens():
     return pyglet.canvas.Display().get_screens()
@@ -14,6 +14,14 @@ def get_screens():
 class ExperimentalWindow(pyglet.window.Window):    
     start_run = False
     paused = False
+    
+    def on_close(self):
+        """Default on_close handler, but closing even without vent loop"""
+        self.has_exit = True
+        #from pyglet import app
+        #if app.event_loop.is_running:
+        self.close()
+
 
     def on_key_press(self, symbol, modifiers):
         """Default on_key_press handler."""
@@ -22,7 +30,7 @@ class ExperimentalWindow(pyglet.window.Window):
                                                        key.MOD_CAPSLOCK | 
                                                        key.MOD_SCROLLLOCK)):
             self.dispatch_event('on_close')    
-        
+            
         if symbol == key.F5:
             self.start_run = True
             
@@ -100,7 +108,7 @@ class Canvas():
             queue = Queue()
             self.window.enable_mouse_logging_to_queue_and_lsl(queue=queue)            
             return queue
-        elif state == True:
+        elif state == True or state == "lsl":
             self.window.enable_mouse_logging()
         elif state == False:
             self.window.disable_mouse_logging()
@@ -157,43 +165,41 @@ class Canvas():
 
         self.window.set_location(*self.origin)
         self.window.dispatch_events()
-        self.window.on_close = self._on_close
         self.window.has_exit = False
     
-    def _on_close(self):        
-        self.window.has_exit = True
-        self.window.close()
-        
     def _on_key_press(symbol, modifiers):
         pass
         
-    def dispatch(self):        
-        self.window.dispatch_events()
-        self.window.dispatch_event('on_draw')
-        
+
     def flip(self):
         "flip the backbuffer to front  and clear the old frontbuffer"
-        try:
+        try:           
             self.window.switch_to()        
-            self.dispatch()
+            self.window.dispatch_events()
+            self.window.dispatch_event('on_draw')
             self.window.flip() # flip front to backbuffer                   
             self.window.clear() #clear the current backbuffer: was the old backbuffer
         except AttributeError as e:
-            print(e)
-            raise Exception('Window was closed')
+            if not hasattr(self, 'window') or self.window.has_exit:
+                print("Window was closed during flipping")
+                return
+            else:
+                print(__name__, e)
+                raise Exception('Window was closed')
             
          
     def open(self):  
-        if not hasattr(self, 'window'):
+        if not hasattr(self, 'window') or self.window.has_exit:
             self._create_window()
         self.window.set_visible(True)        
         self.window.switch_to()        
-        self.dispatch()
+        self.window.dispatch_events()
+        self.window.dispatch_event('on_draw')
         self.clear()        
     
-    def close(self):        
-        self.window.close()
-        del self.window
+    def close(self):      
+        if hasattr(self, 'window') and not self.window.has_exit:
+            self.window.close()        
     
     def clear(self):    
         "clear both buffers and show a black screen"

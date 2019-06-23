@@ -1,6 +1,5 @@
 from reiz.visual._complex import Mural, Image, Cross, Circle, Background, Line
 from reiz.visual._complex import Polygon, Trapezoid, Cylinder
-from reiz.visual._screen import Canvas
 
 def __get_path():
     import os

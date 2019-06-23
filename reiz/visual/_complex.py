@@ -44,12 +44,15 @@ class Background(Visual):
 class Mural(Visual):
     
     def __init__(self, text:str='Hello World', font='Times New Roman', 
-                 fontsize=1, position:Tuple[float, float]=(0,0), color=(1,1,1)):
+                 fontsize=1, position:Tuple[float, float]=(0,0), color=(1,1,1),
+                 anchor_x='center', anchor_y='center'):
         self.scale = 0.05 * fontsize
         self.text = text
         self.font = font        
         self.pos = position
         self.set_color(color)
+        self.anchor_x = anchor_x
+        self.anchor_y = anchor_y
         
     def adapt(self, canvas):
         color = tuple(int(c*255) for c in self.color)
@@ -59,9 +62,8 @@ class Mural(Visual):
         y = (y0*self.pos[1]) + y0
         fontsize = int(canvas.width*self.scale)
         self.visual = pyglet.text.Label(self.text, font_name=self.font, 
-                           font_size=fontsize, color = color,
-                           x=x, y=y,                        
-                           anchor_x='center', anchor_y='center')
+                           font_size=fontsize, color = color, x=x, y=y,                        
+                           anchor_x=self.anchor_x, anchor_y=self.anchor_y )
 
     def __repr__(self):
         return f"Mural('{self.text}')"
