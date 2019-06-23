@@ -30,7 +30,7 @@ class Cue():
                 t1 = t0 = clk.time()
                 dt = 0
                 clk.tick()
-                while dt <= self.duration and not self.canvas.window.has_exit:
+                while dt <= self.duration and self.canvas.available:
                     # flipping quantisizes the sleep duration, therefore we 
                     # don't flip anymore if that would become relevant
                     # we only repeat presentation of the visual stimulus
