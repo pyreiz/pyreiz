@@ -11,3 +11,4 @@ import reiz.audio as audio
 import reiz.marker as marker
 from reiz.time import clock 
 from reiz.cue import Cue
+from reiz.visual import Canvas

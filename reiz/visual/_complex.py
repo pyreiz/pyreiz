@@ -26,6 +26,7 @@ class Visual():
         
     def set_color(self, color:str):
         self.color = get_color(color)
+        
 # %% Complex parametric visualisations
 #------------------------------------------------------------------------------
 class Background(Visual):
@@ -87,6 +88,7 @@ class Line(Visual):
         self.visual = _Line(a=(ax, ay), b=(bx, by), z=0, color=self.color, stroke=self.linewidth)
         
 
+
 class Polygon(Visual):
 
     def __init__(self, positions:list, color='white'):
@@ -104,7 +106,27 @@ class Polygon(Visual):
             v.append((x,y))
         self.visual = _Polygon(v=v, z=0, color=self.color, stroke=0, rotation=0)
     
-
+class Bar(Visual):
+    
+    def __init__(self, height=.5, width=.25, color='white'):
+        self.height = height
+        self.width = width
+        self.color = get_color(color)
+    
+    def adapt(self, window):
+        x0 = window.width//2
+        y0 = window.height*3/4
+        h = self.height
+        w = self.width
+        positions = [(-w, 0), (-w, h), (w, h), (w, 0)]
+        v = []
+        for pos in positions:
+            x = (x0*pos[0]) + x0
+            y = (y0*pos[1]) + 0   
+            v.append((x,y))
+        self.visual = _Polygon(v=v, z=0, color=self.color, stroke=0, rotation=0)
+        
+    
 class Circle(Visual):
     
     def __init__(self, zoom=1, color='red', position:Tuple[float, float]=(0,0),
