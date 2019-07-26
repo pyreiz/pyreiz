@@ -101,8 +101,11 @@ def push(marker:str='', tstamp:float=None,
     c = Client(port=port)
     c.push(marker, tstamp)
     
-def push_locals(marker:dict={'key':'value'}, tstamp:float=None, sanitize=False):
+def push_locals(marker:object={'key':'value'}, tstamp:float=None, sanitize=False):
     push(json.dumps(marker), tstamp, sanitize)
+    
+def push_json(marker:object={'key':'value'}, tstamp:float=None):
+    push(json.dumps(marker), tstamp, sanitize=False)
         
 class Client():
     
@@ -196,8 +199,11 @@ class Server(threading.Thread):
             try:
                 client, address = interface.accept()
                 try:
-                    marker, tstamp = read_msg(client)                
-                    markerstreamer.push(marker, tstamp)
+                    marker, tstamp = read_msg(client)                    
+                    if marker == "None": # connected was only tested 
+                        print("Received ping from", address)
+                    else:
+                        markerstreamer.push(marker, tstamp)
                 except socket.timeout:
                     print('Client from {address} timed out')
                 finally:

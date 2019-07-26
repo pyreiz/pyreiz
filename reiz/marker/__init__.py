@@ -1,1 +1,1 @@
-from reiz.marker.soft import test_connection, push, push_locals
+from reiz.marker.soft import test_connection, push, push_json
