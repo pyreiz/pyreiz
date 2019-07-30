@@ -16,7 +16,7 @@ class Outlet():
     @classmethod
     def get(cls, name='reiz_marker'):
         import socket, weakref
-        source_id = socket.gethostname()
+        source_id = "reiz-marker-sa-at-" + socket.gethostname()
         if cls.instance.get(name, None) is None:                                                
             info = pylsl.StreamInfo(name, type='Markers', channel_count=1, nominal_srate=0, 
                                     channel_format='string', source_id=source_id)

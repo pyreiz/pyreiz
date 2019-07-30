@@ -6,6 +6,7 @@ Pyglet based screen and frame drawing
 """
 import pyglet            
 from pylsl import local_clock
+from typing import Tuple
 # %%
 def get_screens():
     return pyglet.canvas.Display().get_screens()
@@ -39,7 +40,8 @@ class ExperimentalWindow(pyglet.window.Window):
 
     
     def _on_mouse_press_log(self, x, y, button, modifiers):
-        from reiz.marker import push, local_clock   
+        from reiz.marker import push
+        from pylsl import local_clock   
         tstamp = local_clock()
         if button == pyglet.window.mouse.LEFT:
             push('LEFT_MOUSE_BUTTON',  tstamp=tstamp)
@@ -89,7 +91,7 @@ class ExperimentalWindow(pyglet.window.Window):
     def _on_mouse_press_swallow(self, x, y, button, modifiers):
         pass
         
-    def enable_mouse_logging(self):
+    def enable_mouse_logging(self):    
         self.on_mouse_press = self._on_mouse_press_log
     
     def disable_mouse_logging(self):
@@ -113,7 +115,8 @@ class Canvas():
         elif state == False:
             self.window.disable_mouse_logging()
     
-    def __init__(self, size:(int, int)=(640, 480), origin=(100, 100)):
+    def __init__(self, size:Tuple[int, int]=(640, 480), 
+                 origin:Tuple[int, int]=(100, 100)):        
         maxsize = (get_screens()[0].width, get_screens()[0].height)
         if size == 'full':            
             self.size = maxsize
@@ -121,8 +124,9 @@ class Canvas():
             self.size = size    
         
         #check whether origin is outside of window
-        outside = [o<0 for o in origin]
-        self.origin = [o*(1-c) for o,c in zip(origin, outside)]
+        # outside = [o<0 for o in origin]
+        # self.origin = [o*(1-c) for o,c in zip(origin, outside)]
+        self.origin = origin
         
         self.start_width = size[0]
         self.start_height = size[1]
