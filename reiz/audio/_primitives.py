@@ -4,7 +4,7 @@ Auditory stimuli
 """
 
 import pyglet
-from pyglet.media.sources.procedural import ADSREnvelope, Sine
+from pyglet.media.synthesis import ADSREnvelope, Sine
 import time
 # pyglet.options['audio'] = ('openal', 'pulse', 'directsound', 'silent')
 #%%
