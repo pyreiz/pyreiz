@@ -2,3 +2,6 @@ Reiz.egg-info
 reiz/__pycache__/*
 reiz/visual/__pycache__/*
 */*/__pycache__/*
+.pytest_*cache*
+.vscode
+*mypy_cache*

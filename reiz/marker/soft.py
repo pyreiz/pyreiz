@@ -81,7 +81,7 @@ def test_connection(port:int=7654):
         return True
     except ConnectionRefusedError as e:
         print(e)
-        input('Please start Markerserver')
+        print('Please start Markerserver')
         return False
     
 def ping_connection(port:int=7654):
@@ -103,14 +103,14 @@ def push(marker:str='', tstamp:float=None,
     
 def push_locals(marker:object={'key':'value'}, tstamp:float=None, sanitize=False):
     push(json.dumps(marker), tstamp, sanitize)
-    
+   
 def push_json(marker:object={'key':'value'}, tstamp:float=None):
     push(json.dumps(marker), tstamp, sanitize=False)
-        
+
 class Client():
     
-    def __init__(self,  port:int=7654, verbose=True):
-        self.host = "127.0.0.1"
+    def __init__(self, host= "127.0.0.1", port:int=7654, verbose=True):
+        self.host = host
         self.port = port       
         self.verbose = verbose
         
