@@ -1,4 +1,4 @@
-#pyreiz
+# pyReiz
 
 pyReiz is a low-level auditory and visual stimulus presentation suite wrapping
 pyglet, sending markers via a pylsl outlet.
