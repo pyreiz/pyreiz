@@ -8,10 +8,10 @@ import pyglet
 from reiz.visual._primitives import Polygon as _Polygon
 from reiz.visual._primitives import Circle as _Circle
 from reiz.visual._primitives import Line as _Line
-from typing import Tuple
-from reiz.visual.colors import get_color
-__all__ = ["Background", "Bar", "Circle", "Cross", "Cylinder",
-           "Image", "Line", "Mural", "Polygon", "Trapezoid"]
+from typing import Tuple, NewType
+XY = NewType("XY", Tuple[float, float]) #: Tuple[float, float], x-y coordinates scaled from -1 to 1 with 0 indicating the center of the screen
+
+from reiz.visual.colors import get_color, ColorType
 # %%
 
 
@@ -78,10 +78,10 @@ class Mural(Visual):
         the font-type (needs to be installed on the system)
     fontsize: float
         the normalized size of the letters
-    position: 
+    position: XY
         where on the screen the text should be located. Coordinates mark the center of the text
-    color: 
-
+    color: ColorType
+        the desired color
     """
 
     def __init__(self, text: str = 'Hello World', font='Times New Roman',
@@ -113,9 +113,22 @@ class Mural(Visual):
 
 
 class Line(Visual):
+    """draw a line from a to b
 
-    def __init__(self, a: Tuple[int, int] = (0, 0), b: Tuple[int, int] = (0, 0),
-                 color='white', linewidth=1):
+    args
+    ----
+
+    a: XY
+        x-y coordinates of the start point
+    b: XY
+        x-y coordinates of the end point
+    color: ColorType
+        the desired color
+    linewidth:float
+    """
+
+    def __init__(self, a: XY = (0, 0), b: XY = (0, 0),
+                 color:ColorType='white', linewidth:float=1):
         self.a = a
         self.b = b
         self.color = get_color(color)
