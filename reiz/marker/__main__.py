@@ -5,21 +5,29 @@ standalone
 
 import sys
 import time
-from reiz.marker.soft import Server, test_connection
+from reiz.marker.soft import Server, available
 import argparse
+import multiprocessing
 
 
 def main():
     parser = argparse.ArgumentParser(description="Reiz Marker Server")
     parser.add_argument("--port", dest="port", type=int,
                         help="Marker Server port.", default=7654)
+    parser.add_argument("--host", dest="host", type=str,
+                        help="Marker Server host ip.", default="127.0.0.1")
     parser.add_argument("--name", dest="name",
                         help="Marker Server name.", default='reiz_marker_sa')
-    parser.add_argument("--test", action="store_true",
+    parser.add_argument("--ping", action="store_true",
                         help="test connection to Markerserver")
     args = parser.parse_args()
-    if args.test:
-        test_connection()
+    if args.ping:
+        response = available(host=args.host, port=args.port)
+        if response:
+            print(f"Markerserver is available at {args.host}:{args.port}")
+            sys.exit(0)
+        else:
+            sys.exit(1)
 
     server = Server(port=args.port, name=args.name)
     try:
@@ -48,9 +56,11 @@ def main():
 
 
 def start():
-    import multiprocessing
-    return multiprocessing.Process(target=main).start()
-    while not reiz.marker.test_connection():
+    # multiprocessing.freeze_support() is required in windows
+    server = Server()
+    server.start()
+
+    while not available():
         time.sleep(2)
 
 
