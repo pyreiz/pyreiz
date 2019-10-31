@@ -4,19 +4,20 @@ High-level api to create complex shapes and murals
 ..................................................
 
 """
+from reiz.visual.colors import get_color, ColorType
 import pyglet
 from reiz.visual._primitives import Polygon as _Polygon
 from reiz.visual._primitives import Circle as _Circle
 from reiz.visual._primitives import Line as _Line
-from typing import Tuple, NewType
-XY = NewType("XY", Tuple[float, float]) #: Tuple[float, float], x-y coordinates scaled from -1 to 1 with 0 indicating the center of the screen
+from typing import Tuple, NewType, List
+# : Tuple[float, float], x-y coordinates scaled from -1 to 1 with 0 indicating the center of the screen
+XY = NewType("XY", Tuple[float, float])
 
-from reiz.visual.colors import get_color, ColorType
 # %%
 
 
 class Visual():
-    "base class for visual cues"
+    "The base class for all visual cues to inherit from"
 
     def adapt(self, window):
         pass
@@ -45,7 +46,7 @@ class Visual():
 
 
 class Background(Visual):
-    """fill the whole screen with a single color
+    """Fills the whole screen with a single color
 
     args
     ----
@@ -67,7 +68,7 @@ class Background(Visual):
 
 
 class Mural(Visual):
-    """show a text on the screen
+    """A text on the screen
 
     args
     ----
@@ -113,7 +114,7 @@ class Mural(Visual):
 
 
 class Line(Visual):
-    """draw a line from a to b
+    """A line from a to b
 
     args
     ----
@@ -128,7 +129,7 @@ class Line(Visual):
     """
 
     def __init__(self, a: XY = (0, 0), b: XY = (0, 0),
-                 color:ColorType='white', linewidth:float=1):
+                 color: ColorType = 'white', linewidth: float = 1):
         self.a = a
         self.b = b
         self.color = get_color(color)
@@ -147,8 +148,17 @@ class Line(Visual):
 
 
 class Polygon(Visual):
+    """An arbitrary shape defined by the coordinates of its nodes
 
-    def __init__(self, positions: list, color='white'):
+    args
+    ----
+    positions: List[XY, ]
+        a list of x-y-coordinates of each node
+    color: ColorType
+        the desired color
+    """
+
+    def __init__(self, positions: List[XY, ], color='white'):
         self.positions = positions
         self.color = get_color(color)
 
@@ -166,8 +176,19 @@ class Polygon(Visual):
 
 
 class Bar(Visual):
+    """A rectangle starting from the bottom centre of the screen
 
-    def __init__(self, height=.5, width=.25, color='white'):
+    args
+    ----
+    height:float
+        height in normalized units from 0 to 1 (bottom to top of screen)
+    width:float
+        width in  normalized units from 0 to 1 (nothing to whole screen)
+    color: ColorType
+        the desired color
+    """
+
+    def __init__(self, height: float = .5, width: float = .25, color='white'):
         self.height = height
         self.width = width
         self.color = get_color(color)
@@ -188,9 +209,24 @@ class Bar(Visual):
 
 
 class Circle(Visual):
+    """A circle, i.e. the outline of a ball
 
-    def __init__(self, zoom=1, color='red', position: Tuple[float, float] = (0, 0),
-                 opacity=1, stroke=0):
+    args
+    ----
+    zoom: float
+        size of the circle
+    color: ColorType
+        the desired color
+    position: XY
+        position of the center of the circle
+    opacity: float
+        how opaque the circle is supposed to be from 0 to 1
+    stroke: float
+        thickness of the outline
+    """
+
+    def __init__(self, zoom: float = 1, color: ColorType = 'red',
+                 position: XY = (0, 0), opacity: float = 1, stroke: float = 0):
         self.pos = position
         self.color = get_color(color, opacity)
         self.zoom = zoom
@@ -212,12 +248,29 @@ class Circle(Visual):
 
 
 class Cylinder(Visual):
+    """A rectangular shape which can be rotated around its center
 
-    def __init__(self, pos=(0, 0), angle=0, thickness=.05,
-                 length=.75, color='brown'):
+    args
+    ----    
+    position: XY
+        position of the center of the circle
+    angle:float
+        rotation angle around its center
+    thickness:float
+        width of the cylinder
+    length:float
+        length of the cylinder
+    color: ColorType
+        the desired color
+
+    """
+
+    def __init__(self, position=(0, 0), angle: float = 0,
+                 thickness: float = .05, length: float = .75,
+                 color: ColorType = 'brown'):
         self.color = get_color(color)
         self.length = length
-        self.pos = pos
+        self.pos = position
         self.angle = angle
         self.thickness = thickness
 
