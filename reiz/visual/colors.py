@@ -4,8 +4,14 @@ Library of colors
 .................
 """
 from typing import NewType, Union, Tuple, List
-ColorType = NewType("ColorType", Union[Tuple[float, float, float], str])
-RGBA = NewType("RGBA", Tuple[float, float, float, float])
+
+RGB = NewType("RGB", Tuple[float, float, float]
+              )  #: Tuple[float, float, float] limited between 0 and 1
+ColorType = NewType("ColorType", Union[RGB, str]
+                    )  #: Union[RGB, str] either a RGB color or a descriptive string from :data:`~.COLORS`
+
+RGBA = NewType("RGBA", Tuple[float, float, float, float]
+               )  #: Tuple[float, float, float, float] limited between 0 and 1
 # %%
 COLORS = {
     "red": [0.9, 0.1, 0.1],
