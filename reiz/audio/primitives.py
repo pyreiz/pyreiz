@@ -50,7 +50,7 @@ class Sound():
             returns 0. The output is kept here to allow easy substitution with 
             :func:`Sound.play`
         """
-        rest = self.play(self.source)
+        rest = self.play()
         t0 = time.time()
         while (time.time()-t0) < rest:
             pass
