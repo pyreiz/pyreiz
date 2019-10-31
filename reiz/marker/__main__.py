@@ -55,14 +55,5 @@ def main():
         sys.exit(0)
 
 
-def start():
-    # multiprocessing.freeze_support() is required in windows
-    server = Server()
-    server.start()
-
-    while not available():
-        time.sleep(2)
-
-
 if __name__ == '__main__':
     main()

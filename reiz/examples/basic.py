@@ -1,11 +1,14 @@
 import reiz
 import time
 # %%
-if not reiz.marker.available():
-    reiz.marker.start()
 
+# start the MarkerServer which distributes markerstrings over LSL
+reiz.marker.start()
+
+# create a window
 canvas = reiz.Canvas()
 
+# initialize Cues
 hello = reiz.Cue(canvas,
                  audiostim=reiz.audio.library.button,
                  visualstim=reiz.visual.Mural('Hallo Welt!'),
@@ -26,6 +29,7 @@ fix = reiz.Cue(canvas,
                visualstim=reiz.visual.library.fixation,
                markerstr='Fixation')
 
+# open a window, show the cues and close the window again
 canvas.open()
 fix.show()
 time.sleep(1)
@@ -36,3 +40,5 @@ time.sleep(1)
 rate.show()
 time.sleep(1)
 canvas.close()
+
+reiz.marker.stop()

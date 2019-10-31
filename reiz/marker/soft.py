@@ -19,7 +19,7 @@ class Outlet():
     def get(cls, name='reiz_marker'):
         import socket
         import weakref
-        source_id = "reiz-marker-sa-at-" + socket.gethostname()
+        source_id = '_at_'.join((name, socket.gethostname()))
         if cls.instance.get(name, None) is None:
             info = pylsl.StreamInfo(name, type='Markers', channel_count=1, nominal_srate=0,
                                     channel_format='string', source_id=source_id)
@@ -88,7 +88,7 @@ def test_connection(port: int = 7654):
     return available(port=port)
 
 
-def available(port: int = 7654, host: str = "127.0.0.1"):
+def available(port: int = 7654, host: str = "127.0.0.1", verbose=True):
     """test whether a markerserver is already available at port
 
     args
@@ -110,8 +110,9 @@ def available(port: int = 7654, host: str = "127.0.0.1"):
         c.push('None', pylsl.local_clock())
         return True
     except ConnectionRefusedError as e:
-        print(e)
-        print(f'Markerserver at {host}:{port} is not available')
+        if verbose:
+            print(e)
+            print(f'Markerserver at {host}:{port} is not available')
         return False
 
 
@@ -198,43 +199,57 @@ def read_msg(client):
 
 
 class Server(threading.Thread):
+    """Main class to manage the LSL-MarkerStream as man-in-the-middle
+
+    when started, it automatically checks whether there is already a MarkerServer running at that port. If this is the case, it returns and lets the old one keep control. This ensures that possible subscribes to the old 
+    MarkerServer don't experience any hiccups.
+    """
 
     def __init__(self, port: int = 7654, name='reiz_marker_sa',
-                 timeout=.05):
+                 timeout=.05, verbose=True):
         threading.Thread.__init__(self)
         self.host = "127.0.0.1"
         self.port = port
         self.name = name
         self.is_running = threading.Event()
         self.singleton = threading.Event()
+        self.verbose = verbose
 
     def stop(self):
         self.is_running.clear()
 
     def run(self):
         'wait for clients to connect and send messages'
+
+        # we check whether there is already an instance running, and if so
+        # let it keep control by returning
         if available(self.port):
             self.singleton.clear()
-            print("Server already running on that port")
+            if self.verbose:
+                print("Server already running on that port")
             self.is_running.set()
             return
         else:
             self.singleton.set()
-            print("This server is the original instance")
+            if self.verbose:
+                print("This server is the original instance")
 
+        # create the MarkerStreamer, i.e. the LSL-Server that distributes the strings received from the Listener
         markerstreamer = MarkerStreamer(name=self.name)
         markerstreamer.start()
-        interface = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        interface.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        interface.settimeout(1)
-        interface.bind((self.host, self.port))
-        interface.listen(1)
-        print('Server mediating an LSL Outlet opened at {0}:{1}'.format(
-            self.host, self.port))
+        # create the ListenerServer, i.e. the TCP/IP Server that waits for messages for forwarding them to the MarkerStreamer
+        listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        listener.settimeout(1)
+        listener.bind((self.host, self.port))
+        listener.listen(1)
+        if self.verbose:
+            print('Server mediating an LSL Outlet opened at {0}:{1}'.format(
+                self.host, self.port))
         self.is_running.set()
         while self.is_running.is_set():
             try:
-                client, address = interface.accept()
+                client, address = listener.accept()
                 try:
                     marker, tstamp = read_msg(client)
                     if marker == "None":  # connected was only tested
@@ -250,3 +265,7 @@ class Server(threading.Thread):
                 pass
 
         markerstreamer.stop()
+
+
+if __name__ == "__main__":
+    start()

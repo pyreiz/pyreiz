@@ -1,85 +1,48 @@
-# pyReiz
+# Reiz
 
 pyReiz is a low-level auditory and visual stimulus presentation suite wrapping
 pyglet, sending markers via a pylsl outlet.
 
-It comes with a library of default visual and auditory cues. They can be found in
-reiz.visual.library and reiz.audio.library
+### Installation
 
-### Libraries
+The [requirements](#requirements) for pyReiz are pyglet and pylsl. They are checked, and if necessary installed, during `pip install`. Because pyReiz is still beta, i recommend installing from the git repo in editable fashion.
 
-The visual library is filled based on the images files and the ini file in /media/img.
-All images are aggregated, with their filename as key. The ini-file is being 
-parsed. The section title defines the type of the visual stimulus (e.g. Mural or Cross...), the key will be the key for the library and the following json value
-will be exploded as keyword arguments in the creation of respective visual object.
-
-
-The auditory library is filled based on the auditory files in /media/wav. All images are aggregated, with their filename as key.
-
-This allows a global configuration of your stimuli library.
-
-### Example of Cue construction and presentation
-
-A cue usually consists of at least a visual stimulus and an auditory stimulus. This can be selected from the library or constructed on the fly. Additionally, a marker string is useful. Any visual stimulation requires information about which canvas it should be shown on. This can be given during object creation ```cue = Cue(canvas=canvas)``` or set at any later time ```cue.show(canvas=other_canvas)```
-
-For example:
-
+###### Windows
 ```
-import reiz
-import time
-# %%
-if not reiz.marker.available():
-    reiz.marker.start()
-
-canvas = reiz.Canvas()
-
-hello = reiz.Cue(canvas,
-                 audiostim=reiz.audio.library.button,
-                 visualstim=reiz.visual.Mural('Hallo Welt!'),
-                 markerstr='hello')
-
-los = reiz.Cue(canvas,
-               audiostim=reiz.audio.library.los_laut,
-               visualstim=reiz.visual.library.los,
-               markerstr=reiz.visual.library.los.text)
-
-rate = reiz.Cue(canvas,
-                audiostim=reiz.audio.Hertz(duration_in_ms=1000),
-                visualstim=reiz.visual.library.rating,
-                markerstr=reiz.visual.library.rating.text)
-
-fix = reiz.Cue(canvas,
-               audiostim=None,
-               visualstim=reiz.visual.library.fixation,
-               markerstr='Fixation')
-
-canvas.open()
-fix.show()
-time.sleep(1)
-hello.show()
-time.sleep(1)
-los.show()
-time.sleep(1)
-rate.show()
-time.sleep(1)
-canvas.close()
-
-
+git clone https://github.com/pyreiz/pyreiz.git
+cd pyreiz
+pip install -e .
 ```
+###### Linux
+The most recent version of pylsl is not yet on pip, therefore install libsl and pylsl manually. You can download a recent build of liblsl from https://github.com/sccn/liblsl/releases. Afterwards,
+```
+pip install git+https://github.com/labstreaminglayer/liblsl-Python.git
+git clone https://github.com/pyreiz/pyreiz.git
+cd pyreiz
+pip install -e .
+```
+##### Test your installation
 
-If you want a cue that does not send a marker, show a visual stimulus or play 
-an audio for any reason, just omit the respective argument or set it to None.
+Examples can be found in `reiz/examples`. After you installed Reiz, you can give it a test-run by calling `python -m reiz.examples.basic` from your terminal. This should start a throwaway MarkerServer, and present a series of visual and auditory stimuli. If anything does not work out, [inform us of the issue](https://github.com/pyreiz/pyreiz/issues).
+
+### Creation
+
+Take a look at the documentation for the examples, e.g. the [basic example](/reiz/examples/basic.py) that you used to test the installation
 
 ### Recording
 
-Because all markers are send via lsl, i suggest recording with Labrecorder from
-https://github.com/labstreaminglayer/App-LabRecorder/releases Use at least 1.13,
-as this version supports BIDS-conform recording, offers a remote interface and
-has a critical timing bugfix included.
+Because all markers are send via lsl, i suggest recording with [Labrecorder](https://github.com/labstreaminglayer/App-LabRecorder/releases). Use at least 1.13, as this version supports BIDS-conform recording, offers a remote interface and has a critical timing bugfix included.
 
-### Acknowledgment
+###### Man-in-the-middle
+LabRecorder can only start recording Outlets that are existing. If you start a MarkerServer immediatly before you run the experiment, there is not much time for the Recorder to detect the stream. It is therefore best practice to start a pyReiz-MarkerServer as an independent process. This MarkerServer acts as a man-in-the-middle. It opens an Outlet that can be detected independently from the experiments you are running. When you then run an experiment, it receives messages from this experiment, and redistributes them in LSL-format. Start the MarkerServer as an independent process with `reiz-marker` or `python -m reiz.marker` from your terminal.
 
-I used code from Cocos2d at https://github.com/los-cocos/cocos for generation
-of the openGL primitives. 
+Sometimes, this is over-the-top, and you might just want to test your experiment without recording. You can safeguard your experiment by adding `reiz.marker.start()` in your python-script. This will start a MarkerServer
 
 
+##### Requirements
+
+The requirements for pyReiz are pyglet and pylsl. We require pylsl>=1.13 because a timing issue was fixed in that version (see https://github.com/sccn/liblsl/issues/8), and pyglet>1.4 because there was a breaking change between 1.3 and 1.4 in the way audio was generated and played (see https://github.com/pyreiz/pyreiz/issues/2)
+
+##### Acknowledgments
+
+I adapted code from [Cocos2d](https://github.com/los-cocos/cocos) for generation of some openGL primitives. 
