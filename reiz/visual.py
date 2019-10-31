@@ -1,6 +1,6 @@
 from os import environ as _env
-from reiz.visual.complex import Mural, Image, Cross, Circle, Background, Line, Bar
-from reiz.visual.complex import Polygon, Trapezoid, Cylinder
+from reiz._visual.complex import Mural, Image, Cross, Circle, Background, Line, Bar
+from reiz._visual.complex import Polygon, Trapezoid, Cylinder
 
 
 def __get_path():

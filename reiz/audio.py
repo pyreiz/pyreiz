@@ -2,7 +2,7 @@
 API to auditory stimuli
 """
 from os import environ as _env
-from reiz.audio.primitives import AudioFile, Hertz
+from reiz._audio.primitives import AudioFile, Hertz
 
 
 def __get_path():
