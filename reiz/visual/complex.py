@@ -293,6 +293,16 @@ class Cylinder(Visual):
 
 # ------------------------------------------------------------------------------
 class Cross(Visual):
+    """A fixation cross in the center of the screen
+
+    args
+    ----
+    zoom: float
+        size of the cross
+    color: ColorType
+        the desired color
+
+    """
 
     def __init__(self, zoom=1, color='white'):
         self.color = get_color(color)
@@ -326,8 +336,21 @@ class Cross(Visual):
 
 
 class Trapezoid(Visual):
+    """A trapezoid spanned between four nodes
 
-    def __init__(self, xpos=(-.33, -.25, .25, .33), ypos=(-.25, .25), color='white'):
+    args
+    ----
+    xpos: Tuple[float, float, float, float]
+        a tuple of x coordinates of the nodes
+    ypos: Tuple[float, float]
+        a tuple of y coordinates of the nodes
+        the first entry is the ypos of the first two xpos
+    color: ColorType
+        the desired color
+    """
+
+    def __init__(self, xpos=(-.33, -.25, .25, .33),
+                 ypos=(-.25, .25), color='white'):
         self.xpos = xpos
         self.ypos = ypos
         self.color = get_color(color)
@@ -358,8 +381,21 @@ class Trapezoid(Visual):
 
 
 class Image(Visual):
+    """Show an image loaded from a file
 
-    def __init__(self, imgpath: str, position: Tuple[float, float] = (0, 0), scale=.5):
+    args
+    ----
+    imgpath:str
+        path to the imagefile
+    position:XY
+        x-y-coordinate of the center of the image
+    scale:float
+        size of the figure relative to the screen size
+    """
+
+    def __init__(self, imgpath: str,
+                 position: Tuple[float, float] = (0, 0),
+                 scale: float = .5):
         self.imgpath = imgpath
         self.img = pyglet.image.load(imgpath)
         self.scale = scale
