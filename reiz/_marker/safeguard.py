@@ -4,7 +4,7 @@ Throw-away MarkerServer
 
 
 """
-from reiz.marker.mitm import Server
+from reiz._marker.mitm import Server
 from logging import getLogger
 logger = getLogger("throw-away-marker-server")
 

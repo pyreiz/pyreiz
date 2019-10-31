@@ -18,8 +18,8 @@ run from terminal with
 
 import sys
 import time
-from reiz.marker.mitm import Server
-from reiz.marker.client import available
+from reiz._marker.mitm import Server
+from reiz._marker.client import available
 import argparse
 import multiprocessing
 

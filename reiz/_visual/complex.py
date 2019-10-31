@@ -4,11 +4,11 @@ High-level api to create complex shapes and murals
 ..................................................
 
 """
-from reiz.visual.colors import get_color, ColorType
+from reiz._visual.colors import get_color, ColorType
 import pyglet
-from reiz.visual._primitives import Polygon as _Polygon
-from reiz.visual._primitives import Circle as _Circle
-from reiz.visual._primitives import Line as _Line
+from reiz._visual._primitives import Polygon as _Polygon
+from reiz._visual._primitives import Circle as _Circle
+from reiz._visual._primitives import Line as _Line
 from typing import Tuple, NewType, List
 # : Tuple[float, float], x-y coordinates scaled from -1 to 1 with 0 indicating the center of the screen
 XY = NewType("XY", Tuple[float, float])
