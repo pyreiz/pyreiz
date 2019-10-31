@@ -1,11 +1,25 @@
 # -*- coding: utf-8 -*-
-"""
-standalone
+"""standalone MarkerServer
+
+run from terminal with
+.. codeblock:: bash
+    usage: reiz-marker [-h] [--port PORT] [--host HOST] [--name NAME] [--ping]
+
+    Reiz Marker Server
+
+    optional arguments:
+    -h, --help   show this help message and exit
+    --port PORT  Marker Server port.
+    --host HOST  Marker Server host ip.
+    --name NAME  Marker Server name.
+    --ping       test connection to Markerserver
+
 """
 
 import sys
 import time
-from reiz.marker.soft import Server, available
+from reiz.marker.mitm import Server
+from reiz.marker.client import available
 import argparse
 import multiprocessing
 

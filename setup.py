@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='Reiz',
-    version='0.2.0',
+    version='0.3.0',
     description='Toolbox for visual and auditory stimulation.',
     long_description='A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.',
     author='Robert Guggenberger',

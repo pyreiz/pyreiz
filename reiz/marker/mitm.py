@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-LSL based software markers
+Man-in-the-middle
+-----------------
+
+Allows to to manage multiple experiments publishing through one LSL-Outlet and
+to create the Outlet independently from starting the experiments to improve
+detectability and stability for subscribers (e.g. LabRecorder).
+
+Functions and Classes
+.....................
 """
 
 import pylsl
@@ -9,10 +17,11 @@ import queue
 import time
 import socket
 import json
+from reiz.marker.client import available
 # %%
 
 
-class Outlet():
+class _Outlet():
     "LSL based marker outlet as a singleton, to prevent name-stealing"
     instance = dict()
     @classmethod
@@ -31,7 +40,7 @@ class Outlet():
         return outlet
 
 
-class MarkerStreamer(threading.Thread):
+class _MarkerStreamer(threading.Thread):
 
     def __init__(self, name: str = None):
         threading.Thread.__init__(self)
@@ -52,7 +61,7 @@ class MarkerStreamer(threading.Thread):
         self.is_running.clear()
 
     def run(self):
-        self.outlet = Outlet.get(name=self.name)
+        self.outlet = _Outlet.get(name=self.name)
         self.is_running.set()
         while self.is_running.is_set():
             try:
@@ -67,8 +76,9 @@ class MarkerStreamer(threading.Thread):
 # %%
 
 
-def myip():
-    """returns the computers default IP address"""
+def myip() -> str:
+    """returns a string with the computers default IP address
+    """
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     ip = s.getsockname()[0]
@@ -76,108 +86,8 @@ def myip():
     return ip
 
 
-translation = str.maketrans({'ä': 'ae', 'ö': 'oe', 'ü': 'ue', ' ': '_'})
-
-
-def sanitize_string(marker: str):
-    return marker.lower().strip().translate(translation)
-
-
-def test_connection(port: int = 7654):
-    print("test-connection is deprecated. use available instead")
-    return available(port=port)
-
-
-def available(port: int = 7654, host: str = "127.0.0.1", verbose=True):
-    """test whether a markerserver is already available at port
-
-    args
-    ----
-
-    host: str 
-        the ip of the markerserver (defaults to localhost)
-
-    port: int
-        the port number of the markerserver (defaults to 7654)
-
-    returns:
-
-    status:bool
-        True if available, False if not
-    """
-    c = Client(host=host, port=port)
-    try:
-        c.push('None', pylsl.local_clock())
-        return True
-    except ConnectionRefusedError as e:
-        if verbose:
-            print(e)
-            print(f'Markerserver at {host}:{port} is not available')
-        return False
-
-
-def ping_connection(port: int = 7654):
-    print("ping-connection is deprecated. use available instead")
-    c = Client(port=port, verbose=False)
-    try:
-        c.push('None', pylsl.local_clock())
-        return True
-    except Exception:
-        return False
-
-
-def push(marker: str = '', tstamp: float = None,
-         sanitize=True, port: int = 7654):
-    if tstamp is None:
-        tstamp = pylsl.local_clock()
-    if sanitize:
-        marker = sanitize_string(marker)
-    c = Client(port=port)
-    c.push(marker, tstamp)
-
-
-def push_locals(marker: object = {'key': 'value'}, tstamp: float = None, sanitize=False):
-    push(json.dumps(marker), tstamp, sanitize)
-
-
-def push_json(marker: object = {'key': 'value'}, tstamp: float = None):
-    push(json.dumps(marker), tstamp, sanitize=False)
-
-
-class Client():
-
-    def __init__(self, host="127.0.0.1", port: int = 7654, verbose=True):
-        self.host = host
-        self.port = port
-        self.verbose = verbose
-
-    def push(self, marker: str = '', tstamp: float = None):
-        'connects, sends a message, and close the connection'
-        self.connect()
-        self.write(marker, tstamp)
-        self.close()
-
-    def connect(self):
-        'connect wth the remote server'
-        self.interface = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.interface.connect((self.host, self.port))
-        self.interface.settimeout(1)
-
-    def write(self, marker, tstamp):
-        'encode message into ascii and send all bytes'
-        msg = json.dumps((marker, tstamp)).encode('ascii')
-        if self.verbose:
-            print(f'Sending {marker} at {tstamp}')
-        self.interface.sendall(msg)
-
-    def close(self):
-        'closes the connection'
-        self.interface.shutdown(1)
-        self.interface.close()
-
-
 # -----------------------------------------------------------------------------
-def read_msg(client):
+def _read_msg(client):
     'receive byte for byte to read the header telling the message length'
     # parse the message until it is a valid json
     msg = bytearray(b' ')
@@ -201,8 +111,10 @@ def read_msg(client):
 class Server(threading.Thread):
     """Main class to manage the LSL-MarkerStream as man-in-the-middle
 
-    when started, it automatically checks whether there is already a MarkerServer running at that port. If this is the case, it returns and lets the old one keep control. This ensures that possible subscribes to the old 
-    MarkerServer don't experience any hiccups.
+    when started, it automatically checks whether there is already a MarkerServer
+    running at that port. If this is the case, it returns and lets the old one 
+    keep control. This ensures that subscribers to the old MarkerServer
+    don't experience any hiccups.
     """
 
     def __init__(self, port: int = 7654, name='reiz_marker_sa',
@@ -216,10 +128,13 @@ class Server(threading.Thread):
         self.verbose = verbose
 
     def stop(self):
+        'stop the server'
         self.is_running.clear()
 
     def run(self):
-        'wait for clients to connect and send messages'
+        """wait for clients to connect and send messages. 
+
+        This is a Thread, so start with :meth:`server.start` """
 
         # we check whether there is already an instance running, and if so
         # let it keep control by returning
@@ -235,7 +150,7 @@ class Server(threading.Thread):
                 print("This server is the original instance")
 
         # create the MarkerStreamer, i.e. the LSL-Server that distributes the strings received from the Listener
-        markerstreamer = MarkerStreamer(name=self.name)
+        markerstreamer = _MarkerStreamer(name=self.name)
         markerstreamer.start()
         # create the ListenerServer, i.e. the TCP/IP Server that waits for messages for forwarding them to the MarkerStreamer
         listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -251,7 +166,7 @@ class Server(threading.Thread):
             try:
                 client, address = listener.accept()
                 try:
-                    marker, tstamp = read_msg(client)
+                    marker, tstamp = _read_msg(client)
                     if marker == "None":  # connected was only tested
                         print("Received ping from", address)
                     else:
@@ -268,4 +183,4 @@ class Server(threading.Thread):
 
 
 if __name__ == "__main__":
-    start()
+    pass
