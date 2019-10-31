@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='Reiz',
-    version='0.0.1',
+    version='0.2.0',
     description='Toolbox for visual and auditory stimulation.',
     long_description='A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.',
     author='Robert Guggenberger',
@@ -12,7 +12,7 @@ setup(
     download_url='https://github.com/translationalneurosurgery/StimulationFramework/',
     license='MIT',
     packages=['reiz'],
-    install_requires=['pyglet>=1.3.2', "pylsl>=1.13"],
+    install_requires=['pyglet==1.3', "pylsl>=1.13"],
     entry_points={"console_scripts":
                   ["reiz-marker=reiz.marker.__main__:main"]},
     classifiers=[
