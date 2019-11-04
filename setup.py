@@ -1,9 +1,10 @@
 from distutils.core import setup
-
+import os
+__VERSION__ = os.popen("git describe").read().strip()
 
 setup(
     name='Reiz',
-    version='0.3.0',
+    version=__VERSION__,
     description='Toolbox for visual and auditory stimulation.',
     long_description='A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.',
     author='Robert Guggenberger',
@@ -30,5 +31,5 @@ setup(
         'Topic :: Scientific/Engineering :: Human Machine Interfaces',
         'Topic :: Scientific/Engineering :: Medical Science Apps.',
         'Topic :: Software Development :: Libraries',
-        ]
+    ]
 )
