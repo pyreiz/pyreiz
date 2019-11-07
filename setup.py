@@ -13,7 +13,6 @@ setup(
     download_url='https://github.com/translationalneurosurgery/StimulationFramework/',
     license='MIT',
     packages=['reiz'],
-    install_requires=['pyglet>=1.4', "pylsl>=1.13"],
     entry_points={"console_scripts":
                   ["reiz-marker=reiz.marker.__main__:main"]},
     classifiers=[
