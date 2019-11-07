@@ -5,3 +5,6 @@ reiz/visual/__pycache__/*
 .pytest_*cache*
 .vscode
 *mypy_cache*
+MANIFEST
+build/*
+dist/*

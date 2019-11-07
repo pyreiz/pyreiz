@@ -1,10 +1,11 @@
+import setuptools
 from distutils.core import setup
 import os
-__VERSION__ = os.popen("git describe").read().strip()
+__VERSION__ = os.popen("git describe ----abbrev=0").read().strip()
 
 setup(
     name='Reiz',
-    version=__VERSION__,
+    version="v0.3.1",
     description='Toolbox for visual and auditory stimulation.',
     long_description='A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.',
     author='Robert Guggenberger',
