@@ -10,8 +10,8 @@ setup(
     long_description='A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.',
     author='Robert Guggenberger',
     author_email='robert.guggenberger@uni-tuebingen.de',
-    url='https://github.com/translationalneurosurgery/StimulationFramework/',
-    download_url='https://github.com/translationalneurosurgery/StimulationFramework/',
+    url='https://github.com/pyreiz/pyreiz',
+    download_url='https://github.com/pyreiz/pyreiz.git',
     license='MIT',
     packages=['reiz'],
     entry_points={"console_scripts":
