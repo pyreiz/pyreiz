@@ -20,7 +20,8 @@ hello = reiz.Cue(canvas,
 
 # there is also a library of typical auditory and visual stimuli
 los = reiz.Cue(canvas,
-               audiostim=reiz.audio.library.los_laut,
+               # audiostim=reiz.audio.library.los_laut,
+               audiostim=reiz.audio.library.start,
                visualstim=reiz.visual.library.los,
                markerstr=reiz.visual.library.los.text)
 
@@ -37,9 +38,11 @@ shape = reiz.Cue(canvas,
 
 # we can also use an iterable for the visual stimuli, and they are overlayed
 # from left to right
-overlay = reiz.Cue(canvas, visualstim=[reiz.visual.library.lablogo,
+overlay = reiz.Cue(canvas, visualstim=[reiz.visual.Mural('Good Bye',
+                                                         fontsize=1),
                                        reiz.visual.Mural('Good Bye',
-                                                         position=(0, -.5))],
+                                                         fontsize=.99, color="red"),
+                                       ],
                    markerstr='Overlayed')
 
 # we create a named variable for a visual stimulus to allow later updating

@@ -1,60 +1,80 @@
+import os
 from os import environ as _env
 from reiz._visual.complex import Mural, Image, Cross, Circle, Background, Line, Bar
 from reiz._visual.complex import Polygon, Trapezoid, Cylinder
+from types import SimpleNamespace
+from typing import Dict
+from pathlib import Path
+
+_defaults = {"Murals": {
+    "post": {"text": "Run endet"},
+    "pre": {"text": "Run beginnt"},
+    "eo": {"text": "Augen offen"},
+    "ec": {"text": "Augen zu"},
+    "ready": {"text": "Bereit machen"},
+    "los": {"text": "Los"},
+    "imagine": {"text": "Bewegung vorstellen"},
+    "move": {"text": "Bewegung starten"},
+    "count": {"text": "Zahlen berechnen"},
+    "relax": {"text": "Entspannen"},
+    "rating": {"text": "0 - 1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 - 10", "fontsize": 0.75}
+},
+    "Cross": {
+    "fixation": {"color": "white"}
+},
+
+}
 
 
-def __get_path():
-    import os
-    LIBPATH = os.path.dirname(os.path.realpath(__file__))
-    LIBPATH = LIBPATH.split(os.path.sep + 'visual')[0]
-    MEDIAPATH = os.path.join(LIBPATH, 'media')
-    return os.path.join(MEDIAPATH, 'img')
-
-
-PATH = __get_path()
-# %%
-
-
-def make_library(path=None):
-    'create a library of visual stimuli from path'
-    if path is None:
-        path = PATH
+def make_library(settings: Dict = _defaults) -> SimpleNamespace:
+    'create a library of visual stimuli from a dict'
     library = dict()
-    from types import SimpleNamespace
-    import os
-    for f in os.listdir(path):
-        key, ext = os.path.splitext(f)
-        if ext == '.ini':
-            import configparser
-            import json
-            ini = configparser.ConfigParser()
-            ini.read(os.path.join(path, f))
-            sections = ini.sections()
-            if 'Murals' in sections:
-                opts = ini.options('Murals')
-                for o in opts:
-                    val = ini.get('Murals', o)
-                    library[o] = Mural(**json.loads(val))
+    for key in settings.keys():
+        for name, args in settings[key].items():
+            if key.lower() == "murals":
+                library[name] = Mural(**args)
+            elif key.lower() == "cross":
+                library[name] = Cross(**args)
+            elif key.lower() == "image":
+                library[key] = Image(**args)
 
-            if 'Cross' in sections:
-                opts = ini.options('Cross')
-                for o in opts:
-                    val = ini.get('Cross', o)
-                    library[o] = Cross(**json.loads(val))
-
-        else:
-            val = Image(os.path.join(path, f))
-            key = key.replace("(", "")
-            key = key.replace(")", "")
-            key = key.replace(" ", "_")
-            key = key.replace("-", "_")
-            key = key.strip()
-        library[key] = val
     library = SimpleNamespace(**library)
     return library
 
 
-if not 'DOC' in _env.keys():
-    library = make_library()
-else:
-    print("Generating sphinx documentation. Skipping visual library")
+def read_settings(path: Path = None) -> Dict:
+    'create settings-dict for library of visual stimuli from an ini-file'
+    import configparser
+    import json
+
+    if path is None or not path.exists():
+        raise ValueError(f"{path} not found")
+
+    ini = configparser.ConfigParser()
+    ini.read(os.path.join(path, f))
+    d = dict()
+    for s in ini.sections():
+        d[s] = dict()
+        for k, v in ini.items(s):
+            try:
+                d[s][k] = int(v)
+                continue
+            except ValueError:
+                pass
+            try:
+                d[s][k] = json.loads(v)
+                continue
+            except json.JSONDecodeError:
+                pass
+            try:
+                d[s][k] = str2list(v)
+                continue
+            except Exception as e:
+                raise e
+
+        return d
+
+    return d
+
+
+library = make_library()

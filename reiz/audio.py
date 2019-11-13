@@ -3,27 +3,38 @@ API to auditory stimuli
 """
 from os import environ as _env
 from reiz._audio.primitives import AudioFile, Hertz
+from reiz._audio.tts import Message
+from pathlib import Path
+from typing import Dict
+from types import SimpleNamespace
+
+_defaults = {"Message":
+             {"start": {"message": "start"}},
+             "Hertz":
+             {"beep": {"duration_in_ms": 1000}},
+             }
 
 
-def __get_path():
-    import os
-    LIBPATH = os.path.dirname(os.path.realpath(__file__))
-    LIBPATH = LIBPATH.split(os.path.sep + 'audio')[0]
-    MEDIAPATH = os.path.join(LIBPATH, 'media')
-    return os.path.join(MEDIAPATH, 'wav')
+def make_library(settings: Dict = _defaults) -> SimpleNamespace:
+    lib = dict()
+    for key in settings.keys():
+        for name, args in settings[key].items():
+            if key.lower() == "audiofile":
+                lib[name] = AudioFile(**args)
+            elif key.lower() == "message":
+                lib[name] = Message(**args)
+            elif key.lower() == "hertz":
+                lib[name] = Hertz(**args)
+    lib = SimpleNamespace(**lib)
+    print(lib)
+    return lib
 
 
-PATH = __get_path()
-
-# %%
-
-
-def make_library(path=None):
+def read_folder(path: Path = None) -> Dict:
     'create an audio library from path'
-    if path is None:
-        path = PATH
+    if path is None or not path.exists():
+        raise ValueError(f"{path} not found")
     library = dict()
-    from types import SimpleNamespace
     import os
     for f in os.listdir(path):
         key = os.path.splitext(f)[0]
@@ -38,7 +49,4 @@ def make_library(path=None):
     return library
 
 
-if not 'DOC' in _env.keys():
-    library = make_library()
-else:
-    print("Generating sphinx documentation. Skipping audo library")
+library = make_library(_defaults)
