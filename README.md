@@ -9,23 +9,27 @@ The [requirements](#requirements) for pyReiz are pyglet and pylsl. They are chec
 ### Windows
 
 ```
-git clone https://github.com/pyreiz/pyreiz.git
-cd pyreiz
-pip install -e .
+pip install Reiz
 ```
 
 ### Linux
 
-The most recent version of pylsl is not yet on pip, therefore install libsl and pylsl manually. You can download a recent build of liblsl from <https://github.com/sccn/liblsl/releases>. Afterwards,
+The most recent version of pylsl is not yet on pypi. A solution is to install libsl manually. You download a recent build of liblsl from <https://github.com/sccn/liblsl/releases>. Afterwards, install pylsl directly from github.
 
 ```
 pip install git+https://github.com/labstreaminglayer/liblsl-Python.git
+pip install Reiz
+```
+
+## Development
+
+```
 git clone https://github.com/pyreiz/pyreiz.git
 cd pyreiz
 pip install -e .
 ```
 
-#### Test your installation
+### Test your installation
 
 After you installed Reiz, you can give it a test-run by calling `python -m reiz.examples.basic` from your terminal. This should start a throwaway MarkerServer, and present a series of visual and auditory stimuli. If anything does not work out, [inform us of the issue](https://github.com/pyreiz/pyreiz/issues).
 
