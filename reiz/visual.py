@@ -5,24 +5,29 @@ from reiz._visual.complex import Polygon, Trapezoid, Cylinder
 from types import SimpleNamespace
 from typing import Dict
 from pathlib import Path
-
-_defaults = {"Murals": {
-    "post": {"text": "Run endet"},
-    "pre": {"text": "Run beginnt"},
-    "eo": {"text": "Augen offen"},
-    "ec": {"text": "Augen zu"},
-    "ready": {"text": "Bereit machen"},
-    "los": {"text": "Los"},
-    "go": {"text": "Go!"},
-    "imagine": {"text": "Bewegung vorstellen"},
-    "move": {"text": "Bewegung starten"},
-    "count": {"text": "Zahlen berechnen"},
-    "relax": {"text": "Entspannen"},
-    "rating": {"text": "0 - 1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 - 10", "fontsize": 0.75}
-},
+rootfolder = Path(__file__).absolute().parent.parent
+_defaults = {
+    "Murals": {
+        "post": {"text": "Run endet"},
+        "pre": {"text": "Run beginnt"},
+        "eo": {"text": "Augen offen"},
+        "ec": {"text": "Augen zu"},
+        "ready": {"text": "Bereit machen"},
+        "los": {"text": "Los"},
+        "go": {"text": "Go!"},
+        "imagine": {"text": "Bewegung vorstellen"},
+        "move": {"text": "Bewegung starten"},
+        "count": {"text": "Zahlen berechnen"},
+        "relax": {"text": "Entspannen"},
+        "rating": {"text": "0 - 1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 - 10", "fontsize": 0.75},
+    },
     "Cross": {
-    "fixation": {"color": "white"}
-},
+        "fixation": {"color": "white"},
+    },
+
+    "Image": {
+        "logo": {"imgpath": rootfolder / "media" / "logo.png"},
+    }
 
 }
 
@@ -37,8 +42,8 @@ def make_library(settings: Dict = _defaults) -> SimpleNamespace:
             elif key.lower() == "cross":
                 library[name] = Cross(**args)
             elif key.lower() == "image":
-                library[key] = Image(**args)
-
+                library[name] = Image(**args)
+    print(library)
     library = SimpleNamespace(**library)
     return library
 

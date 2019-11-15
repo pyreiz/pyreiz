@@ -1,8 +1,6 @@
 import setuptools
 from distutils.core import setup
-import os
-__VERSION__ = os.popen("git describe ----abbrev=0").read().strip()
-# read the contents of your README file
+# read the contents of README.md
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
@@ -11,7 +9,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='Reiz',
-    version="v0.3.2a",
+    version="v0.3.2post0",
     description='A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -20,6 +18,7 @@ setup(
     url='https://github.com/pyreiz/pyreiz',
     download_url='https://github.com/pyreiz/pyreiz.git',
     license='MIT',
+    include_package_data=True,
     packages=setuptools.find_packages(),
     install_requires=[
         'pyglet>=1.4.7',

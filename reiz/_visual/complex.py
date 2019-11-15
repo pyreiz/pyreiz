@@ -6,6 +6,7 @@ High-level api to create complex shapes and murals
 """
 from reiz._visual.colors import get_color, ColorType
 import pyglet
+from pathlib import Path
 from reiz._visual._primitives import Polygon as _Polygon
 from reiz._visual._primitives import Circle as _Circle
 from reiz._visual._primitives import Line as _Line
@@ -396,7 +397,7 @@ class Image(Visual):
     def __init__(self, imgpath: str,
                  position: Tuple[float, float] = (0, 0),
                  scale: float = .5):
-        self.imgpath = imgpath
+        self.imgpath = str(Path(imgpath).expanduser().absolute())
         self.img = pyglet.image.load(imgpath)
         self.scale = scale
         self.pos = position
