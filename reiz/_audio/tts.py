@@ -13,41 +13,21 @@ import time
 import pyglet.media
 
 
-class Espeak_Mixin(object):
-
-    def __init__(self, message: str = "Hallo Welt und Goodbye",
-                 rate: int = 135,
-                 gender="f",
-                 language="de"):
-        self.message = message
-        if gender.lower() not in ["m", "f"]:
-            raise ValueError("Gender must be (m)ale or (f)emale")
-
-        from subprocess import run
-        from tempfile import NamedTemporaryFile
-        with NamedTemporaryFile(suffix=".wav") as f:
-            run(["espeak", f"\"{message}\""
-                 "-s", str(rate),
-                 f"-v{language.lower()}+{gender.lower()}1",
-                 # increase  pitch for words which begin a capital letter.
-                 "-k10",
-                 "-g2",
-                 "-w", f.name])
-            self.source = pyglet.media.load(f.name, streaming=False)
-
-
 class PlatformIndependentMessage():
-    """instantiate a generic sound object
+    """instantiate a tts sound object
 
     args
     ----
     message: str
         the content of the message, e.g. "Hello World"
-
+    voiceid:int
+        the id of the voice
+    rate:int
+        the speed of the Utterance
     """
 
     def __init__(self, message: str = "Hello World",
-                 rate=135, voiceid=0):
+                 rate=135, voiceid=0,):
         self.engine = pyttsx3.init()
         self.engine.setProperty('rate', rate)
         voices = self.engine.getProperty('voices')
@@ -99,3 +79,42 @@ class PlatformIndependentMessage():
 
     def __repr__(self):
         return f"{self.__class__} {str(self.message)}"
+
+
+class Espeak_Mixin(object):
+
+    def __init__(self, message: str = "Hallo Welt und Goodbye",
+                 rate: int = 135,
+                 gender="f",
+                 language="de"):
+        self.message = message
+        if gender.lower() not in ["m", "f"]:
+            raise ValueError("Gender must be (m)ale or (f)emale")
+
+        from subprocess import run
+        from tempfile import NamedTemporaryFile
+        with NamedTemporaryFile(suffix=".wav") as f:
+            run(["espeak", f"\"{message}\""
+                 "-s", str(rate),
+                 f"-v{language.lower()}+{gender.lower()}1",
+                 # increase  pitch for words which begin a capital letter.
+                 "-k10",
+                 "-g2",
+                 "-w", f.name])
+            self.source = pyglet.media.load(f.name, streaming=False)
+
+
+class gTTS_Mixin():
+
+    def __init__(self, message: str = "Google says",
+                 gender="f",
+                 language="de"):
+        self.message = message
+        from gtts import gTTS
+        from tempfile import NamedTemporaryFile
+        from subprocess import run
+        with NamedTemporaryFile(suffix=".wav") as f:
+            tts = gTTS(message, lang=language)
+            tts.save(f.name)
+            run(["ffmpeg", "-i", f.name, f.name, "-y"])
+            self.source = pyglet.media.load(f.name, streaming=False)

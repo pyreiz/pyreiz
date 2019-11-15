@@ -40,8 +40,7 @@ shape = reiz.Cue(canvas,
 
 # we can also use an iterable for the visual stimuli, and they are overlayed
 # from left to right
-farewell = reiz.audio.Message("Auf Wiedersehen!",
-                              language="de")
+farewell = reiz.audio.Message("Auf Wiedersehen!")
 overlay = reiz.Cue(canvas,
                    audiostim=farewell,
                    visualstim=[reiz.visual.Mural('Good Bye',

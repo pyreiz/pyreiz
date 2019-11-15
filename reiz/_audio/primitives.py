@@ -2,6 +2,7 @@
 """Building blocks for auditory stimuli
 """
 
+from .tts import PlatformIndependentMessage as Message
 from sys import platform
 from threading import Timer
 import time
@@ -107,15 +108,17 @@ class AudioFile(Sound):
         self.source = pyglet.media.load(filepath, streaming=False)
 
 
-# Text-to-speech depends on the platform
-if platform == "linux":
-    from .tts import Espeak_Mixin
+# # Text-to-speech depends on the platform
+# if platform == "linux":
+#     from .tts import Espeak_Mixin
 
-    class Message(Espeak_Mixin, Sound):
-        pass
+#     class Message(Espeak_Mixin, Sound):
+#         pass
 
+# elif platform == 'win32':
+#     from .tts import PlatformIndependentMessage as Message
+# else:
+#     from .tts import gTTS_Mixin
 
-elif platform == 'win32':
-    from .tts import PlatformIndependentMessage as Message
-else:
-    raise NotImplementedError()
+#     class Message(gTTS_Mixin, Sound):
+#         pass
