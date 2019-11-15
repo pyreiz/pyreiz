@@ -2,36 +2,26 @@
 """Building blocks for auditory stimuli
 """
 
-import pyglet
-from pyglet.media.synthesis import ADSREnvelope, Sine
-import time
+from sys import platform
 from threading import Timer
+import time
 from pyglet.media.codecs.base import StaticSource
+from pyglet.media.synthesis import ADSREnvelope, Sine
+import pyglet
+
 # %%
 
 
 class Sound():
-    """instantiate a generic sound object
-
-    args
-    ----
-    source: StaticSource
-        the source of the sound. Usually you instantiate one of the
-        inheriting objects, e.g. :class:`~.AudioFile` or :class`~.Hertz` 
-        which allow more parameters.
-
-    """
-
-    def __init__(self, source: StaticSource = None):
-
-        self.source = source
+    """interface for a generic sound object"""
+    source = None
 
     def play(self):
         """start playing the sound and return immediatly
 
         returns
         -------
-        remainder:float
+        remainder: float
             seconds until the sound would be finished playing
         """
         t0 = time.time()
@@ -45,10 +35,10 @@ class Sound():
 
         returns
         -------
-        remainder:float
+        remainder: float
             seconds until the sound would finish playing. Naturally, it always
-            returns 0. The output is kept here to allow easy substitution with 
-            :func:`Sound.play`
+            returns 0. The output is kept here to allow easy substitution with
+            : func: `Sound.play`
         """
         rest = self.play()
         t0 = time.time()
@@ -65,16 +55,31 @@ class Sound():
         return str(self.source)
 
 
+class AnySource(Sound):
+    """
+    args
+    ----
+    source: StaticSource
+        the source of the sound. Usually you instantiate one of the
+        inheriting objects, e.g. :class:`~.AudioFile` or :class`~.Hertz`
+        which allow more parameters.
+
+    """
+
+    def __init__(self, source: StaticSource = None):
+        self.source = source
+
+
 class Hertz(Sound):
     """instantiate a sine wave with ramp-up and ramp-down period of volume
 
     args
     ----
-    duration_in_ms:float
+    duration_in_ms: float
         duration of the sound in ms
     frequency: int
         frequency in Hz
-    volume:float
+    volume: float
         relative volume
     """
 
@@ -100,3 +105,17 @@ class AudioFile(Sound):
 
     def __init__(self, filepath: str):
         self.source = pyglet.media.load(filepath, streaming=False)
+
+
+# Text-to-speech depends on the platform
+if platform == "linux":
+    from .tts import Espeak_Mixin
+
+    class Message(Espeak_Mixin, Sound):
+        pass
+
+
+elif platform == 'win32':
+    from .tts import PlatformIndependentMessage as Message
+else:
+    raise NotImplementedError()

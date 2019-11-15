@@ -2,8 +2,7 @@
 API to auditory stimuli
 """
 from os import environ as _env
-from reiz._audio.primitives import AudioFile, Hertz
-from reiz._audio.tts import Message
+from reiz._audio.primitives import AudioFile, Hertz, Message
 from pathlib import Path
 from typing import Dict
 from types import SimpleNamespace
@@ -26,7 +25,6 @@ def make_library(settings: Dict = _defaults) -> SimpleNamespace:
             elif key.lower() == "hertz":
                 lib[name] = Hertz(**args)
     lib = SimpleNamespace(**lib)
-    print(lib)
     return lib
 
 

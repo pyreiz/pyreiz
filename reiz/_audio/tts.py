@@ -10,9 +10,33 @@ import pyttsx3
 from typing import Callable
 from threading import Thread
 import time
+import pyglet.media
 
 
-class Message():
+class Espeak_Mixin(object):
+
+    def __init__(self, message: str = "Hallo Welt und Goodbye",
+                 rate: int = 135,
+                 gender="f",
+                 language="de"):
+        self.message = message
+        if gender.lower() not in ["m", "f"]:
+            raise ValueError("Gender must be (m)ale or (f)emale")
+
+        from subprocess import run
+        from tempfile import NamedTemporaryFile
+        with NamedTemporaryFile(suffix=".wav") as f:
+            run(["espeak", f"\"{message}\""
+                 "-s", str(rate),
+                 f"-v{language.lower()}+{gender.lower()}1",
+                 # increase  pitch for words which begin a capital letter.
+                 "-k10",
+                 "-g2",
+                 "-w", f.name])
+            self.source = pyglet.media.load(f.name, streaming=False)
+
+
+class PlatformIndependentMessage():
     """instantiate a generic sound object
 
     args

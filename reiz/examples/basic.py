@@ -14,16 +14,18 @@ canvas = reiz.Canvas()
 # auditory and visual stimuli, e.g. a tone (Hertz) or text (Mural)
 # and a markerstring to be send via LSL when .show() is called
 hello = reiz.Cue(canvas,
-                 audiostim=reiz.audio.Hertz(duration_in_ms=1000),
+                 audiostim=reiz.audio.Hertz(
+                     frequency=400, duration_in_ms=1000),
                  visualstim=reiz.visual.Mural('Hello World!'),
                  markerstr='hello')
 
-# there is also a library of typical auditory and visual stimuli
+# there is also a library of typical auditory and visual stimuli and
+# we can for example, take the visual "los" and the auditory "beep" stimuli
+# for convenience, we use the text of the go stimulus as marker message
 los = reiz.Cue(canvas,
-               # audiostim=reiz.audio.library.los_laut,
-               audiostim=reiz.audio.library.start,
-               visualstim=reiz.visual.library.los,
-               markerstr=reiz.visual.library.los.text)
+               audiostim=reiz.audio.library.beep,
+               visualstim=reiz.visual.library.go,
+               markerstr=reiz.visual.library.go.text)
 
 # here we show a fixation cross but don't want to play an auditory stimulus.
 # we can therefore either set it to None or just leave it out (defaults to None)
@@ -38,11 +40,15 @@ shape = reiz.Cue(canvas,
 
 # we can also use an iterable for the visual stimuli, and they are overlayed
 # from left to right
-overlay = reiz.Cue(canvas, visualstim=[reiz.visual.Mural('Good Bye',
-                                                         fontsize=1),
-                                       reiz.visual.Mural('Good Bye',
-                                                         fontsize=.99, color="red"),
-                                       ],
+farewell = reiz.audio.Message("Auf Wiedersehen!",
+                              language="de")
+overlay = reiz.Cue(canvas,
+                   audiostim=farewell,
+                   visualstim=[reiz.visual.Mural('Good Bye',
+                                                 fontsize=1),
+                               reiz.visual.Mural('Good Bye',
+                                                 fontsize=.99, color="red"),
+                               ],
                    markerstr='Overlayed')
 
 # we create a named variable for a visual stimulus to allow later updating
@@ -78,10 +84,12 @@ for i in range(0, 100, 1):
     # there might be a variable amount of time spend for calculation.
     # therefore, it is best practice to wait instead of sleep the remainder of
     # the time
-    while (time.time()-t0) < 0.05:
+    while (time.time()-t0) < 0.017:
         pass
 
-overlay.show(duration=2)
+
+# we present the cue as long as the audio is playing
+overlay.show(duration=farewell.duration)
 
 canvas.close()
 

@@ -13,6 +13,7 @@ _defaults = {"Murals": {
     "ec": {"text": "Augen zu"},
     "ready": {"text": "Bereit machen"},
     "los": {"text": "Los"},
+    "go": {"text": "Go!"},
     "imagine": {"text": "Bewegung vorstellen"},
     "move": {"text": "Bewegung starten"},
     "count": {"text": "Zahlen berechnen"},

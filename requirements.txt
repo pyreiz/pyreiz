@@ -1,2 +1,4 @@
-pyglet==1.4
-pylsl==1.13
+pyglet>=1.4.6
+pylsl>=1.13.2
+pyttsx3==2.71
+
