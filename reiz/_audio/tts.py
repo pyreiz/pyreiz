@@ -4,9 +4,9 @@ Created on Mon May 20 10:50:52 2019
 
 @author: Robert Guggenberger
 """
-
-# %%
 import pyttsx3
+from tempfile import NamedTemporaryFile
+from subprocess import run
 from typing import Callable
 from threading import Thread
 import time
@@ -27,7 +27,7 @@ class PlatformIndependentMessage():
     """
 
     def __init__(self, message: str = "Hello World",
-                 rate=135, voiceid=0,):
+                 rate=135, voiceid=0):
         self.engine = pyttsx3.init()
         self.engine.setProperty('rate', rate)
         voices = self.engine.getProperty('voices')
@@ -83,7 +83,7 @@ class PlatformIndependentMessage():
 
 class Espeak_Mixin(object):
 
-    def __init__(self, message: str = "Hallo Welt und Goodbye",
+    def __init__(self, message: str = "Espeak says",
                  rate: int = 135,
                  gender="f",
                  language="de"):
@@ -91,8 +91,6 @@ class Espeak_Mixin(object):
         if gender.lower() not in ["m", "f"]:
             raise ValueError("Gender must be (m)ale or (f)emale")
 
-        from subprocess import run
-        from tempfile import NamedTemporaryFile
         with NamedTemporaryFile(suffix=".wav") as f:
             run(["espeak", f"\"{message}\""
                  "-s", str(rate),
@@ -107,12 +105,16 @@ class Espeak_Mixin(object):
 class gTTS_Mixin():
 
     def __init__(self, message: str = "Google says",
-                 gender="f",
                  language="de"):
         self.message = message
-        from gtts import gTTS
-        from tempfile import NamedTemporaryFile
-        from subprocess import run
+        try:
+            from gtts import gTTS
+        except ImportError:
+            print("gTTS is not installed on your system. Default to silence")
+            from pyglet.media.synthesis import Silence
+            self.source = Silence(duration=0.1)
+            return
+
         with NamedTemporaryFile(suffix=".wav") as f:
             tts = gTTS(message, lang=language)
             tts.save(f.name)

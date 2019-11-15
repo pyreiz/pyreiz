@@ -22,7 +22,7 @@ setup(
     license='MIT',
     packages=setuptools.find_packages(),
     install_requires=[
-        'pyglet>=1.4.6',
+        'pyglet>=1.4.7',
         'pylsl>=1.13',
         'pyttsx3>=2.7',
     ],
