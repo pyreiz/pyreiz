@@ -1,20 +1,38 @@
+"""Creating and managing auditory stimuli
 """
-API to auditory stimuli
-"""
+from types import SimpleNamespace
 from os import environ as _env
 from reiz._audio.primitives import AudioFile, Hertz, Message
 from pathlib import Path
-from typing import Dict
-from types import SimpleNamespace
+from typing import Dict, NewType, Any
+libConf = NewType("libConf", Dict[str, Dict[str, Any]]
+                  )  #: Dict[str, Dict[str, Any], a dictionary of types and respective keywords arguments
 
-_defaults = {"Message":
-             {"start": {"message": "start"}},
-             "Hertz":
-             {"beep": {"duration_in_ms": 1000}},
-             }
+_defaults = libConf({
+    "Message": {
+        "start": {"message": "start"}
+    },
+    "Hertz": {
+        "beep": {"duration_in_ms": 1000}
+    },
+})  #: libConf
 
 
-def make_library(settings: Dict = _defaults) -> SimpleNamespace:
+def make_library(settings: libConf = _defaults) -> SimpleNamespace:
+    """create a library of auditory stimuli from a dictionary of arguments
+
+    args
+    ----
+    settings:
+        a dictionary of types with kwargs appropriate to the respective type
+        as dictionary
+
+    returns
+    -------
+
+    library:
+        a library of instances of stimuli which can be adressed in dot.notation
+    """
     lib = dict()
     for key in settings.keys():
         for name, args in settings[key].items():
@@ -50,4 +68,14 @@ def read_folder(path: Path = None) -> SimpleNamespace:
 if not 'DOC' in _env.keys():
     library = make_library()
 else:
-    print("Generating sphinx documentation. Skipping audio library")
+    mock = dict()
+    for t, item in _defaults.items():
+        for k, v in item.items():
+            mock[k] = t
+    library = SimpleNamespace(**mock)  #: a library of auditory stimuli
+    print("Generating sphinx documentation. Skipping visual library")
+
+
+__doc__ += f"""
+During import, a basic library will be created. By default, it contains
+the following set of auditory stimuli: {', '.join([str(k) for k in library.__dict__])}. These stimuli can be addressed by dot.notation from :data:`reiz.audio.library`, for example like :data:`reiz.audio.library.beep`"""
