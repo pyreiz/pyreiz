@@ -43,8 +43,10 @@ shape = reiz.Cue(canvas,
 farewell = reiz.audio.Message("Auf Wiedersehen!")
 overlay = reiz.Cue(canvas,
                    audiostim=farewell,
-                   visualstim=[reiz.visual.library.logo,                                   reiz.visual.Mural('Good Bye', fontsize=1),
-                               ],
+                   visualstim=[
+                       reiz.visual.library.logo,
+                       reiz.visual.Mural('Good Bye', fontsize=1),
+                   ],
                    markerstr='Overlayed')
 
 # we create a named variable for a visual stimulus to allow later updating

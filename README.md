@@ -1,7 +1,6 @@
 # Reiz
 
-pyReiz is a low-level auditory and visual stimulus presentation suite wrapping pyglet, sending markers via a pylsl outlet.
-You can find more [extensive documentation on readthedocs](https://pyreiz.readthedocs.io/en/latest/index.html).
+pyReiz is a low-level auditory and visual stimulus presentation suite wrapping pyglet, sending markers via a pylsl outlet. You can also read more [extensive documentation online](https://reiz.agricolab.de/index.html).
 
 ## Installation
 

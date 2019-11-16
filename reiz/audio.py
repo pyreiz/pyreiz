@@ -47,4 +47,7 @@ def read_folder(path: Path = None) -> SimpleNamespace:
     return library
 
 
-library = make_library(_defaults)
+if not 'DOC' in _env.keys():
+    library = make_library()
+else:
+    print("Generating sphinx documentation. Skipping audio library")

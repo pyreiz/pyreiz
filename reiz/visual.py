@@ -50,4 +50,7 @@ def make_library(settings: Dict = _defaults) -> SimpleNamespace:
     return library
 
 
-library = make_library()
+if not 'DOC' in _env.keys():
+    library = make_library()
+else:
+    print("Generating sphinx documentation. Skipping visual library")
