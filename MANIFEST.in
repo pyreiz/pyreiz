@@ -1,0 +1,3 @@
+graft reiz/data
+include *.png
+include license.txt
