@@ -9,7 +9,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='Reiz',
-    version="v0.3.2post0",
+    version="v0.3.3rc0",
     description='A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -19,11 +19,12 @@ setup(
     download_url='https://github.com/pyreiz/pyreiz.git',
     license='MIT',
     include_package_data=True,
+    package_data={'reiz': ['data/*.*']},
     packages=setuptools.find_packages(),
     install_requires=[
-        'pyglet>=1.4.7',
-        'pylsl>=1.13',
-        'pyttsx3>=2.7',
+        'pyglet >= 1.4.7',
+        'pylsl >= 1.13',
+        'pyttsx3 >= 2.7',
     ],
     entry_points={"console_scripts":
                   ["reiz-marker=reiz._marker.__main__:main"]},

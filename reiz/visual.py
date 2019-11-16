@@ -5,7 +5,7 @@ from reiz._visual.complex import Polygon, Trapezoid, Cylinder
 from types import SimpleNamespace
 from typing import Dict
 from pathlib import Path
-rootfolder = Path(__file__).absolute().parent.parent
+from pkg_resources import resource_filename
 _defaults = {
     "Murals": {
         "post": {"text": "Run endet"},
@@ -26,7 +26,7 @@ _defaults = {
     },
 
     "Image": {
-        "logo": {"imgpath": rootfolder / "media" / "logo.png"},
+        "logo": {"imgpath": resource_filename(__name__, 'data/logo.png')},
     }
 
 }
@@ -43,44 +43,11 @@ def make_library(settings: Dict = _defaults) -> SimpleNamespace:
                 library[name] = Cross(**args)
             elif key.lower() == "image":
                 library[name] = Image(**args)
-    print(library)
+            else:
+                raise ValueError(f"{key} with {args} can't be processed")
+
     library = SimpleNamespace(**library)
     return library
-
-
-def read_settings(path: Path = None) -> Dict:
-    'create settings-dict for library of visual stimuli from an ini-file'
-    import configparser
-    import json
-
-    if path is None or not path.exists():
-        raise ValueError(f"{path} not found")
-
-    ini = configparser.ConfigParser()
-    ini.read(os.path.join(path, f))
-    d = dict()
-    for s in ini.sections():
-        d[s] = dict()
-        for k, v in ini.items(s):
-            try:
-                d[s][k] = int(v)
-                continue
-            except ValueError:
-                pass
-            try:
-                d[s][k] = json.loads(v)
-                continue
-            except json.JSONDecodeError:
-                pass
-            try:
-                d[s][k] = str2list(v)
-                continue
-            except Exception as e:
-                raise e
-
-        return d
-
-    return d
 
 
 library = make_library()

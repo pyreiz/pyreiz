@@ -28,7 +28,7 @@ def make_library(settings: Dict = _defaults) -> SimpleNamespace:
     return lib
 
 
-def read_folder(path: Path = None) -> Dict:
+def read_folder(path: Path = None) -> SimpleNamespace:
     'create an audio library from path'
     if path is None or not path.exists():
         raise ValueError(f"{path} not found")

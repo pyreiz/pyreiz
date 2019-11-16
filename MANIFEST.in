@@ -1,3 +1,0 @@
-recursive-include ./ *.txt 
-recursive-include ./ *.md
-graft media
