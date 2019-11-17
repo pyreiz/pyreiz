@@ -33,23 +33,8 @@ class Clock():
 
         """
         ts = self.time()
-        delta_t = ts - self.last_ts
-        self.cumulative_time += delta_t
-        self.last_ts = ts
-        return delta_t
-
-    def pause(self):
-        """pass time as idle
-
-        returns
-        -------
-        delta_t: float
-            time passed in seconds since the last call of :meth:`~.tick` or
-            :meth:`~.pause`. This is time not being added to the cumulative time
-        """
-        ts = self.time()
-        delta_t = ts - self.last_ts
-        self.last_ts = ts
+        delta_t = ts - self.last_tick
+        self.last_tick = ts
         return delta_t
 
     def sleep(self, duration: float):
@@ -91,42 +76,42 @@ class Clock():
         Example
         -------
 
-        This examkle shows how we can regularize the time spent in each cycle to 200ms in spite of there being an element of random runtime  
+        This example shows how we can regularize the time spent in each cycle to 200ms in spite of there being an element of random runtime
 
         .. code-block:: python
 
             import time
             import random
+            from reiz.time import Clock
             clock = Clock()
-            clock.reset()
-            clock.tick()
+            t = 0.
+            msg = "{0:3.5f}, {1:3.5f}, {2:3.5f}, slept for {3:3.5f}s"
             for i in range(1, 11):
                 time.sleep(random.random()/10)
                 dt = clock.sleep_debiased(0.2)
-                print(i, clock.now(), dt)
-            print(i*.2, clock.now())
+                t += dt
+                print(msg.format(i*0.2, clock.now(), t, dt))
         """
         bias = self.tick()
-        dt = clock.sleep(duration - bias - self._error)
+        dt = self.sleep(duration - bias - self._error)
         self._error += dt + bias - duration
-       # self.tick()
-        return dt + bias
+        tick_bias = self.tick()-dt
+        self._error += tick_bias
+        return dt + bias + tick_bias
 
     def reset(self):
         """reset the clock
 
-        resets the counter keeping track of the cumulative time spend since the last call to :meth:`~.reset` to 0
+        resets the counter keeping track of the cumulative time spend since instantiaion or the last call of :meth:`~.reset`
         """
-        self.cumulative_time = 0
-        self.next_ts = self.last_ts = self.time()
+        self._t0 = self.last_tick = self.time()
 
     def now(self):
         """return the cumulative time passed since the last call of :meth:`reset`
 
         this cumulative time has ignored any time spent with :meth:`pause`.
         """
-        self.tick()
-        return self.cumulative_time
+        return self.time()-self._t0
 
 
 clock = Clock()  #: a default :class:`.Clock` instance ready for your experiment
