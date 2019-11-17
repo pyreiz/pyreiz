@@ -4,13 +4,14 @@ Created on Mon May 20 10:50:52 2019
 
 @author: Robert Guggenberger
 """
-import pyttsx3
 from tempfile import NamedTemporaryFile
 from subprocess import run
 from typing import Callable
 from threading import Thread
 import time
 import pyglet.media
+from sys import platform
+import importlib
 
 
 class PlatformIndependentMessage():
@@ -102,6 +103,16 @@ class Espeak_Mixin(object):
             self.source = pyglet.media.load(f.name, streaming=False)
 
 
+class Silent_Mixin(object):
+    def __init__(self, message: str = "Silence is golden",
+                 language="de"):
+        self.message = message
+        print("no TTS is installed on your system. Default to silence")
+        from pyglet.media.synthesis import Silence
+        self.source = Silence(duration=0.1)
+        return
+
+
 class gTTS_Mixin():
 
     def __init__(self, message: str = "Google says",
@@ -120,3 +131,17 @@ class gTTS_Mixin():
             tts.save(f.name)
             run(["ffmpeg", "-i", f.name, f.name, "-y"])
             self.source = pyglet.media.load(f.name, streaming=False)
+
+
+# conditional interface for Message
+
+if importlib.util.find_spec("pyttsx3") is not None:
+    import pyttsx3
+    tts_Mixin = PlatformIndependentMessage
+elif importlib.util.find_spec("gtts") is not None:
+    from gtts import gTTS
+    tts_Mixin = gTTS_Mixin
+elif platform == "linux":
+    tts_Mixin = Espeak_Mixin
+else:
+    tts_Mixin = Silent_Mixin
