@@ -1,6 +1,4 @@
 import reiz
-import time
-# %%
 
 # start the MarkerServer which distributes markerstrings over LSL
 reiz.marker.start()
@@ -8,6 +6,8 @@ reiz.marker.start()
 # create a window
 canvas = reiz.Canvas()
 
+# initialize a clock for timing control
+clock = reiz.Clock()
 # initialize Cues
 # each Cue reveices information about
 # the Window where it will be shown -> canvas
@@ -60,7 +60,7 @@ canvas.open()
 
 # we can either add a sleep function afterwards
 fix.show()
-time.sleep(1)
+clock.sleep(1)
 # or use the duration parameter. this has the advantage that the window stays
 # responsive under Win10 and can e.g. be moved around or resized
 hello.show(duration=1)
@@ -69,21 +69,31 @@ shape.show(duration=1)
 # we continually update the size of the visualstim of the cue
 # because the Cue has a reference to the dynamic_ball, it takes
 # over any changes
+clock.tick()
+# reset the clock to be able to debias sleep towards this time-point
 for i in range(0, 100, 1):
-    t0 = time.time()
+
     # we update the size of the ball
     dynamic_ball.zoom = i/20
     # and show it
     ball.show()
-    # if the show duration is slower than the framerate of your graphics card
-    # and screen, expect that not all frames can be drawn, i.e. some will be
-    # dropped. 60 Hz is ~16ms, so showing the Cue for 50ms  should be fine
+    # if the show duration is faster than the framerate of your graphics card
+    # and screen, expect that the update rate is only as fast as your hardware
+    # allows, i.e. with 60 Hz is ~16ms. Sleeping for longer than the minimum
+    # framerate ensures controlled calculation time, but frames are still
+    # refreshed according to the whims of your graphics card.
     # generally, when you use dynamic cues, e.g. for feedback, consider that
     # there might be a variable amount of time spend for calculation.
-    # therefore, it is best practice to wait instead of sleep the remainder of
-    # the time
-    while (time.time()-t0) < 0.017:
-        pass
+    # therefore, it is best practice to sleep controlling for this bias
+    # instead of simply sleep a fixed amount of time
+    clock.sleep_debiased(0.05)
+    # this is roughly equivalent to
+    # ```
+    # t0 = time.time()
+    # execute_task_with_random_runtime()
+    # while (time.time()-t0) < 0.05:
+    #     pass
+    # ```
 
 
 # we present the cue as long as the audio is playing

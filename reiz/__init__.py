@@ -8,7 +8,7 @@ import reiz.audio as audio
 import reiz.marker as marker
 from reiz.cue import Cue
 from reiz._visual._screen import Canvas
-from reiz.time import clock
+from reiz.time import clock, Clock
 
 if platform == 'linux':
     pyglet.options['audio'] = ('openal', 'pulse', 'directsound', 'silent')
