@@ -138,10 +138,10 @@ class gTTS_Mixin():
 if importlib.util.find_spec("pyttsx3") is not None:
     import pyttsx3
     tts_Mixin = PlatformIndependentMessage
-elif importlib.util.find_spec("gtts") is not None:
-    from gtts import gTTS
-    tts_Mixin = gTTS_Mixin
-elif platform == "linux":
-    tts_Mixin = Espeak_Mixin
+# elif importlib.util.find_spec("gtts") is not None:
+#     from gtts import gTTS
+#     tts_Mixin = gTTS_Mixin
+# elif platform == "linux":
+#     tts_Mixin = Espeak_Mixin
 else:
     tts_Mixin = Silent_Mixin

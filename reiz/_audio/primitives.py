@@ -109,4 +109,9 @@ class AudioFile(Sound):
 
 
 class Message(tts_Mixin, Sound):
+    """Text-to-Speech Audio Stimulus
+
+    If reiz was installed with `[tts]` as extra, this class will use pyttsx3
+    to generate auditory stimuli on demand. If pyttsx3 is not found, there will be only silence when creating an `audio.Message`.
+    """
     pass
