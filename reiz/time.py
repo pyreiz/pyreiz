@@ -62,7 +62,7 @@ class Clock():
     def sleep_debiased(self, duration: float):
         """Sleep for duration in seconds with attempts for debiasing`
 
-        sometimes, you execute some other commands, and these commands have a variable runtime. If we would naively sleep everytime for n seconds afterwards, we would inherit this jitter. By using :meth:`~.tick` before these commands, and :meth:`~.sleep_since_tick` after these commands, we can normalize the runtime to a fixed period (as long as the sleep duration is longer than the runtime of the commands).
+        sometimes, you execute some other commands, and these commands have a variable runtime. If we would naively sleep everytime for n seconds afterwards, we would inherit this jitter. By using :meth:`~.tick` before these commands, and :meth:`~.sleep_debiased` after these commands, we can normalize the runtime to a fixed period (as long as the sleep duration is longer than the runtime of the commands).
 
         Additionally, this function keeps track of any oversleeping or undersleeping, and will minimize the temporal error asymptotically
 
@@ -108,8 +108,6 @@ class Clock():
 
     def now(self):
         """return the cumulative time passed since the last call of :meth:`reset`
-
-        this cumulative time has ignored any time spent with :meth:`pause`.
         """
         return self.time()-self._t0
 
