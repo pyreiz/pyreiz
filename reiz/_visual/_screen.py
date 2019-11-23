@@ -41,83 +41,8 @@ class ExperimentalWindow(pyglet.window.Window):
         if symbol == key.P:
             self.paused = ~self.paused
 
-    def _on_mouse_press_log(self, x, y, button, modifiers):
-        from reiz.marker import push
-        from pylsl import local_clock
-        tstamp = local_clock()
-        if button == pyglet.window.mouse.LEFT:
-            push('LEFT_MOUSE_BUTTON',  tstamp=tstamp)
-        elif button == pyglet.window.mouse.RIGHT:
-            push('RIGHT_MOUSE_BUTTON', tstamp=tstamp)
-        elif button == pyglet.window.mouse.MIDDLE:
-            push('MIDDLE_MOUSE_BUTTON', tstamp=tstamp)
-
-    def _on_mouse_press_log_to_queue(self, x, y, button, modifiers):
-
-        tstamp = local_clock()
-
-        def push(label, tstamp):
-            print(f"Pushing to queue: {label} at {tstamp}")
-            self.queue.put((label, tstamp))
-
-        if button == pyglet.window.mouse.LEFT:
-            push('LEFT_MOUSE_BUTTON',  tstamp=tstamp)
-        elif button == pyglet.window.mouse.RIGHT:
-            push('RIGHT_MOUSE_BUTTON', tstamp=tstamp)
-        elif button == pyglet.window.mouse.MIDDLE:
-            push('MIDDLE_MOUSE_BUTTON', tstamp=tstamp)
-
-    def _on_mouse_press_log_to_queue_and_lsl(self, x, y, button, modifiers):
-        def push(label, tstamp):
-            from reiz.marker import push
-            print(f"Pushing to queue: {label} at {tstamp}")
-            self.queue.put((label, tstamp))
-            print(f"Pushing to LSL: {label} at {tstamp}")
-            push(label, tstamp)
-
-        tstamp = local_clock()
-        if button == pyglet.window.mouse.LEFT:
-            push('LEFT_MOUSE_BUTTON',  tstamp=tstamp)
-        elif button == pyglet.window.mouse.RIGHT:
-            push('RIGHT_MOUSE_BUTTON', tstamp=tstamp)
-        elif button == pyglet.window.mouse.MIDDLE:
-            push('MIDDLE_MOUSE_BUTTON', tstamp=tstamp)
-
-    def enable_mouse_logging_to_queue(self, queue):
-        self.queue = queue
-        self.on_mouse_press = self._on_mouse_press_log_to_queue
-
-    def enable_mouse_logging_to_queue_and_lsl(self, queue):
-        self.queue = queue
-        self.on_mouse_press = self._on_mouse_press_log_to_queue_and_lsl
-
-    def _on_mouse_press_swallow(self, x, y, button, modifiers):
-        pass
-
-    def enable_mouse_logging(self):
-        self.on_mouse_press = self._on_mouse_press_log
-
-    def disable_mouse_logging(self):
-        self.on_mouse_press = self._on_mouse_press_swallow
-
 
 class Canvas():
-
-    def set_mouse_logging(self, state=True):
-        if state == "queue":
-            from queue import Queue
-            queue = Queue()
-            self.window.enable_mouse_logging_to_queue(queue=queue)
-            return queue
-        if state == "both":
-            from queue import Queue
-            queue = Queue()
-            self.window.enable_mouse_logging_to_queue_and_lsl(queue=queue)
-            return queue
-        elif state == True or state == "lsl":
-            self.window.enable_mouse_logging()
-        elif state == False:
-            self.window.disable_mouse_logging()
 
     def __init__(self, size: Tuple[int, int] = (640, 480),
                  origin: Tuple[int, int] = (100, 100)):
@@ -148,16 +73,7 @@ class Canvas():
     def start_run(self, value: bool):
         self.window.start_run = value
 
-    def is_fps_feasible(self, fps, throw=True):
-        if fps >= .9*self.get_fps():
-            if throw:
-                raise ResourceWarning(
-                    'Framerate to high for monitor: decrease fps')
-            else:
-                return False
-        return True
-
-    def get_fps(self):
+    def estimate_fps(self):
         pyglet.clock.tick()
         for i in range(0, 100, 1):
             self.window.flip()
@@ -175,9 +91,6 @@ class Canvas():
         self.window.set_location(*self.origin)
         self.window.dispatch_events()
         self.window.has_exit = False
-
-    def _on_key_press(symbol, modifiers):
-        pass
 
     def flip(self):
         "flip the backbuffer to front  and clear the old frontbuffer"
@@ -206,7 +119,7 @@ class Canvas():
 
     def close(self):
         if hasattr(self, 'window') and not self.window.has_exit:
-            self.window.close()
+            self.window.on_close()
 
     def clear(self):
         "clear both buffers and show a black screen"
@@ -250,4 +163,4 @@ class Canvas():
 
     @property
     def available(self):
-        return (hasattr(self, "window") and not self.window.has_exit)
+        return (hasattr(self, "window") and not self.window.has_exit and self.window.visible)

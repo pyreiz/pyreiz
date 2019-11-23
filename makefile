@@ -17,7 +17,7 @@ test: build
 	source .test/bin/activate
 	pip install git+https://github.com/labstreaminglayer/liblsl-Python.git
 	pip install dist/*.whl
-	pytest
+	pytest --cov=reiz
 
 .PHONY: upload
 upload: build

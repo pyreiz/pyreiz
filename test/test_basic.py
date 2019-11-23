@@ -5,13 +5,52 @@ def test_beep():
     reiz.audio.Hertz(volume=0, duration_in_ms=100).play()
 
 
+def test_colors():
+    from reiz._visual.colors import COLORS
+    from reiz._visual.colors import resolve_rgb
+    canvas = reiz.Canvas()
+    for c in COLORS:
+        resolve_rgb("white", c)
+        reiz.visual.Background(color=c).draw(canvas)
+
+
+def test_canvas_keypress():
+    from pyglet.window import key
+    canvas = reiz.Canvas()
+    canvas.open()
+    assert canvas.start_run == False
+    canvas.window.dispatch_event('on_key_press', key.F5, 0)
+    canvas.flip()
+    assert canvas.start_run == True
+    canvas.close()
+
+
+def test_canvas_available():
+    canvas = reiz.Canvas()
+    assert canvas.available == False
+    canvas.open()
+    assert canvas.available == True
+    canvas.close()
+    assert canvas.available == False
+
+
+def test_canvas_properties():
+    w, h = (640, 480)
+    canvas = reiz.Canvas(size=(w, h))
+    canvas.open()
+    canvas.clear()
+    canvas.get_diag()
+    canvas.estimate_fps()
+    assert h == canvas.height
+    assert w == canvas.width
+
+
 def test_clock_sleep():
     limit = 1.5 * 10**(-4)  # exact within a millisecond
     desired = 1
     actual = reiz.clock.sleep(desired)
     deviance = abs(desired-actual)
-    print(actual)
-    assert deviance
+    assert deviance < limit
 
 
 def test_clock_sleep_debiased():
@@ -20,11 +59,9 @@ def test_clock_sleep_debiased():
     limit = 1.5 * 10**(-4)  # exact within a millisecond
     desired = .1
     reiz.clock.reset()
-    for i in range(0, 10):
+    for i in range(1, 11):
         time.sleep(random.random()*0.05)
         reiz.clock.sleep_debiased(desired)
-
     actual = reiz.clock.now()
-    deviance = abs(1-reiz.clock.now())
-    print(actual)
+    deviance = abs(desired*i-actual)
     assert deviance < limit

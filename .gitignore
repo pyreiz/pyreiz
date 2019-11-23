@@ -7,3 +7,4 @@ Reiz.egg-info
 build/*
 dist/*
 .test
+.coverage
