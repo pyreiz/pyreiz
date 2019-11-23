@@ -159,7 +159,7 @@ class Polygon(Visual):
         the desired color
     """
 
-    def __init__(self, positions: List[XY, ], color='white'):
+    def __init__(self, positions: List[XY, ] = [(0,0), (.1,.2), (.3,.1)], color='white'):
         self.positions = positions
         self.color = get_color(color)
 

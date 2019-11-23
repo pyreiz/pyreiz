@@ -1,19 +1,6 @@
 import reiz
 
 
-def test_beep():
-    reiz.audio.Hertz(volume=0, duration_in_ms=100).play()
-
-
-def test_colors():
-    from reiz._visual.colors import COLORS
-    from reiz._visual.colors import resolve_rgb
-    canvas = reiz.Canvas()
-    for c in COLORS:
-        resolve_rgb("white", c)
-        reiz.visual.Background(color=c).draw(canvas)
-
-
 def test_canvas_keypress():
     from pyglet.window import key
     canvas = reiz.Canvas()
@@ -26,7 +13,7 @@ def test_canvas_keypress():
 
 
 def test_canvas_available():
-    canvas = reiz.Canvas()
+    canvas = reiz.Canvas(size=(5, 5))
     assert canvas.available == False
     canvas.open()
     assert canvas.available == True
@@ -35,7 +22,7 @@ def test_canvas_available():
 
 
 def test_canvas_properties():
-    w, h = (640, 480)
+    w, h = (10, 9)
     canvas = reiz.Canvas(size=(w, h))
     canvas.open()
     canvas.clear()
@@ -43,11 +30,12 @@ def test_canvas_properties():
     canvas.estimate_fps()
     assert h == canvas.height
     assert w == canvas.width
+    canvas.close()
 
 
 def test_clock_sleep():
     limit = 1.5 * 10**(-4)  # exact within a millisecond
-    desired = 1
+    desired = .1
     actual = reiz.clock.sleep(desired)
     deviance = abs(desired-actual)
     assert deviance < limit
@@ -57,11 +45,27 @@ def test_clock_sleep_debiased():
     import random
     import time
     limit = 1.5 * 10**(-4)  # exact within a millisecond
-    desired = .1
+    desired = .01
     reiz.clock.reset()
     for i in range(1, 11):
-        time.sleep(random.random()*0.05)
+        time.sleep(random.random()*0.005)
         reiz.clock.sleep_debiased(desired)
     actual = reiz.clock.now()
     deviance = abs(desired*i-actual)
     assert deviance < limit
+
+
+def test_cue():
+    c = reiz.Canvas((10, 10))
+    cue = reiz.Cue(canvas=c,
+                   audiostim=reiz.audio.library.beep, visualstim=reiz.visual.library.go)
+    N = reiz.Cue(canvas=c,
+                 audiostim=None,
+                 visualstim=None)
+    reiz.audio.library.beep.volume = 0
+    c.open()
+    cue.show(0.05)
+    N.show(canvas=c)
+    N.show()
+    cue.show(None)
+    c.close()

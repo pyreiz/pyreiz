@@ -6,6 +6,9 @@ Safeguard your scripts against absence of a MarkerServer
 """
 from reiz._marker.mitm import Server
 from reiz._marker.client import _Client
+from subprocess import Popen
+from time import sleep
+from pylsl import local_clock
 from logging import getLogger
 logger = getLogger("throw-away-marker-server")
 
@@ -41,7 +44,7 @@ def available(port: int = 7654, verbose=True) -> bool:
     host: str = "127.0.0.1"
     c = _Client(host=host, port=port)
     try:
-        c.push('None', pylsl.local_clock())
+        c.push('None', local_clock())
         return True
     except ConnectionRefusedError as e:
         if verbose:
@@ -64,10 +67,11 @@ def start():
 
     """
     global server
-    if server is None or not server.is_running.is_set():
+    if server is None:
         logger.debug("Starting a throwaway marker-server")
-        server = Server(name='reiz_marker_throwaway')
-        server.start()
+        server = Popen("reiz-marker")
+        while not available(verbose=False):
+            sleep(0.5)
         return server
     else:
         logger.debug("A throwaway marker-server is already running")
@@ -84,5 +88,7 @@ def stop():
         logger.debug("No throwaway marker-server is currently running")
         return True
     else:
-        server.stop()
+        server.kill()
+        while available(verbose=False):
+            sleep(0.5)
         return True

@@ -44,6 +44,14 @@ class PlatformIndependentMessage():
         self.engine.setProperty('volume', 1.)
         return t1-t0
 
+    @property
+    def volume(self):
+        return self.engine.getProperty('volume')
+
+    @volume.setter
+    def volume(self, volume: float):
+        self.engine.setProperty('volume', volume)
+
     def play_blocking(self):
         """
         returns
