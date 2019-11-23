@@ -6,3 +6,4 @@ Reiz.egg-info
 *mypy_cache*
 build/*
 dist/*
+.test

@@ -16,6 +16,7 @@ import pyglet
 class Sound():
     """interface for a generic sound object"""
     source = None
+    volume = 1
 
     def play(self):
         """start playing the sound and return immediatly
@@ -27,6 +28,7 @@ class Sound():
         """
         t0 = time.time()
         player = self.source.play()
+        player.volume = self.volume
         t = Timer(player.source.duration, player.delete)
         t.start()
         return player.source.duration + t0 - time.time()
@@ -93,6 +95,7 @@ class Hertz(Sound):
         sine = Sine(duration=duration_in_ms/1000, frequency=frequency,
                     sample_size=16, sample_rate=44100, envelope=adsr)
         self.source = pyglet.media.StaticSource(sine)
+        self.volume = volume
 
 
 class AudioFile(Sound):
