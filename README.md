@@ -2,6 +2,8 @@
 
 pyReiz is a low-level auditory and visual stimulus presentation suite wrapping pyglet, sending markers via a pylsl outlet. You can also read more [extensive documentation online](https://reiz.agricolab.de/index.html).
 
+[![DOI](https://zenodo.org/badge/181853750.svg)](https://zenodo.org/badge/latestdoi/181853750)
+
 ## Installation
 
 The [requirements](#requirements) for pyReiz are _pyglet_ and _pylsl_. They are checked, and if necessary installed, during `pip install`. There is also a dependency on _pyttsx3_ to allow on-demand synthesis of auditory cues from text. If you don't need that or can't acquire a version of pyttsx3 for your architecture, install pyreiz without the `[tts]` suffix.
