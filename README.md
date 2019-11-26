@@ -39,6 +39,8 @@ After you installed Reiz, you can give it a test-run by calling `python -m reiz.
 
 Examples can be found in `reiz/examples`. A quite extensively documented basic example can be found here: [basic example](/reiz/examples/basic.py).
 
+<img src = "basic-example.gif" width=100%>
+
 ## Recording
 
 Because all markers are send via LSL, i suggest recording with [Labrecorder](https://github.com/labstreaminglayer/App-LabRecorder/releases). Use at least 1.13, as this version supports BIDS-conform recording, offers a remote interface and has a critical timing bugfix included.
