@@ -4,6 +4,8 @@ pyReiz is a low-level auditory and visual stimulus presentation suite wrapping p
 
 [![DOI](https://zenodo.org/badge/181853750.svg)](https://zenodo.org/badge/latestdoi/181853750)
 
+<img src = "basic-example.gif" width=100%>
+
 ## Installation
 
 The [requirements](#requirements) for pyReiz are _pyglet_ and _pylsl_. They are checked, and if necessary installed, during `pip install`. There is also a dependency on _pyttsx3_ to allow on-demand synthesis of auditory cues from text. If you don't need that or can't acquire a version of pyttsx3 for your architecture, install pyreiz without the `[tts]` suffix.
@@ -38,8 +40,6 @@ After you installed Reiz, you can give it a test-run by calling `python -m reiz.
 ## Create your Experiment
 
 Examples can be found in `reiz/examples`. A quite extensively documented basic example can be found here: [basic example](/reiz/examples/basic.py).
-
-<img src = "basic-example.gif" width=100%>
 
 ## Recording
 
