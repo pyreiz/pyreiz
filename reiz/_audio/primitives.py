@@ -94,8 +94,13 @@ class Hertz(Sound):
                             sustain_amplitude=volume)
         sine = Sine(duration=duration_in_ms/1000, frequency=frequency,
                     sample_size=16, sample_rate=44100, envelope=adsr)
+        self._duration_in_ms = duration_in_ms
+        self._frequency = frequency
         self.source = pyglet.media.StaticSource(sine)
         self.volume = volume
+
+    def __repr__(self):
+        return f"Hertz(duration_in_ms={self._duration_in_ms}, frequency= {self._frequency})"
 
 
 class AudioFile(Sound):

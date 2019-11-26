@@ -2,6 +2,7 @@
 """
 import reiz.marker as marker
 from reiz.time import Clock as _Clock
+from types import SimpleNamespace
 
 
 class Cue():
@@ -79,3 +80,8 @@ class Cue():
                         clk.sleep_debiased(.1)
                     dt = clk.now()
                 return dt
+
+
+def collect(**lib) -> SimpleNamespace:
+    lib = SimpleNamespace(**lib)
+    return lib

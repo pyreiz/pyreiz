@@ -18,7 +18,7 @@ _defaults = libConf({
 })  #: libConf
 
 
-def make_library(settings: libConf = _defaults) -> SimpleNamespace:
+def make_library(settings: libConf = _defaults, failraise=False) -> SimpleNamespace:
     """create a library of auditory stimuli from a dictionary of arguments
 
     args
@@ -26,6 +26,8 @@ def make_library(settings: libConf = _defaults) -> SimpleNamespace:
     settings:
         a dictionary of types with kwargs appropriate to the respective type
         as dictionary
+    failraise:bool
+        raise an exception if a key is not recognized. defaults to False
 
     returns
     -------
@@ -42,6 +44,9 @@ def make_library(settings: libConf = _defaults) -> SimpleNamespace:
                 lib[name] = Message(**args)
             elif key.lower() == "hertz":
                 lib[name] = Hertz(**args)
+            else:
+                if failraise:
+                    raise ValueError(f"{key} with {args} can't be processed")
     lib = SimpleNamespace(**lib)
     return lib
 

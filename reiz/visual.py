@@ -13,7 +13,7 @@ libConf = NewType("libConf", Dict[str, Dict[str, Any]]
                   )  #: Dict[str, Dict[str, Any], a dictionary of types and respective keywords arguments
 
 _defaults = libConf({
-    "Murals": {
+    "Mural": {
         "post": {"text": "Run endet"},
         "pre": {"text": "Run beginnt"},
         "eo": {"text": "Augen offen"},
@@ -38,7 +38,7 @@ _defaults = libConf({
 })  #: libConf
 
 
-def make_library(settings: libConf = None) -> SimpleNamespace:
+def make_library(settings: libConf = None, failraise=False) -> SimpleNamespace:
     """create a library of visual stimuli from a dictionary of arguments
 
     args
@@ -46,6 +46,8 @@ def make_library(settings: libConf = None) -> SimpleNamespace:
     settings:
         a dictionary of types with kwargs appropriate to the respective type
         as dictionary
+    failraise:bool
+        raise an exception if a key is not recognized. defaults to False
 
     returns
     -------
@@ -59,14 +61,15 @@ def make_library(settings: libConf = None) -> SimpleNamespace:
     library = dict()
     for key in settings.keys():
         for name, args in settings[key].items():
-            if key.lower() == "murals":
+            if key.lower() == "mural":
                 library[name] = Mural(**args)
             elif key.lower() == "cross":
                 library[name] = Cross(**args)
             elif key.lower() == "image":
                 library[name] = Image(**args)
             else:
-                raise ValueError(f"{key} with {args} can't be processed")
+                if failraise:
+                    raise(f"{key} with {args} can't be processed")
 
     library = SimpleNamespace(**library)
     return library
