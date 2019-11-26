@@ -72,7 +72,7 @@ class _MarkerStreamer(threading.Thread):
                     f'Pushed {marker} from {tstamp} at {pylsl.local_clock()}')
             except queue.Empty:
                 time.sleep(0.001)
-
+        print(f"Shutting down MarkerStreamer: {self.name}")
 # %%
 
 
@@ -169,6 +169,10 @@ class Server(threading.Thread):
                     marker, tstamp = _read_msg(client)
                     if marker == "None":  # connected was only tested
                         print("Received ping from", address)
+                    elif marker == self.name + "-poison-pill":
+                        print("Swallowing poison pill")
+                        self.is_running.clear()
+                        break
                     else:
                         markerstreamer.push(marker, tstamp)
                 except socket.timeout:
@@ -179,6 +183,7 @@ class Server(threading.Thread):
             except socket.timeout:
                 pass
 
+        print(f"Shutting down MarkerServer: {self.name}")
         markerstreamer.stop()
 
 

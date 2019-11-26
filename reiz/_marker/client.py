@@ -98,6 +98,11 @@ def push_json(marker: object = {'key': 'value'}, tstamp: float = None):
     push(json.dumps(marker), tstamp, sanitize=False)
 
 
+def kill(host: str = "127.0.0.1", port: int = 7654, name: str = "reiz_marker_sa"):
+    c = _Client(port=port, host=host)
+    c.push(name + "-poison-pill",  pylsl.local_clock())
+
+
 class _Client():
     "Basic Client communicating with the MarkerServer"
 

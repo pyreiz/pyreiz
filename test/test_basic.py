@@ -45,10 +45,10 @@ def test_clock_sleep_debiased():
     import random
     import time
     limit = 1.5 * 10**(-4)  # exact within a millisecond
-    desired = .01
+    desired = .1
     reiz.clock.reset()
     for i in range(1, 11):
-        time.sleep(random.random()*0.005)
+        time.sleep(random.random()*0.05)
         reiz.clock.sleep_debiased(desired)
     actual = reiz.clock.now()
     deviance = abs(desired*i-actual)

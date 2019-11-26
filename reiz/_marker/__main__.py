@@ -19,9 +19,8 @@ run from terminal with
 import sys
 import time
 from reiz._marker.mitm import Server
-from reiz._marker.client import available
+from reiz._marker.client import available, kill
 import argparse
-import multiprocessing
 
 
 def main():
@@ -34,7 +33,14 @@ def main():
                         help="Marker Server name.", default='reiz_marker_sa')
     parser.add_argument("--ping", action="store_true",
                         help="test connection to Markerserver")
+    parser.add_argument("--kill", action="store_true",
+                        help="send a poison pill to the Markerserver")
+
     args = parser.parse_args()
+    if args.kill:
+        if available(host=args.host, port=args.port):
+            kill(host=args.host, port=args.port, name=args.name)
+        return
     if args.ping:
         response = available(host=args.host, port=args.port)
         if response:
@@ -70,4 +76,5 @@ def main():
 
 
 if __name__ == '__main__':
+
     main()
