@@ -53,6 +53,7 @@ def make_library(settings: libConf = _defaults, failraise=False) -> SimpleNamesp
 
 def read_folder(path: Path = None) -> SimpleNamespace:
     'create an audio library from path'
+    path = Path(path)
     if path is None or not path.exists():
         raise ValueError(f"{path} not found")
     library = dict()
