@@ -70,13 +70,13 @@ def start():
     """
     global server
     if server is None:
-        logger.debug("Starting a throwaway marker-server")
+        logger.debug("Starting a marker-server")
         server = Popen(["reiz-marker", "--name", "reiz-marker"])
         while not available(verbose=False):
             sleep(0.5)
         return server
     else:
-        logger.debug("A throwaway marker-server is already running")
+        logger.debug("A marker-server is already running")
         return None
 
 
@@ -87,7 +87,7 @@ def stop():
     """
     global server
     if server is None:
-        logger.debug("No throwaway marker-server is currently running")
+        logger.debug("No marker-server is currently running")
         return True
     else:
         killer = Popen(["reiz-marker", "--kill", "--name", "reiz-marker"])

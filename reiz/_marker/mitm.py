@@ -32,7 +32,10 @@ class _Outlet():
         import weakref
         source_id = '_at_'.join((name, socket.gethostname()))
         if cls.instance.get(name, None) is None:
-            info = pylsl.StreamInfo(name, type='Markers', channel_count=1, nominal_srate=0,
+            info = pylsl.StreamInfo(name,
+                                    type='Markers',
+                                    channel_count=1,
+                                    nominal_srate=0,
                                     channel_format='string', source_id=source_id)
 
             info.desc().append_child_value("version", version)
@@ -171,9 +174,9 @@ class Server(threading.Thread):
                 client, address = listener.accept()
                 try:
                     marker, tstamp = _read_msg(client)
-                    if marker == "None":  # connected was only tested
+                    if marker.lower() == "ping":  # connection was only pinged
                         print("Received ping from", address)
-                    elif marker == self.name + "-poison-pill":
+                    elif marker.lower() == "poison-pill":
                         print("Swallowing poison pill")
                         self.is_running.clear()
                         break
@@ -189,7 +192,3 @@ class Server(threading.Thread):
 
         print(f"Shutting down MarkerServer: {self.name}")
         markerstreamer.stop()
-
-
-if __name__ == "__main__":
-    pass

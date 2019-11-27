@@ -39,7 +39,7 @@ def main():
     args = parser.parse_args()
     if args.kill:
         if available(host=args.host, port=args.port):
-            kill(host=args.host, port=args.port, name=args.name)
+            kill(host=args.host, port=args.port)
         return
     if args.ping:
         response = available(host=args.host, port=args.port)
