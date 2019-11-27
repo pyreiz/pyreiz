@@ -7,8 +7,9 @@ Safeguard your scripts against absence of a MarkerServer
 from reiz._marker.mitm import Server
 from sys import platform
 from reiz._marker.client import _Client
-from subprocess import Popen
+from subprocess import Popen, run
 from time import sleep
+from sys import platform
 from pylsl import local_clock
 from logging import getLogger
 logger = getLogger("throw-away-marker-server")
@@ -57,20 +58,20 @@ def available(port: int = 7654, verbose=True) -> bool:
 def start():
     """start a throw-away MarkerServer
 
-    Close it after the experiment with :func:`~.stop`    
+    Close it after the experiment with :func:`~.stop`
 
     .. caution::
         consider that it is best practice to start an independent MarkerServer to
-        improve discoverability and stability for any listeners, especially 
-        when recording with LabRecorder. Use these functions only to safeguard 
-        your experiment and to be able to test it without the need for an 
+        improve discoverability and stability for any listeners, especially
+        when recording with LabRecorder. Use these functions only to safeguard
+        your experiment and to be able to test it without the need for an
         unrelated process running.
 
     """
     global server
     if server is None:
         logger.debug("Starting a throwaway marker-server")
-        server = Popen("reiz-marker --name reiz-marker-throwaway")
+        server = Popen(["reiz-marker", "--name", "reiz-marker"])
         while not available(verbose=False):
             sleep(0.5)
         return server
@@ -89,7 +90,7 @@ def stop():
         logger.debug("No throwaway marker-server is currently running")
         return True
     else:
-        killer = Popen("reiz-marker --kill --name reiz-marker-throwaway")
+        killer = Popen(["reiz-marker", "--kill", "--name", "reiz-marker"])
         killer.communicate()
         while available(verbose=False):
             sleep(0.5)

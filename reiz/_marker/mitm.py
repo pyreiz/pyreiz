@@ -18,6 +18,8 @@ import time
 import socket
 import json
 from reiz._marker.client import available
+import pkg_resources
+version = pkg_resources.get_distribution("reiz").version
 # %%
 
 
@@ -25,13 +27,15 @@ class _Outlet():
     "LSL based marker outlet as a singleton, to prevent name-stealing"
     instance = dict()
     @classmethod
-    def get(cls, name='reiz_marker'):
+    def get(cls, name='reiz-marker'):
         import socket
         import weakref
         source_id = '_at_'.join((name, socket.gethostname()))
         if cls.instance.get(name, None) is None:
             info = pylsl.StreamInfo(name, type='Markers', channel_count=1, nominal_srate=0,
                                     channel_format='string', source_id=source_id)
+
+            info.desc().append_child_value("version", version)
             print(info.as_xml())
             outlet = pylsl.StreamOutlet(info)
             cls.instance[name] = weakref.ref(outlet)
@@ -112,12 +116,12 @@ class Server(threading.Thread):
     """Main class to manage the LSL-MarkerStream as man-in-the-middle
 
     when started, it automatically checks whether there is already a MarkerServer
-    running at that port. If this is the case, it returns and lets the old one 
+    running at that port. If this is the case, it returns and lets the old one
     keep control. This ensures that subscribers to the old MarkerServer
     don't experience any hiccups.
     """
 
-    def __init__(self, port: int = 7654, name='reiz_marker_sa',
+    def __init__(self, port: int = 7654, name='reiz-marker',
                  timeout=.05, verbose=True):
         threading.Thread.__init__(self)
         self.host = "127.0.0.1"
@@ -132,7 +136,7 @@ class Server(threading.Thread):
         self.is_running.clear()
 
     def run(self):
-        """wait for clients to connect and send messages. 
+        """wait for clients to connect and send messages.
 
         This is a Thread, so start with :meth:`server.start` """
 

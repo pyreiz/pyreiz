@@ -30,7 +30,7 @@ def main():
     parser.add_argument("--host", dest="host", type=str,
                         help="Marker Server host ip.", default="127.0.0.1")
     parser.add_argument("--name", dest="name",
-                        help="Marker Server name.", default='reiz_marker_sa')
+                        help="Marker Server name.", default='reiz-marker')
     parser.add_argument("--ping", action="store_true",
                         help="test connection to Markerserver")
     parser.add_argument("--kill", action="store_true",
