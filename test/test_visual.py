@@ -18,9 +18,34 @@ def test_colors():
         reiz.visual.Background(color=c).draw(canvas)
 
 
-def test_complex():
+def test_smoke_complex():
     canvas = reiz.Canvas()
     reiz._visual.complex.Line().draw(canvas)
     reiz._visual.complex.Polygon().draw(canvas)
     reiz._visual.complex.Bar().draw(canvas)
+    reiz._visual.complex.Circle().draw(canvas)
     reiz._visual.complex.Cylinder().draw(canvas)
+    reiz._visual.complex.Mural().draw(canvas)
+    reiz._visual.complex.Trapezoid().draw(canvas)
+    reiz._visual.complex.Cross().draw(canvas)
+
+
+def test_mural():
+    canvas = reiz.Canvas()
+    m = reiz._visual.complex.Mural(text="test")
+    assert repr(m) == "Mural('test')"
+
+
+def test_cross():
+    canvas = reiz.Canvas()
+    m = reiz._visual.complex.Cross(zoom=1, color=(1, 0, 0))
+    assert repr(m) == "Cross(zoom=1, color=(1, 0, 0))"
+
+
+def test_iteration():
+    canvas = reiz.Canvas()
+    for v in reiz._visual.complex.Line():
+        v.draw(canvas)
+
+    for v in [reiz._visual.complex.Line(), reiz._visual.complex.Line()]:
+        v.draw(canvas)
