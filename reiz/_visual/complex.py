@@ -159,7 +159,7 @@ class Polygon(Visual):
         the desired color
     """
 
-    def __init__(self, positions: List[XY, ] = [(0,0), (.1,.2), (.3,.1)], color='white'):
+    def __init__(self, positions: List[XY, ] = [(0, 0), (.1, .2), (.3, .1)], color='white'):
         self.positions = positions
         self.color = get_color(color)
 
@@ -252,7 +252,7 @@ class Cylinder(Visual):
     """A rectangular shape which can be rotated around its center
 
     args
-    ----    
+    ----
     position: XY
         position of the center of the circle
     angle:float
@@ -333,7 +333,7 @@ class Cross(Visual):
         self.visual = [self.ho, self.ve]
 
     def __repr__(self):
-        return f"Cross(zoom='{self.zoom}', color={self.color})"
+        return f"Cross(zoom={self.zoom}, color={self.color[:-1]})"
 
 
 class Trapezoid(Visual):
