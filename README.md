@@ -2,9 +2,8 @@
 
 pyReiz is a low-level auditory and visual stimulus presentation suite wrapping pyglet, sending markers via a pylsl outlet. You can also read more [extensive documentation online](https://reiz.agricolab.de/index.html).
 
-[![DOI](https://zenodo.org/badge/181853750.svg)](https://zenodo.org/badge/latestdoi/181853750) [![PyPI version](https://badge.fury.io/py/Reiz.svg)](https://badge.fury.io/py/Reiz)
-[![Build Status](https://travis-ci.com/pyreiz/pyreiz.svg?branch=master)](https://travis-ci.com/pyreiz/pyreiz) [![codecov](https://codecov.io/gh/pyreiz/pyreiz/branch/master/graph/badge.svg)](https://codecov.io/gh/pyreiz/pyreiz) [![Coverage Status](https://coveralls.io/repos/github/pyreiz/pyreiz/badge.svg?branch=master)](https://coveralls.io/github/pyreiz/pyreiz?branch=master)
-
+[![DOI](https://zenodo.org/badge/181853750.svg)](https://zenodo.org/badge/latestdoi/181853750) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+[![PyPI version](https://badge.fury.io/py/Reiz.svg)](https://badge.fury.io/py/Reiz) ![Since Release](https://img.shields.io/github/commits-since/pyreiz/pyreiz/v0.3.3.2/master) [![Build Status](https://travis-ci.com/pyreiz/pyreiz.svg?branch=master)](https://travis-ci.com/pyreiz/pyreiz) [![Coverage Status](https://coveralls.io/repos/github/pyreiz/pyreiz/badge.svg?branch=master)](https://coveralls.io/github/pyreiz/pyreiz?branch=master)
 <img src = "basic-example.gif" width=100%>
 
 ## Installation
