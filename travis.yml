@@ -1,0 +1,17 @@
+language: python
+python:
+  - 3.5
+  - 3.6
+  - 3.7
+  - 3.8
+before_install:
+  - python --version
+  - pip install -U pip
+  - pip install git+https://github.com/labstreaminglayer/liblsl-Python.git
+  - pip install -U pytest
+  - pip install codecov
+install:
+  - pip install ".[ttr]" . # install package + test dependencies
+script: pytest # run tests
+after_success:
+  - codecov # submit coverage
