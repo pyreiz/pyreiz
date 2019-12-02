@@ -58,7 +58,7 @@ class PlatformIndependentMessage():
         -------
         remainder:float
             seconds until the sound would finish playing. Naturally, it always
-            returns 0. The output is kept here to allow easy substitution with 
+            returns 0. The output is kept here to allow easy substitution with
             :func:`Sound.play`
         """
         self.engine.say(self.message)
@@ -121,24 +121,24 @@ class Silent_Mixin(object):
         return
 
 
-class gTTS_Mixin():
+# class gTTS_Mixin():
 
-    def __init__(self, message: str = "Google says",
-                 language="de"):
-        self.message = message
-        try:
-            from gtts import gTTS
-        except ImportError:
-            print("gTTS is not installed on your system. Default to silence")
-            from pyglet.media.synthesis import Silence
-            self.source = Silence(duration=0.1)
-            return
+#     def __init__(self, message: str = "Google says",
+#                  language="de"):
+#         self.message = message
+#         try:
+#             from gtts import gTTS
+#         except ImportError:
+#             print("gTTS is not installed on your system. Default to silence")
+#             from pyglet.media.synthesis import Silence
+#             self.source = Silence(duration=0.1)
+#             return
 
-        with NamedTemporaryFile(suffix=".wav") as f:
-            tts = gTTS(message, lang=language)
-            tts.save(f.name)
-            run(["ffmpeg", "-i", f.name, f.name, "-y"])
-            self.source = pyglet.media.load(f.name, streaming=False)
+#         with NamedTemporaryFile(suffix=".wav") as f:
+#             tts = gTTS(message, lang=language)
+#             tts.save(f.name)
+#             run(["ffmpeg", "-i", f.name, f.name, "-y"])
+#             self.source = pyglet.media.load(f.name, streaming=False)
 
 
 # conditional interface for Message
@@ -146,10 +146,5 @@ class gTTS_Mixin():
 if importlib.util.find_spec("pyttsx3") is not None:
     import pyttsx3
     tts_Mixin = PlatformIndependentMessage
-# elif importlib.util.find_spec("gtts") is not None:
-#     from gtts import gTTS
-#     tts_Mixin = gTTS_Mixin
-# elif platform == "linux":
-#     tts_Mixin = Espeak_Mixin
 else:
     tts_Mixin = Silent_Mixin

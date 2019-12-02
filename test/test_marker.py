@@ -31,3 +31,14 @@ def test_sanitization(rmarker, capsys):
     reiz.marker.push("poison-pill")
     out, err = capsys.readouterr()
     assert 'Sending {\"msg": "poison-pill"}' in out
+
+    c = reiz.Canvas((10, 10))
+
+    cue = reiz.Cue(canvas=c,
+                   audiostim=reiz.audio.library.beep, visualstim=reiz.visual.library.go,
+                   markerstr="test")
+
+    out, err = capsys.readouterr()
+    cue.show()
+    out, err = capsys.readouterr()
+    assert 'Sending test at' in out

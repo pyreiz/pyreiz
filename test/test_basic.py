@@ -53,19 +53,3 @@ def test_clock_sleep_debiased():
     actual = reiz.clock.now()
     deviance = abs(desired*i-actual)
     assert deviance < limit
-
-
-def test_cue():
-    c = reiz.Canvas((10, 10))
-    cue = reiz.Cue(canvas=c,
-                   audiostim=reiz.audio.library.beep, visualstim=reiz.visual.library.go)
-    N = reiz.Cue(canvas=c,
-                 audiostim=None,
-                 visualstim=None)
-    reiz.audio.library.beep.volume = 0
-    c.open()
-    cue.show(0.05)
-    N.show(canvas=c)
-    N.show()
-    cue.show(None)
-    c.close()
