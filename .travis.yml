@@ -18,8 +18,9 @@ before_install:
   - pip install -U pip
   - pip install git+https://github.com/labstreaminglayer/liblsl-Python.git
   - pip install -U pytest
-  - pip install -U pytest-cov
-  - pip install codecov
+  - pip install -U pytest-cov==2.7.1
+  - pip install -U coveralls
+  - pip install -U codecov
 install:
   - pip install ".[tts]" . # install package + test dependencies
 script: pytest # run tests
