@@ -18,7 +18,7 @@ before_install:
   - pip install -U pip
   - pip install git+https://github.com/labstreaminglayer/liblsl-Python.git
   - pip install -U pytest
-  - pip install -U pytest-cov==2.7.1
+  - pip install -U pytest-cov
   - pip install -U coveralls
   - pip install -U codecov
 install:
