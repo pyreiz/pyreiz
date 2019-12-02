@@ -1,2 +1,7 @@
 [run]
-omit = reiz/examples/*
+omit =
+    # is an example to be run from cli
+    reiz/examples/*
+    # is necessarily tested when reiz.marker.start is run in test_marker
+    reiz/_marker/__main__.py 
+    reiz/_marker/mitm.py 

@@ -73,7 +73,7 @@ def read_folder(path: Path = None) -> SimpleNamespace:
 
 if not 'DOC' in _env.keys():
     library = make_library()
-else:
+else:  # pragma: no cover
     mock = dict()
     for t, item in _defaults.items():
         for k, v in item.items():
