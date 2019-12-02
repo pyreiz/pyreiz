@@ -2,7 +2,8 @@
 
 pyReiz is a low-level auditory and visual stimulus presentation suite wrapping pyglet, sending markers via a pylsl outlet. You can also read more [extensive documentation online](https://reiz.agricolab.de/index.html).
 
-[![DOI](https://zenodo.org/badge/181853750.svg)](https://zenodo.org/badge/latestdoi/181853750) [![Build Status](https://travis-ci.com/pyreiz/pyreiz.svg?branch=master)](https://travis-ci.com/pyreiz/pyreiz)
+[![DOI](https://zenodo.org/badge/181853750.svg)](https://zenodo.org/badge/latestdoi/181853750) [![Build Status](https://travis-ci.com/pyreiz/pyreiz.svg?branch=master)](https://travis-ci.com/pyreiz/pyreiz)[![codecov](https://codecov.io/gh/pyreiz/pyreiz/branch/master/graph/badge.svg)](https://codecov.io/gh/pyreiz/pyreiz)
+
 <img src = "basic-example.gif" width=100%>
 
 ## Installation
