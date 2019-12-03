@@ -25,24 +25,24 @@ jobs:
   #   osx_image: xcode8.3
   #   language: python
   #   python: 3.6
-  - name: Windows
-    os: windows
-    language: bash
-    python: 3.7
-    env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-    before_install:
-      - choco install python --version 3.7
-      - choco install ffmpeg
-      - choco install avbin
-      - choco install glfw3
-      - python --version
-      - python -m ensurepip --upgrade
-      - python -m pip install --upgrade pip
-      - pip install -U pylsl
-      - pip install -U pytest
-      - pip install -U pytest-cov
-      - pip install -U coveralls
-      - pip install -U codecov
+  # - name: Windows
+  #   os: windows
+  #   language: bash
+  #   python: 3.7
+  #   env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+  #   before_install:
+  #     - choco install python --version 3.7
+  #     - choco install ffmpeg
+  #     - choco install avbin
+  #     - choco install glfw3
+  #     - python --version
+  #     - python -m ensurepip --upgrade
+  #     - python -m pip install --upgrade pip
+  #     - pip install -U pylsl
+  #     - pip install -U pytest
+  #     - pip install -U pytest-cov
+  #     - pip install -U coveralls
+  #     - pip install -U codecov
 install:
   - pip install ".[tts]" . # install package + test dependencies
 script: pytest # run tests
