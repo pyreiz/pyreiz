@@ -6,6 +6,7 @@ _before_install: &install_before
   - pip install -U coveralls
   - pip install -U codecov
 
+
 jobs:
   - name: Linux
     dist: bionic
