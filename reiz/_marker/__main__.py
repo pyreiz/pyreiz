@@ -1,9 +1,19 @@
 # -*- coding: utf-8 -*-
-"""standalone MarkerServer
+"""Standalone MarkerServer
+
+LabRecorder can only start recording Outlets that are existing. If you start a MarkerServer immediatly before you run the experiment, there is not much time for the Recorder to detect the stream.
+
+We there recommend to use a reiz-marker-Server as an independent process. You can either start the MarkerServer as an independent process with `reiz-marker` or `python -m reiz.marker` from your terminal. Shut it down gracefull with `reiz-marker --kill`.
+
+Alternatively, :meth:`~.reiz._marker.safeguard.start` starts such a process from within Python, and you can kill it later with :meth:`~.reiz._marker.safeguard.stop`.
+
+This MarkerServer opens an Outlet that can be detected independently from the experiments you are running. When you then run an experiment, it receives messages from this experiment, and redistributes them in LSL-format.
 
 run from terminal with
-.. codeblock:: bash
-    usage: reiz-marker [-h] [--port PORT] [--host HOST] [--name NAME] [--ping]
+
+.. code-block:: bash
+
+    usage: reiz-marker [-h] [--port PORT] [--host HOST] [--name NAME] [--ping] [--kill]
 
     Reiz Marker Server
 
@@ -13,6 +23,7 @@ run from terminal with
     --host HOST  Marker Server host ip.
     --name NAME  Marker Server name.
     --ping       test connection to Markerserver
+    --kill       send a poison pill to the Markerserver
 
 """
 
@@ -24,6 +35,7 @@ import argparse
 
 
 def main():
+
     parser = argparse.ArgumentParser(description="Reiz Marker Server")
     parser.add_argument("--port", dest="port", type=int,
                         help="Marker Server port.", default=7654)

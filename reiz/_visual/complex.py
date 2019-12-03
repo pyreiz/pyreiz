@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 """
-High-level api to create complex shapes and murals
-..................................................
-
+Create complex shapes and murals
+................................
 """
 from reiz._visual.colors import get_color, ColorType
 import pyglet

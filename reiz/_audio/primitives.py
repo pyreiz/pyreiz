@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Building blocks for auditory stimuli
+"""
+Building blocks for auditory stimuli
+....................................
 """
 
 from .tts import tts_Mixin

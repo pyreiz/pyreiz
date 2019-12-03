@@ -2,7 +2,7 @@
 
 pyReiz is a low-level auditory and visual stimulus presentation suite wrapping pyglet, sending markers via a pylsl outlet. You can also read more [extensive documentation online](https://reiz.agricolab.de/index.html).
 
-[![DOI](https://zenodo.org/badge/181853750.svg)](https://zenodo.org/badge/latestdoi/181853750) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)]()
+[![DOI](https://zenodo.org/badge/181853750.svg)](https://doi.org/10.5281/zenodo.3551933) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://en.wikipedia.org/wiki/MIT_License)
 [![PyPI version](https://badge.fury.io/py/Reiz.svg)](https://badge.fury.io/py/Reiz) ![Since Release](https://img.shields.io/github/commits-since/pyreiz/pyreiz/v0.3.3.2/master) [![Build Status](https://travis-ci.com/pyreiz/pyreiz.svg?branch=master)](https://travis-ci.com/pyreiz/pyreiz) [![Coverage Status](https://coveralls.io/repos/github/pyreiz/pyreiz/badge.svg?branch=master)](https://coveralls.io/github/pyreiz/pyreiz?branch=master)
 <img src = "basic-example.gif" width=100%>
 
@@ -25,6 +25,10 @@ pip install git+https://github.com/labstreaminglayer/liblsl-Python.git
 pip install Reiz[tts]
 ```
 
+### Mac
+
+Mac is currently not supported.
+
 ## Development
 
 ```bash
@@ -37,23 +41,15 @@ pip install -e .[tts]
 
 After you installed Reiz, you can give it a test-run by calling `python -m reiz.examples.basic` from your terminal. This should start a throwaway MarkerServer, and present a series of visual and auditory stimuli. If anything does not work out, [inform us of the issue](https://github.com/pyreiz/pyreiz/issues).
 
-## Create your Experiment
+## Create your own experiment
 
 Examples can be found in `reiz/examples`. A quite extensively documented basic example can be found here: [basic example](/reiz/examples/basic.py).
 
-## Recording
-
-Because all markers are send via LSL, i suggest recording with [Labrecorder](https://github.com/labstreaminglayer/App-LabRecorder/releases). Use at least 1.13, as this version supports BIDS-conform recording, offers a remote interface and has a critical timing bugfix included.
-
 ## Additional Information
 
-### MarkerServer
+### Recording
 
-LabRecorder can only start recording Outlets that are existing. If you start a MarkerServer immediatly before you run the experiment, there is not much time for the Recorder to detect the stream.
-
-It is therefore best practice to start a pyReiz-MarkerServer as an independent process. Start the MarkerServer as an independent process with `reiz-marker` or `python -m reiz.marker` from your terminal.
-
-This MarkerServer opens an Outlet that can be detected independently from the experiments you are running. When you then run an experiment, it receives messages from this experiment, and redistributes them in LSL-format.
+Because all markers are send via LSL, i suggest recording with [Labrecorder](https://github.com/labstreaminglayer/App-LabRecorder/releases). Use at least 1.13, as this version supports BIDS-conform recording, offers a remote interface and has a critical timing bugfix included.
 
 ### Requirements
 
