@@ -84,4 +84,17 @@ else:  # pragma: no cover
 
 __doc__ += f"""
 During import, a basic library will be created. By default, it contains
-the following set of auditory stimuli: {', '.join([str(k) for k in library.__dict__])}. These stimuli can be addressed by dot.notation from :data:`reiz.audio.library`, for example like :data:`reiz.audio.library.beep`"""
+the following set of auditory stimuli: {', '.join([str(k) for k in library.__dict__])}. These stimuli can be addressed by dot.notation from :data:`reiz.audio.library`, for example like :data:`reiz.audio.library.beep`
+
+.. currentmodule:: reiz._audio.primitives
+
+.. autoclass:: Message
+   :members:
+
+.. autoclass:: Hertz
+   :members:
+
+.. autoclass:: AudioFile
+   :members:
+
+"""

@@ -29,7 +29,10 @@ class PlatformIndependentMessage():
 
     def __init__(self, message: str = "Hello World",
                  rate=135, voiceid=0):
-        self.engine = pyttsx3.init()
+        if "darwin" in platform:
+            self.engine = pyttsx3.init("dummy")
+        else:
+            self.engine = pyttsx3.init()
         self.engine.setProperty('rate', rate)
         voices = self.engine.getProperty('voices')
         self.engine.setProperty('voice', voices[voiceid])
@@ -143,8 +146,11 @@ class Silent_Mixin(object):
 
 # conditional interface for Message
 
-if importlib.util.find_spec("pyttsx3") is not None:
-    import pyttsx3
-    tts_Mixin = PlatformIndependentMessage
-else:
+if importlib.util.find_spec("pyttsx3") is None:  # pragma: no cover
     tts_Mixin = Silent_Mixin
+else:
+    if "darwin" in platform:  # pragma: no cover
+        tts_Mixin = Silent_Mixin
+    else:
+        import pyttsx3
+        tts_Mixin = PlatformIndependentMessage

@@ -9,7 +9,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='Reiz',
-    version="v0.3.3.2",
+    version="v0.3.3.3",
     description='A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -29,15 +29,17 @@ setup(
     entry_points={"console_scripts":
                   ["reiz-marker=reiz._marker.__main__:main"]},
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: Developers',
-        'Intended Audience :: Education',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3 :: Only',
-        'Topic :: Multimedia',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Topic :: Multimedia :: Graphics :: Presentation',
+        'Topic :: Multimedia :: Sound/Audio :: Players',
         'Topic :: Scientific/Engineering :: Human Machine Interfaces',
         'Topic :: Scientific/Engineering :: Medical Science Apps.'
     ]
