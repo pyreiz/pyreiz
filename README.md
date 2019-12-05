@@ -2,9 +2,7 @@
 
 pyReiz is a low-level auditory and visual stimulus presentation suite wrapping pyglet, sending markers via a pylsl outlet. You can also read more [extensive documentation online](https://reiz.agricolab.de/index.html).
 
-[![DOI](https://zenodo.org/badge/181853750.svg)](https://doi.org/10.5281/zenodo.3551933) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://en.wikipedia.org/wiki/MIT_License)
-[![PyPI version](https://badge.fury.io/py/Reiz.svg)](https://badge.fury.io/py/Reiz) ![Since Release](https://img.shields.io/github/commits-since/pyreiz/pyreiz/v0.3.3.2/master) [![Build Status](https://travis-ci.com/pyreiz/pyreiz.svg?branch=master)](https://travis-ci.com/pyreiz/pyreiz) [![Coverage Status](https://coveralls.io/repos/github/pyreiz/pyreiz/badge.svg?branch=master)](https://coveralls.io/github/pyreiz/pyreiz?branch=master)
-<img src = "basic-example.gif" width=100%>
+[![DOI](https://zenodo.org/badge/181853750.svg)](https://doi.org/10.5281/zenodo.3551933) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://en.wikipedia.org/wiki/MIT_License) [![PyPI version](https://badge.fury.io/py/Reiz.svg)](https://badge.fury.io/py/Reiz) [![Build Status](https://travis-ci.com/pyreiz/pyreiz.svg?branch=master)](https://travis-ci.com/pyreiz/pyreiz) [![Coverage Status](https://coveralls.io/repos/github/pyreiz/pyreiz/badge.svg?branch=master)](https://coveralls.io/github/pyreiz/pyreiz?branch=master) ![](basic-example.gif)
 
 ## Installation
 
@@ -29,7 +27,7 @@ pip install Reiz[tts]
 
 Mac is currently not supported.
 
-## Development
+### Development
 
 ```bash
 git clone https://github.com/pyreiz/pyreiz.git
@@ -41,11 +39,11 @@ pip install -e .[tts]
 
 After you installed Reiz, you can give it a test-run by calling `python -m reiz.examples.basic` from your terminal. This should start a throwaway MarkerServer, and present a series of visual and auditory stimuli. If anything does not work out, [inform us of the issue](https://github.com/pyreiz/pyreiz/issues).
 
-## Create your own experiment
+## Additional Information
+
+### Create your own experiment
 
 Examples can be found in `reiz/examples`. A quite extensively documented basic example can be found here: [basic example](/reiz/examples/basic.py).
-
-## Additional Information
 
 ### Recording
 
