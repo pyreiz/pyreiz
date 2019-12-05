@@ -12,7 +12,6 @@ long_description.replace(
     "https://raw.githubusercontent.com/pyreiz/pyreiz/master/basic-example.gif",
 )
 
-
 setup(
     name="Reiz",
     version="v0.3.4.1",
