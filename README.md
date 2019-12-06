@@ -27,7 +27,11 @@ pip install Reiz[tts]
 
 ### Mac
 
-Mac is currently not supported.
+On Mac, tts and reiz-marker are not supported. These functionalities will be mocked, so at least, you can develop on Mac to deploy on Linux or Windows.
+
+```bash
+pip install Reiz
+```
 
 ### Development
 

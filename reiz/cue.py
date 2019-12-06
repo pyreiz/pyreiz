@@ -4,7 +4,6 @@ import reiz.marker as marker
 from reiz.time import Clock as _Clock
 from types import SimpleNamespace
 
-
 class Cue():
     """bind stimuli and a marker for synchronous presentation
 

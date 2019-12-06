@@ -13,18 +13,14 @@ def msg():
 
 @fixture
 def silence():
-
     class Silence(Silent_Mixin, Sound):
         pass
+
     return Silence()
 
 
 def test_silence(silence):
     assert silence.duration == 0.1
-
-
-def test_properties(msg):
-    assert msg.volume == 0
 
 
 def test_play_stop(msg):
@@ -35,5 +31,6 @@ def test_play_stop(msg):
 
 
 def test_play_blocking(msg):
+    assert msg.volume == 0
     played_time = msg.play_blocking()
     assert played_time == 0

@@ -14,7 +14,7 @@ long_description.replace(
 
 setup(
     name="Reiz",
-    version="v0.3.4.1",
+    version="v0.3.4.2",
     description="A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.",
     long_description=long_description,
     long_description_content_type="text/markdown",

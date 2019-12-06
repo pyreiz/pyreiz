@@ -3,6 +3,8 @@ import pylsl
 import socket
 import json
 from logging import getLogger
+from sys import platform
+
 log = getLogger()
 
 
@@ -22,23 +24,24 @@ def sanitize_string(marker: str) -> str:
     sanitized:str
         the sanitized string
     """
-    translation = str.maketrans({'ä': 'ae', 'ö': 'oe', 'ü': 'ue', ' ': '_'})
+    translation = str.maketrans({"ä": "ae", "ö": "oe", "ü": "ue", " ": "_"})
     marker = marker.lower().strip().translate(translation)
 
     if marker.lower() == "ping":
         marker = json.dumps({"msg": marker})
         log.critical(
-            f"'ping' is a reserved key-word for pinging the marker-server. If you want to ping, use available. Forwarded {marker} instead")
+            f"'ping' is a reserved key-word for pinging the marker-server. If you want to ping, use available. Forwarded {marker} instead"
+        )
     if marker.lower() == "poison-pill":
         marker = {"msg": marker}
         marker = json.dumps(marker)
         log.critical(
-            f"'poison-pill' is a reserved key-word for shutting down the marker-server. If you want to shut-down, use kill. Forwarded {marker} instead")
+            f"'poison-pill' is a reserved key-word for shutting down the marker-server. If you want to shut-down, use kill. Forwarded {marker} instead"
+        )
     return marker
 
 
-def push(marker: str = '', tstamp: float = None,
-         sanitize=True, port: int = 7654):
+def push(marker: str = "", tstamp: float = None, sanitize=True, port: int = 7654):
     """push a marker to the MarkerServer for redistribution as LSL
 
     args
@@ -65,7 +68,7 @@ def push(marker: str = '', tstamp: float = None,
     c.push(marker, tstamp)
 
 
-def push_json(marker: dict = {'key': 'value'}, tstamp: float = None):
+def push_json(marker: dict = {"key": "value"}, tstamp: float = None):
     """encode a dictionary as json and push it to the MarkerServer
 
     args
@@ -102,22 +105,21 @@ def available(port: int = 7654, host: str = "127.0.0.1", verbose=True) -> bool:
     """
     c = _Client(host=host, port=port)
     try:
-        c.push('ping', pylsl.local_clock())
+        c.push("ping", pylsl.local_clock())
         return True
     except ConnectionRefusedError as e:
         if verbose:
             print(e)
-            print(f'Markerserver at {host}:{port} is not available')
+            print(f"Markerserver at {host}:{port} is not available")
         return False
 
 
-def kill(host: str = "127.0.0.1",
-         port: int = 7654):
+def kill(host: str = "127.0.0.1", port: int = 7654):
     c = _Client(port=port, host=host)
-    c.push("poison-pill",  pylsl.local_clock())
+    c.push("poison-pill", pylsl.local_clock())
 
 
-class _Client():
+class _Client:
     "Basic Client communicating with the MarkerServer"
 
     def __init__(self, host="127.0.0.1", port: int = 7654, verbose=True):
@@ -125,26 +127,43 @@ class _Client():
         self.port = port
         self.verbose = verbose
 
-    def push(self, marker: str = '', tstamp: float = None):
-        'connects, sends a message, and close the connection'
+    def push(self, marker: str = "", tstamp: float = None):
+        "connects, sends a message, and close the connection"
         self.connect()
         self.write(marker, tstamp)
         self.close()
 
     def connect(self):
-        'connect wth the remote server'
+        "connect wth the remote server"
         self.interface = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.interface.connect((self.host, self.port))
         self.interface.settimeout(1)
 
     def write(self, marker, tstamp):
-        'encode message into ascii and send all bytes'
-        msg = json.dumps((marker, tstamp)).encode('ascii')
+        "encode message into ascii and send all bytes"
+        msg = json.dumps((marker, tstamp)).encode("ascii")
         if self.verbose:
-            print(f'Sending {marker} at {tstamp}')
+            print(f"Sending {marker} at {tstamp}")
         self.interface.sendall(msg)
 
     def close(self):
-        'closes the connection'
+        "closes the connection"
         self.interface.shutdown(1)
         self.interface.close()
+
+
+if "darwin" in platform:  # pragma no cover
+
+    def fake_push(
+        marker: str = "", tstamp: float = None, sanitize=True, port: int = 7654
+    ):
+
+        if tstamp is None:
+            tstamp = pylsl.local_clock()
+        if sanitize:
+            marker = sanitize_string(marker)
+        print(f'MacOs: fake_push "{marker}" at {tstamp}')
+
+    fake_push.__doc__ = push.__doc__
+    push = fake_push
+

@@ -12,6 +12,7 @@ from time import sleep
 from sys import platform
 from pylsl import local_clock
 from logging import getLogger
+
 logger = getLogger("throw-away-marker-server")
 
 server = None
@@ -46,12 +47,12 @@ def available(port: int = 7654, verbose=True) -> bool:
     host: str = "127.0.0.1"
     c = _Client(host=host, port=port)
     try:
-        c.push('None', local_clock())
+        c.push("None", local_clock())
         return True
     except ConnectionRefusedError as e:
         if verbose:
             print(e)
-            print(f'Markerserver at {host}:{port} is not available')
+            print(f"Markerserver at {host}:{port} is not available")
         return False
 
 
@@ -70,13 +71,13 @@ def start():
     """
     global server
     if server is None:
-        logger.debug("Starting a marker-server")
+        print("Starting a marker-server")
         server = Popen(["reiz-marker", "--name", "reiz-marker"])
         while not available(verbose=False):
             sleep(0.5)
-        return server
+        return True
     else:
-        logger.debug("A marker-server is already running")
+        print("A marker-server is already running")
         return None
 
 
@@ -87,11 +88,12 @@ def stop():
     """
     global server
     if server is None:
-        logger.debug("No marker-server is currently running")
+        print("No marker-server is currently running")
         return True
     else:
         killer = Popen(["reiz-marker", "--kill", "--name", "reiz-marker"])
         killer.communicate()
         while available(verbose=False):
             sleep(0.5)
+        server = None
         return True
