@@ -21,16 +21,17 @@ def test_audio_library():
 def mock_wavfiles():
     SAMPLE_LEN = 44100
     with TemporaryDirectory() as fld:
-        with NamedTemporaryFile(suffix=".wav", dir=fld) as wf:
-            with wave.open(wf.name, 'wb') as wfile:
-                wfile.setparams((2, 2, 44100, 0, 'NONE', 'not compressed'))
-                for i in range(0, SAMPLE_LEN):
-                    value = random.randint(-32767, 32767)
-                    packed_value = struct.pack('h', value)
-                    wfile.writeframes(packed_value)
-                    wfile.writeframes(packed_value)
-                wfile.close()
-                yield fld, Path(wf.name).stem
+        wf = (Path(fld) / "tmp").with_suffix(".wav")
+        with wave.open(str(wf), 'wb') as wfile:
+            wfile.setparams((2, 2, 44100, 0, 'NONE', 'not compressed'))
+            for i in range(0, SAMPLE_LEN):
+                value = random.randint(-32767, 32767)
+                packed_value = struct.pack('h', value)
+                wfile.writeframes(packed_value)
+                wfile.writeframes(packed_value)
+            wfile.close()
+            yield fld, Path(wf.name).stem
+        wf.unlink()
 
 
 def test_read_folder(mock_wavfiles):
