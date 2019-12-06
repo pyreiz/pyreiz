@@ -52,16 +52,18 @@ class Base(object):
     Basic attributes of all drawing primitives
     """
     def __init__(self, x, y, z=0, color=(0.,0.,0.,1.), stroke=0, rotation=0):
-        try :
-            self.rect
-        except AttributeError:
-            self.rect = Rect(x,y,1,1) # this inits x,y and loc as well
+        # try :
+        #     self.rect
+        # except AttributeError:
+        #     self.rect = Rect(x,y,1,1) # this inits x,y and loc as well
         self.visible = 1 #
         self.z = z 
         self.rotation = rotation
         self.stroke = stroke
         self.color = color
         self.q = gl.gluNewQuadric()
+
+
     def setLoc(self, p) : self.rect.loc = p 
     def getLoc(self) : return self.rect.loc
     def setX(self, x) : self.rect.x = x 
@@ -81,29 +83,29 @@ class Base(object):
     def draw(self):
         self.render()
     
-class Pixel(Base):
-    """ A pixel at a given x,y,z position and color.
-        Pixel(x=12, y=100, z=900, color=(1,0,0,0.5))
-    """
-    def render(self):
-        """
-            Draws a pixel at a given x and y with given color .
-            Color = 3 or 4 arg tuple. RGB values from 0 to 1 being 1 max value (1, 1, 1) would be white
-        """
-        gl.glColor4f(*self.color)
-##        glDisable(GL_TEXTURE_2D) # disable in case it was on
+# class Pixel(Base):
+#     """ A pixel at a given x,y,z position and color.
+#         Pixel(x=12, y=100, z=900, color=(1,0,0,0.5))
+#     """
+#     def render(self):
+#         """
+#             Draws a pixel at a given x and y with given color .
+#             Color = 3 or 4 arg tuple. RGB values from 0 to 1 being 1 max value (1, 1, 1) would be white
+#         """
+#         gl.glColor4f(*self.color)
+# ##        glDisable(GL_TEXTURE_2D) # disable in case it was on
             
-        gl.glPushMatrix() # remember previous matrix state before translating, rotating
-        gl.glTranslatef(self.x, self.y, -self.z) # translate to point to draw
+#         gl.glPushMatrix() # remember previous matrix state before translating, rotating
+#         gl.glTranslatef(self.x, self.y, -self.z) # translate to point to draw
 
-        gl.glBegin(gl.GL_POINTS) # draw point
-        gl.glVertex3f(0.0, 0.0, 0.0)
-        gl.glEnd()
+#         gl.glBegin(gl.GL_POINTS) # draw point
+#         gl.glVertex3f(0.0, 0.0, 0.0)
+#         gl.glEnd()
 
-        gl.glPopMatrix() # back to previous matrix state
+#         gl.glPopMatrix() # back to previous matrix state
 
-    def intersects(self, x,y):
-        if x==self.x and y==self.y : return True
+#     def intersects(self, x,y):
+#         if x==self.x and y==self.y : return True
 
 
 class Circle(Base):
@@ -118,10 +120,10 @@ class Circle(Base):
         self.circleresolution = 60
         Base.__init__(self, x, y, z, color, stroke, rotation)
         
-    def setWidth(self, w):
-        self.radius = w*0.5
-        self.rect.width = w
-    width = property(Base.getWidth, setWidth)
+    # def setWidth(self, w):
+    #     self.radius = w*0.5
+    #     self.rect.width = w
+    # width = property(Base.getWidth, setWidth)
         
     def render(self):
         """ Draw Circle
@@ -153,42 +155,42 @@ class Circle(Base):
 
 
 
-class Arc(Base):
-    """ Arc class
-        Arc(x=10, y=10, z=0, radius=1, start=0, sweep=1, color=(0,0,0,1), stroke=0, rotation=0.0, style=GLU_FILL)
-        style choices are : GLU_LINE, GLU_FILL, GLU_SILHOUETTE, GLU_POINT
-    """
-    def __init__(self, x=10, y=10, z=0, radius=1, start=0, sweep=1, color=(0,0,0,1), stroke=0,
-                 rotation=0.0, style=gl.GLU_FILL):
+# class Arc(Base):
+#     """ Arc class
+#         Arc(x=10, y=10, z=0, radius=1, start=0, sweep=1, color=(0,0,0,1), stroke=0, rotation=0.0, style=GLU_FILL)
+#         style choices are : GLU_LINE, GLU_FILL, GLU_SILHOUETTE, GLU_POINT
+#     """
+#     def __init__(self, x=10, y=10, z=0, radius=1, start=0, sweep=1, color=(0,0,0,1), stroke=0,
+#                  rotation=0.0, style=gl.GLU_FILL):
 
-        Base.__init__(self, x,y,z,color, stroke, rotation)
-        self.radius = radius
-        self.start = start
-        self.sweep = sweep
-        self.style = style
-        self.circleresolution = 60
+#         Base.__init__(self, x,y,z,color, stroke, rotation)
+#         self.radius = radius
+#         self.start = start
+#         self.sweep = sweep
+#         self.style = style
+#         self.circleresolution = 60
         
-    def render(self):
-        """
-        Draws Arc
-        """
-        gl.glColor4f(*self.color)
-        gl.glPushMatrix()
-        gl.glTranslatef(self.x, self.y, -self.z)
-        gl.glRotatef(self.rotation, 0, 0, 0.1)
+#     def render(self):
+#         """
+#         Draws Arc
+#         """
+#         gl.glColor4f(*self.color)
+#         gl.glPushMatrix()
+#         gl.glTranslatef(self.x, self.y, -self.z)
+#         gl.glRotatef(self.rotation, 0, 0, 0.1)
 
-        if self.stroke : 
-            inner = self.radius - self.stroke
-            if inner < 0: inner=0
-        else :
-            inner = 0 # full, no inner
-        self.start -= 180
+#         if self.stroke : 
+#             inner = self.radius - self.stroke
+#             if inner < 0: inner=0
+#         else :
+#             inner = 0 # full, no inner
+#         self.start -= 180
         
-        gl.gluQuadricDrawStyle(self.q, self.style)
+#         gl.gluQuadricDrawStyle(self.q, self.style)
         
-        gl.gluPartialDisk(self.q, inner, self.radius, self.circleresolution, 1, self.start, self.sweep)
+#         gl.gluPartialDisk(self.q, inner, self.radius, self.circleresolution, 1, self.start, self.sweep)
         
-        gl.glPopMatrix()
+#         gl.glPopMatrix()
 
 #%%
 
@@ -207,18 +209,18 @@ class Polygon(Base):
         
         Base.__init__(self, self.rect.x, self.rect.y, z,color,stroke,rotation)
 
-    def updateV(self):
-        self.v = [(self.rect.x + n[0], self.rect.y + n[1]) for n in self.v2]
+    # def updateV(self):
+    #     self.v = [(self.rect.x + n[0], self.rect.y + n[1]) for n in self.v2]
 
-    def setLoc(self, p):
-        self.rect.loc = p ; self.updateV()
-    def setX(self, x):
-        self.rect.x = x ; self.updateV()
-    def setY(self, y):
-        self.rect.y = y; self.updateV()
-    x = property(Base.getX, setX)
-    y = property(Base.getY, setY)
-    loc = property(Base.getLoc, setLoc)
+    # def setLoc(self, p):
+    #     self.rect.loc = p ; self.updateV()
+    # def setX(self, x):
+    #     self.rect.x = x ; self.updateV()
+    # def setY(self, y):
+    #     self.rect.y = y; self.updateV()
+    # x = property(Base.getX, setX)
+    # y = property(Base.getY, setY)
+    # loc = property(Base.getLoc, setLoc)
     
     def render(self):
         """ Draw Polygon
@@ -323,19 +325,19 @@ class LineRel(Base):
         gl.glPopMatrix()
 
 
-    def updateAB(self):
-        self.a = self.x + self.a[0], self.y + self.a[0]
-        self.b = self.x + self.b[0], self.y + self.b[0]
+    # def updateAB(self):
+    #     self.a = self.x + self.a[0], self.y + self.a[0]
+    #     self.b = self.x + self.b[0], self.y + self.b[0]
 
-    def setLoc(self, p):
-        self.rect.loc = p ; self.updateAB()
-    def setX(self, x):
-        self.rect.x = x ; self.updateAB()
-    def setY(self, y):
-        self.rect.y = y; self.updateAB()
-    x = property(Base.getX, setX)
-    y = property(Base.getY, setY)
-    loc = property(Base.getLoc, setLoc)
+    # def setLoc(self, p):
+    #     self.rect.loc = p ; self.updateAB()
+    # def setX(self, x):
+    #     self.rect.x = x ; self.updateAB()
+    # def setY(self, y):
+    #     self.rect.y = y; self.updateAB()
+    # x = property(Base.getX, setX)
+    # y = property(Base.getY, setY)
+    # loc = property(Base.getLoc, setLoc)
 
 
 class Line(LineRel):
