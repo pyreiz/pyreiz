@@ -40,15 +40,15 @@ _defaults = libConf(
 
 
 def read_folder(folder: str = None) -> SimpleNamespace:
-    """"read all .jog and .png from a specific folder and return them as a library
+    """"read image files in a the specified folder into a library
 
     args
     ----
     folder:str
         the path to the folder with the images
 
-    .. note:: 
-      the library is a simplenamespace and you can use dot notation to index the created images. These fields are created from the filename. Some basic sanitization is performed, but is best if files have a name which could be called from python. For example, files should be named 'image_file.png' instead of 'image-file.png'.
+
+    The function selects all files ending in .png and .jpg. It collects them  into a SimpleNamespace, so you can use dot notation to select the images. These fields are named based on the filename. Some basic sanitization is performed, but is nonetheless best if the files already have names which could be called safely from python. For example, files should be named 'image_file.png' instead of 'image-file.png'.
           
     """
 
