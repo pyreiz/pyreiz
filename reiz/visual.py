@@ -10,33 +10,64 @@ from typing import Dict, NewType, Any
 from pathlib import Path
 from pkg_resources import resource_filename
 
-libConf = NewType("libConf", Dict[str, Dict[str, Any]]
-                  )  #: Dict[str, Dict[str, Any], a dictionary of types and respective keywords arguments
+libConf = NewType(
+    "libConf", Dict[str, Dict[str, Any]]
+)  #: Dict[str, Dict[str, Any], a dictionary of types and respective keywords arguments
 
-_defaults = libConf({
-    "Mural": {
-        "post": {"text": "Run endet"},
-        "pre": {"text": "Run beginnt"},
-        "eo": {"text": "Augen offen"},
-        "ec": {"text": "Augen zu"},
-        "ready": {"text": "Bereit machen"},
-        "los": {"text": "Los"},
-        "go": {"text": "Go!"},
-        "imagine": {"text": "Bewegung vorstellen"},
-        "move": {"text": "Bewegung starten"},
-        "count": {"text": "Zahlen berechnen"},
-        "relax": {"text": "Entspannen"},
-        "rating": {"text": "0 - 1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 - 10", "fontsize": 0.75},
-    },
-    "Cross": {
-        "fixation": {"color": "white"},
-    },
-
-    "Image": {
-        "logo": {"imgpath": resource_filename(__name__, 'data/logo.png')},
+_defaults = libConf(
+    {
+        "Mural": {
+            "post": {"text": "Run endet"},
+            "pre": {"text": "Run beginnt"},
+            "eo": {"text": "Augen offen"},
+            "ec": {"text": "Augen zu"},
+            "ready": {"text": "Bereit machen"},
+            "los": {"text": "Los"},
+            "go": {"text": "Go!"},
+            "imagine": {"text": "Bewegung vorstellen"},
+            "move": {"text": "Bewegung starten"},
+            "count": {"text": "Zahlen berechnen"},
+            "relax": {"text": "Entspannen"},
+            "rating": {
+                "text": "0 - 1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 - 10",
+                "fontsize": 0.75,
+            },
+        },
+        "Cross": {"fixation": {"color": "white"},},
+        "Image": {"logo": {"imgpath": resource_filename(__name__, "data/logo.png")},},
     }
+)  #: libConf
 
-})  #: libConf
+
+def read_folder(folder: str = None) -> SimpleNamespace:
+    """"read all .jog and .png from a specific folder and return them as a library
+
+    args
+    ----
+    folder:str
+        the path to the folder with the images
+
+    .. note:: 
+      the library is a simplenamespace and you can use dot notation to index the created images. These fields are created from the filename. Some basic sanitization is performed, but is best if files have a name which could be called from python. For example, files should be named 'image_file.png' instead of 'image-file.png'.
+          
+    """
+
+    folder = folder or resource_filename(__name__, "data/")
+
+    def sanitize(fname: str) -> str:
+        return fname.replace("-", "_").replace(" ", "_").replace(":", "_")
+
+    conf = dict()
+    conf["Image"] = dict()
+    pth = Path(folder).expanduser().absolute()
+    print(pth)
+    for file in pth.glob("*.png"):
+        print(file)
+        conf["Image"][sanitize(file.stem)] = {"imgpath": str(file)}
+    for file in pth.glob("*.jpg"):
+        print(file)
+        conf["Image"][sanitize(file.stem)] = {"imgpath": str(file)}
+    return make_library(conf)
 
 
 def make_library(settings: libConf = None, failraise=False) -> SimpleNamespace:
@@ -70,15 +101,15 @@ def make_library(settings: libConf = None, failraise=False) -> SimpleNamespace:
                 library[name] = Image(**args)
             else:
                 if failraise:
-                    raise(f"{key} with {args} can't be processed")
+                    raise (f"{key} with {args} can't be processed")
 
     library = SimpleNamespace(**library)
     return library
 
 
-if not 'DOC' in _env.keys():
+if not "DOC" in _env.keys():
     library = make_library()
-else:   # pragma: no cover
+else:  # pragma: no cover
     mock = dict()
     for t, item in _defaults.items():
         for k, v in item.items():

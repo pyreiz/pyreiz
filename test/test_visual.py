@@ -54,3 +54,8 @@ def test_iteration(canvas):
 
     for v in [reiz._visual.complex.Line(), reiz._visual.complex.Line()]:
         v.draw(canvas)
+
+
+def test_read_folder(canvas):
+    lib = reiz.visual.read_folder()
+    assert lib.__dict__.get("logo", None) is not None
