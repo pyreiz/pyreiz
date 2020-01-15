@@ -12,6 +12,18 @@ long_description.replace(
     "https://raw.githubusercontent.com/pyreiz/pyreiz/master/basic-example.gif",
 )
 
+from os import environ
+
+if environ.get("READTHEDOCS", False):
+    install_requires = [
+        "pyglet >= 1.4.7",
+    ]
+else:
+    install_requires = [
+        "pyglet >= 1.4.7",
+        "pylsl >= 1.13",
+    ]
+
 setup(
     name="Reiz",
     version="v0.3.4.2",
@@ -26,7 +38,7 @@ setup(
     include_package_data=True,
     package_data={"reiz": ["data/*.*"]},
     packages=["reiz"],
-    install_requires=["pyglet >= 1.4.7", "pylsl >= 1.13",],
+    install_requires=install_requires,
     extras_require={"tts": ["pyttsx3 >= 2.7"]},
     entry_points={"console_scripts": ["reiz-marker=reiz._marker.__main__:main"]},
     classifiers=[
