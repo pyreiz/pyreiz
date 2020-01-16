@@ -14,10 +14,15 @@ long_description.replace(
 
 from os import environ
 
+print(environ)
 if environ.get("READTHEDOCS", False):
     install_requires = [
         "pyglet >= 1.4.7",
     ]
+    import os
+
+    os.system("conda install pylyl -c tstenner")
+    print("Running on RTD")
 else:
     install_requires = [
         "pyglet >= 1.4.7",
@@ -37,7 +42,7 @@ setup(
     license="MIT",
     include_package_data=True,
     package_data={"reiz": ["data/*.*"]},
-    packages=["reiz"],
+    packages=["reiz", "reiz._visual", "reiz._audio", "reiz.examples", "reiz._marker"],
     install_requires=install_requires,
     extras_require={"tts": ["pyttsx3 >= 2.7"]},
     entry_points={"console_scripts": ["reiz-marker=reiz._marker.__main__:main"]},

@@ -13,6 +13,9 @@ sphinx:
 # Build documentation with MkDocs
 #mkdocs:
 #  configuration: mkdocs.yml
+conda:
+  environment: docs/environment.yml
+
 
 # Optionally build your docs in additional formats such as PDF and ePub
 formats: 
