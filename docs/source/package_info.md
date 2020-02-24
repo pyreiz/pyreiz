@@ -4,7 +4,9 @@ pyReiz is a low-level auditory and visual stimulus presentation suite wrapping p
 
 [![DOI](https://zenodo.org/badge/181853750.svg)](https://doi.org/10.5281/zenodo.3551933) [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://en.wikipedia.org/wiki/MIT_License) [![PyPI version](https://badge.fury.io/py/Reiz.svg)](https://badge.fury.io/py/Reiz) [![Build Status](https://travis-ci.com/pyreiz/pyreiz.svg?branch=master)](https://travis-ci.com/pyreiz/pyreiz) [![Coverage Status](https://coveralls.io/repos/github/pyreiz/pyreiz/badge.svg?branch=master)](https://coveralls.io/github/pyreiz/pyreiz?branch=master) [![Documentation Status](https://readthedocs.org/projects/reiz/badge/?version=latest)](https://reiz.readthedocs.io/en/latest/?badge=latest)
 
-![basic-example](basic-example.gif)
+<br>
+
+![basic-example](../../basic-example.gif)
 
 ## Installation
 

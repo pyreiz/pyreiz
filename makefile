@@ -11,13 +11,7 @@ clean:
 
 .PHONY: test
 test: build
-	twine check dist/*
-	# twine upload --repository-url https://test.pypi.org/legacy/ dist/* --verbose
-	virtualenv .test
-	source .test/bin/activate
-	pip install git+https://github.com/labstreaminglayer/liblsl-Python.git
-	pip install dist/*.whl
-	pytest
+	test/runtest
 
 .PHONY: upload
 upload: build

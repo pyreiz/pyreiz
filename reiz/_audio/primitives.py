@@ -6,17 +6,17 @@ Building blocks for auditory stimuli
 
 from .tts import tts_Mixin
 from sys import platform
-from threading import Timer
+#from threading import Timer
 import time
 from pyglet.media.codecs.base import StaticSource
+from pyglet.media import Player
 from pyglet.media.synthesis import ADSREnvelope, Sine
 import pyglet
 
-# %%
 
-
-class Sound():
+class Sound:
     """interface for a generic sound object"""
+
     source = None
     volume = 1
 
@@ -30,9 +30,7 @@ class Sound():
         """
         t0 = time.time()
         player = self.source.play()
-        player.volume = self.volume
-        t = Timer(player.source.duration, player.delete)
-        t.start()
+        player.volume = self.volume        
         return player.source.duration + t0 - time.time()
 
     def play_blocking(self) -> float:
@@ -47,7 +45,7 @@ class Sound():
         """
         rest = self.play()
         t0 = time.time()
-        while (time.time()-t0) < rest:
+        while (time.time() - t0) < rest:
             pass
         return 0
 
@@ -88,14 +86,23 @@ class Hertz(Sound):
         relative volume
     """
 
-    def __init__(self, duration_in_ms: float = 500, frequency: int = 440, volume: float = 1):
+    def __init__(
+        self, duration_in_ms: float = 500, frequency: int = 440, volume: float = 1
+    ):
 
-        adsr = ADSREnvelope(attack=duration_in_ms/8000,
-                            decay=duration_in_ms/2000,
-                            release=duration_in_ms/8000,
-                            sustain_amplitude=volume)
-        sine = Sine(duration=duration_in_ms/1000, frequency=frequency,
-                    sample_size=16, sample_rate=44100, envelope=adsr)
+        adsr = ADSREnvelope(
+            attack=duration_in_ms / 8000,
+            decay=duration_in_ms / 2000,
+            release=duration_in_ms / 8000,
+            sustain_amplitude=volume,
+        )
+        sine = Sine(
+            duration=duration_in_ms / 1000,
+            frequency=frequency,
+            sample_size=16,
+            sample_rate=44100,
+            envelope=adsr,
+        )
         self._duration_in_ms = duration_in_ms
         self._frequency = frequency
         self.source = pyglet.media.StaticSource(sine)
@@ -124,4 +131,6 @@ class Message(tts_Mixin, Sound):
     If reiz was installed with `[tts]` as extra, this class will use pyttsx3
     to generate auditory stimuli on demand. If pyttsx3 is not found, there will be only silence when creating an `audio.Message`.
     """
+
     pass
+

@@ -17,7 +17,7 @@ from os import environ
 print(environ)
 if environ.get("READTHEDOCS", False):
     install_requires = [
-        "pyglet >= 1.4.7",
+        "pyglet >= 1.5",
     ]
     import os
 
@@ -31,7 +31,7 @@ else:
 
 setup(
     name="Reiz",
-    version="v0.3.4.2",
+    version="v0.3.5.0",
     description="A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.",
     long_description=long_description,
     long_description_content_type="text/markdown",
