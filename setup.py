@@ -25,13 +25,13 @@ if environ.get("READTHEDOCS", False):
     print("Running on RTD")
 else:
     install_requires = [
-        "pyglet >= 1.4.7",
+        "pyglet >= 1.5",
         "pylsl >= 1.13",
     ]
 
 setup(
     name="Reiz",
-    version="v0.3.5.0",
+    version="v3.5.1",
     description="A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.",
     long_description=long_description,
     long_description_content_type="text/markdown",
