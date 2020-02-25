@@ -6,8 +6,7 @@ Building blocks for auditory stimuli
 
 from .tts import tts_Mixin
 from sys import platform
-
-# from threading import Timer
+from threading import Timer
 import time
 from pyglet.media.codecs.base import StaticSource
 from pyglet.media import Player
@@ -32,6 +31,8 @@ class Sound:
         t0 = time.time()
         player = self.source.play()
         player.volume = self.volume
+        t = Timer(player.source.duration, player.delete)
+        t.start()
         return player.source.duration + t0 - time.time()
 
     def play_blocking(self) -> float:
