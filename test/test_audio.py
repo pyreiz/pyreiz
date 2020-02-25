@@ -1,5 +1,5 @@
 import reiz
-from pytest import fixture
+from pytest import fixture, raises
 from tempfile import TemporaryDirectory, NamedTemporaryFile
 import wave
 import random
@@ -22,11 +22,11 @@ def mock_wavfiles():
     SAMPLE_LEN = 44100
     with TemporaryDirectory() as fld:
         wf = (Path(fld) / "tmp").with_suffix(".wav")
-        with wave.open(str(wf), 'wb') as wfile:
-            wfile.setparams((2, 2, 44100, 0, 'NONE', 'not compressed'))
+        with wave.open(str(wf), "wb") as wfile:
+            wfile.setparams((2, 2, 44100, 0, "NONE", "not compressed"))
             for i in range(0, SAMPLE_LEN):
                 value = random.randint(-32767, 32767)
-                packed_value = struct.pack('h', value)
+                packed_value = struct.pack("h", value)
                 wfile.writeframes(packed_value)
                 wfile.writeframes(packed_value)
             wfile.close()
@@ -38,3 +38,10 @@ def test_read_folder(mock_wavfiles):
     fld, fname = mock_wavfiles
     lib = reiz.audio.read_folder(fld)
     assert fname in lib.__dict__.keys()
+
+
+def test_noise():
+    b = reiz.audio.Noise(100, "brown")
+    w = reiz.audio.Noise(100, "white")
+    with raises(NotImplementedError):
+        reiz.audio.Noise(100, "notimplemented")

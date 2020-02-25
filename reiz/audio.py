@@ -2,20 +2,20 @@
 """
 from types import SimpleNamespace
 from os import environ as _env
-from reiz._audio.primitives import AudioFile, Hertz, Message
+from reiz._audio.primitives import AudioFile, Hertz, Message, Noise
 from pathlib import Path
 from typing import Dict, NewType, Any
-libConf = NewType("libConf", Dict[str, Dict[str, Any]]
-                  )  #: Dict[str, Dict[str, Any], a dictionary of types and respective keywords arguments
 
-_defaults = libConf({
-    "Message": {
-        "start": {"message": "start"}
-    },
-    "Hertz": {
-        "beep": {"duration_in_ms": 1000}
-    },
-})  #: libConf
+libConf = NewType(
+    "libConf", Dict[str, Dict[str, Any]]
+)  #: Dict[str, Dict[str, Any], a dictionary of types and respective keywords arguments
+
+_defaults = libConf(
+    {
+        "Message": {"start": {"message": "start"}},
+        "Hertz": {"beep": {"duration_in_ms": 1000}},
+    }
+)  #: libConf
 
 
 def make_library(settings: libConf = _defaults, failraise=False) -> SimpleNamespace:
@@ -52,12 +52,13 @@ def make_library(settings: libConf = _defaults, failraise=False) -> SimpleNamesp
 
 
 def read_folder(path: Path = None) -> SimpleNamespace:
-    'create an audio library from path'
+    "create an audio library from path"
     path = Path(path)
     if path is None or not path.exists():
         raise ValueError(f"{path} not found")
     library = dict()
     import os
+
     for f in os.listdir(path):
         key = os.path.splitext(f)[0]
         key = key.replace("(", "")
@@ -71,7 +72,7 @@ def read_folder(path: Path = None) -> SimpleNamespace:
     return library
 
 
-if not 'DOC' in _env.keys():
+if not "DOC" in _env.keys():
     library = make_library()
 else:  # pragma: no cover
     mock = dict()

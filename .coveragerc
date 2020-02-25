@@ -5,3 +5,4 @@ omit =
     # is necessarily tested when reiz.marker.start is run in test_marker
     reiz/_marker/__main__.py 
     reiz/_marker/mitm.py 
+    reiz/_audio/fft.py

@@ -6,7 +6,8 @@ Building blocks for auditory stimuli
 
 from .tts import tts_Mixin
 from sys import platform
-#from threading import Timer
+
+# from threading import Timer
 import time
 from pyglet.media.codecs.base import StaticSource
 from pyglet.media import Player
@@ -30,7 +31,7 @@ class Sound:
         """
         t0 = time.time()
         player = self.source.play()
-        player.volume = self.volume        
+        player.volume = self.volume
         return player.source.duration + t0 - time.time()
 
     def play_blocking(self) -> float:
@@ -105,7 +106,7 @@ class Hertz(Sound):
         )
         self._duration_in_ms = duration_in_ms
         self._frequency = frequency
-        self.source = pyglet.media.StaticSource(sine)
+        self.source = StaticSource(sine)
         self.volume = volume
 
     def __repr__(self):
@@ -134,3 +135,30 @@ class Message(tts_Mixin, Sound):
 
     pass
 
+
+class Noise(Sound):
+    """instantiate a noise wave
+
+    args
+    ----
+    duration_in_ms: float
+        duration of the sound in ms
+    kind: str
+        either "white" or "brown"
+    volume: float
+        relative volume
+    """
+
+    def __init__(
+        self, duration_in_ms: float = 500, kind: str = "white", volume: float = 1
+    ):
+        if kind.lower() == "white":
+            from reiz._audio.noise import WhiteNoise as _Noise
+        elif kind.lower() == "brown":
+            from reiz._audio.noise import BrownNoise as _Noise
+        else:
+            raise NotImplementedError(f"{kind} is not implemented as noise form")
+
+        self.source = StaticSource(_Noise(duration=duration_in_ms / 1000))
+
+        self.volume = volume
