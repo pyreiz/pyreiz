@@ -89,7 +89,7 @@ the following set of auditory stimuli: {', '.join([str(k) for k in library.__dic
 
 
 .. automodule:: reiz._audio.primitives
-   :members: Message, Hertz, AudioFile
+   :members: Message, Hertz, AudioFile, Noise
 
 Create libraries of auditory stimuli
 ....................................
