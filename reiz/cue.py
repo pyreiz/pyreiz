@@ -4,7 +4,8 @@ import reiz.marker as marker
 from reiz.time import Clock as _Clock
 from types import SimpleNamespace
 
-class Cue():
+
+class Cue:
     """bind stimuli and a marker for synchronous presentation
 
 
@@ -29,14 +30,13 @@ class Cue():
 
     """
 
-    def __init__(self, canvas=None, audiostim=None,
-                 visualstim=None, markerstr=None):
+    def __init__(self, canvas=None, audiostim=None, visualstim=None, markerstr=None):
         self.canvas = canvas
         self.audio = audiostim
         self.visual = visualstim
         self.marker = markerstr
 
-    def show(self, duration: float = 0, canvas=None, safetime=.2):
+    def show(self, duration: float = 0, canvas=None, safetime=0.2):
         """present all stimuli stored in the cue
 
         args
@@ -55,12 +55,15 @@ class Cue():
 
         if canvas is not None:
             self.canvas = canvas
-        if self.audio is not None:
-            self.audio.play()
         if self.marker is not None:
             marker.push(self.marker)
 
-        if duration is not None and self.visual is not None:
+        # block for duration as long as we either have a visual or an audio
+        if duration is not None and (self.visual is not None or self.audio is not None):
+            # always play the audio if available
+            if self.audio is not None:
+                self.audio.play()
+
             if duration == 0:  # show "forever"
                 self.canvas.show(self.visual)
                 return 0
@@ -74,9 +77,9 @@ class Cue():
                     # don't flip anymore if that would become relevant
                     # we only repeat presentation of the visual stimulus
                     # as audio and markers would be senseless and overlays
-                    if abs(duration-dt) > safetime:
+                    if abs(duration - dt) > safetime:
                         self.canvas.show(self.visual)
-                        clk.sleep_debiased(.1)
+                        clk.sleep_debiased(0.1)
                     dt = clk.now()
                 return dt
 

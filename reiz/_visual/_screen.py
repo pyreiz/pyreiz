@@ -132,9 +132,10 @@ class Canvas:
         "after having rendered and drawn into the backbuffer, show this"
         try:
             self.window.switch_to()
-            for v in visual:
-                if v is not None:
-                    v.draw(canvas=self)
+            if visual is not None:
+                for v in visual:
+                    if v is not None:
+                        v.draw(canvas=self)
         # except TypeError: #visual is not iterable
         #    visual.draw(canvas=self)
         except AttributeError:  # window was closed
