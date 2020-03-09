@@ -33,7 +33,24 @@ class Sound:
         player.volume = self.volume
         t = Timer(player.source.duration, player.delete)
         t.start()
+        self._keep_audio_buffer_full()
         return player.source.duration + t0 - time.time()
+
+    def _keep_audio_buffer_full(self, now=None):
+        """update the audio buffer continually
+        
+        important for sounds longer than ~2s
+        https://github.com/pyglet/pyglet/issues/158
+        """
+        now = now or time.time()
+        passed = time.time()-now
+        t = Timer(.5, self._keep_audio_buffer_full, args=(now,))
+        if passed < self.duration:
+            pyglet.clock.tick()
+          #  print("Buffer up")
+            t.start()
+        #else:
+        #    print("Stopped keeping the audiobuffer full at", now)
 
     def play_blocking(self) -> float:
         """"play the sound and block until playing is finished
@@ -44,11 +61,12 @@ class Sound:
             seconds until the sound would finish playing. Naturally, it always
             returns 0. The output is kept here to allow easy substitution with
             : func: `Sound.play`
-        """
+        """    
         rest = self.play()
-        t0 = time.time()
+        t0 = time.time()                
         while (time.time() - t0) < rest:
             pass
+            
         return 0
 
     @property
