@@ -17,7 +17,7 @@ from os import environ
 print(environ)
 if environ.get("READTHEDOCS", False):
     install_requires = [
-        "pyglet >= 1.5",
+        "pyglet == 1.5",
     ]
     import os
 
@@ -25,7 +25,7 @@ if environ.get("READTHEDOCS", False):
     print("Running on RTD")
 else:
     install_requires = [
-        "pyglet >= 1.5",
+        "pyglet == 1.5",
         "pylsl >= 1.13",
     ]
 
