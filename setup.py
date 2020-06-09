@@ -17,7 +17,7 @@ from os import environ
 print(environ)
 if environ.get("READTHEDOCS", False):
     install_requires = [
-        "pyglet >= 1.5",
+        "pyglet == 1.5",
     ]
     import os
 
@@ -25,13 +25,13 @@ if environ.get("READTHEDOCS", False):
     print("Running on RTD")
 else:
     install_requires = [
-        "pyglet >= 1.5",
+        "pyglet == 1.5",
         "pylsl >= 1.13",
     ]
 
 setup(
     name="Reiz",
-    version="v3.5.1",
+    version="v3.5.2",
     description="A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -44,7 +44,7 @@ setup(
     package_data={"reiz": ["data/*.*"]},
     packages=["reiz", "reiz._visual", "reiz._audio", "reiz.examples", "reiz._marker"],
     install_requires=install_requires,
-    extras_require={"tts": ["pyttsx3 >= 2.7"]},
+    extras_require={"tts": ["pyttsx3 == 2.7"]},
     entry_points={"console_scripts": ["reiz-marker=reiz._marker.__main__:main"]},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
