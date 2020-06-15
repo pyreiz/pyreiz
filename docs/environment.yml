@@ -5,6 +5,7 @@ channels:
 dependencies:
   - pylsl
   - pip:
-    - m2r
-    - sphinx-autodoc-typehints
-    - sphinx-rtd-theme
+      - m2r
+      - sphinx-autodoc-typehints
+      - sphinx-rtd-theme
+      - Sphinx==2.2.1
