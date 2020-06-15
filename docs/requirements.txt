@@ -1,4 +1,4 @@
 git+https://github.com/labstreaminglayer/liblsl-Python.git
-m2r
+recommonmark
 sphinx-autodoc-typehints
 sphinx-rtd-theme
