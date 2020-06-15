@@ -99,7 +99,6 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.githubpages",
-    "m2r",  # convert markdown to rst with .. mdinclude::
     "sphinx_autodoc_typehints",  # : pip install sphinx-autodoc-typehints
     "sphinx_rtd_theme",
 ]
@@ -125,6 +124,10 @@ napoleon_use_rtype = True
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
+source_parsers = {
+   '.md': 'recommonmark.parser.CommonMarkParser',
+}
+
 source_suffix = [".rst", ".md"]
 
 # The master toctree document.
