@@ -50,11 +50,12 @@ class Canvas:
         self,
         size: Tuple[int, int] = (640, 480),
         origin: Tuple[int, int] = (100, 100),
+        antialias: bool = True,
     ):
         self.origin = origin
         self.start_width = size[0]
         self.start_height = size[1]
-        self._create_window()
+        self._create_window(antialias=antialias)
 
     @property
     def paused(self):
@@ -75,15 +76,51 @@ class Canvas:
             pyglet.clock.tick()
         return pyglet.clock.get_fps()
 
-    def _create_window(self):
-        self.window = ExperimentalWindow(
-            visible=False,
-            vsync=True,
-            width=self.start_width,
-            height=self.start_height,
-            resizable=True,
-            caption="Experimental Framework",
-        )
+    def _create_window(self, antialias: bool):
+        def default_window(kwargs={}):
+            if kwargs == {}:
+                # according to pyglet docs
+                # https://pyglet.readthedocs.io/en/latest/programming_guide/context.html#opengl-configuration-options
+                # Create separate front and back buffers. Without
+                # double-buffering, drawing commands are immediately visible
+                # on the screen, and the user will notice a visible flicker as
+                # the image is redrawn in front of them.
+                # It is recommended to set double_buffer=True, which creates a
+                # separate hidden buffer to which drawing is performed. When
+                # the Window.flip is called, the buffers are swapped, making
+                # the new drawing visible virtually instantaneously.
+                config = pyglet.gl.Config(double_buffer=True)
+                kwargs = {"config": config}
+            return ExperimentalWindow(
+                visible=False,
+                vsync=True,
+                width=self.start_width,
+                height=self.start_height,
+                resizable=True,
+                caption="Experimental Framework",
+                **kwargs
+            )
+
+        if antialias:
+            try:
+                # Try to create a window with multisampling for anti-aliasing
+                # see https://github.com/pyglet/pyglet/issues/247
+                config = pyglet.gl.Config(
+                    sample_buffers=1, samples=4, double_buffer=True
+                )
+                self.window = default_window(kwargs={"config": config})
+                print(
+                    "Multisampling available. Reiz will run with anti-aliasing"
+                )
+
+            except pyglet.window.NoSuchConfigException:
+                # Fall back to no multisampling
+                print(
+                    "Multisampling not available. Reiz will run without anti-aliasing"
+                )
+                self.window = default_window()
+        else:
+            self.window = default_window()
 
         self.window.set_location(*self.origin)
         self.window.dispatch_events()
