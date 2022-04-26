@@ -2,7 +2,7 @@
 """
 from types import SimpleNamespace
 from os import environ as _env
-from reiz._audio.primitives import AudioFile, Hertz, Message, Noise
+from reiz._audio.primitives import Message, AudioFile, Hertz, Noise
 from pathlib import Path
 from typing import Dict, NewType, Any
 
@@ -18,7 +18,9 @@ _defaults = libConf(
 )  #: libConf
 
 
-def make_library(settings: libConf = _defaults, failraise=False) -> SimpleNamespace:
+def make_library(
+    settings: libConf = _defaults, failraise=False
+) -> SimpleNamespace:
     """create a library of auditory stimuli from a dictionary of arguments
 
     args
@@ -80,7 +82,7 @@ else:  # pragma: no cover
         for k, v in item.items():
             mock[k] = t
     library = SimpleNamespace(**mock)  #: a library of auditory stimuli
-    print("Generating sphinx documentation. Skipping visual library")
+    print("Generating sphinx documentation. Skipping audio library")
 
 
 __doc__ += f"""

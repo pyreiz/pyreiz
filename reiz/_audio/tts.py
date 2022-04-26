@@ -4,17 +4,29 @@ Created on Mon May 20 10:50:52 2019
 
 @author: Robert Guggenberger
 """
-from tempfile import NamedTemporaryFile
+from tempfile import TemporaryDirectory
 from subprocess import run
-from typing import Callable
-from threading import Thread
-import time
-import pyglet.media
 from sys import platform
 import importlib
+from time import sleep
+
+try:
+    import pyttsx3
+    from pathlib import Path
+
+    if "darwin" in platform:
+        engine = pyttsx3.init("dummy")
+    else:
+        engine = pyttsx3.init()
+    tmpdir = TemporaryDirectory(suffix="tts", dir="./")
+except ImportError:
+    print("pyttsx3 not found")
+    pyttsx3 = None
+
+import pyglet.media
 
 
-class PlatformIndependentMessage():
+class PlatformIndependentMessage:
     """instantiate a tts sound object
 
     args
@@ -27,99 +39,62 @@ class PlatformIndependentMessage():
         the speed of the Utterance
     """
 
-    def __init__(self, message: str = "Hello World",
-                 rate=135, voiceid=0):
-        if "darwin" in platform:
-            self.engine = pyttsx3.init("dummy")
-        else:
-            self.engine = pyttsx3.init()
-        self.engine.setProperty('rate', rate)
-        voices = self.engine.getProperty('voices')
-        self.engine.setProperty('voice', voices[voiceid])
+    def __init__(self, message: str = "Hello World", rate=135, voiceid=0):
+        engine.setProperty("rate", rate)
+        voices = engine.getProperty("voices")
+        engine.setProperty("voice", voices[voiceid])
         self.message = message
-        self._duration = self._estimate_duration()
-
-    def _estimate_duration(self):
-        t0 = time.time()
-        self.engine.setProperty('volume', 0.)
-        self.play_blocking()
-        t1 = time.time()
-        self.engine.setProperty('volume', 1.)
-        return t1-t0
-
-    @property
-    def volume(self):
-        return self.engine.getProperty('volume')
-
-    @volume.setter
-    def volume(self, volume: float):
-        self.engine.setProperty('volume', volume)
-
-    def play_blocking(self):
-        """
-        returns
-        -------
-        remainder:float
-            seconds until the sound would finish playing. Naturally, it always
-            returns 0. The output is kept here to allow easy substitution with
-            :func:`Sound.play`
-        """
-        self.engine.say(self.message)
-        self.engine.runAndWait()
-        return 0
-
-    def stop(self):
-        self.engine.stop()
-
-    def play(self):
-        """start playing the sound and return immediatly
-
-        returns
-        -------
-        remainder:float
-            seconds until the sound would be finished playing
-        """
-        t0 = time.time()
-        t = Thread(target=self.play_blocking)
-        t.start()
-        return self.duration + t0 - time.time()
-
-    @property
-    def duration(self) -> float:
-        "returns duration of the sound in seconds"
-        return self._duration
+        f = (Path(f"{tmpdir.name}") / Path(f"{message}.mp3")).resolve()
+        engine.save_to_file(message, str(f))
+        engine.runAndWait()
+        while not f.exists():
+            sleep(0.1)
+            print(".", end="")
+        print(f"Created temporary audiofile at {f}")
+        self.source = pyglet.media.load(str(f), streaming=False)
 
     def __repr__(self):
-        return f"{self.__class__} {str(self.message)}"
+        return f"{self.__class__.__name__} {str(self.message)}"
 
 
 class Espeak_Mixin(object):
-
-    def __init__(self, message: str = "Espeak says",
-                 rate: int = 135,
-                 gender="f",
-                 language="de"):
+    def __init__(
+        self,
+        message: str = "Espeak says",
+        rate: int = 135,
+        gender="f",
+        language="de",
+    ):
         self.message = message
         if gender.lower() not in ["m", "f"]:
             raise ValueError("Gender must be (m)ale or (f)emale")
 
         with NamedTemporaryFile(suffix=".wav") as f:
-            run(["espeak", f"\"{message}\""
-                 "-s", str(rate),
-                 f"-v{language.lower()}+{gender.lower()}1",
-                 # increase  pitch for words which begin a capital letter.
-                 "-k10",
-                 "-g2",
-                 "-w", f.name])
+            run(
+                [
+                    "espeak",
+                    f'"{message}"' "-s",
+                    str(rate),
+                    f"-v{language.lower()}+{gender.lower()}1",
+                    # increase  pitch for words which begin a capital letter.
+                    "-k10",
+                    "-g2",
+                    "-w",
+                    f.name,
+                ]
+            )
             self.source = pyglet.media.load(f.name, streaming=False)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__} {str(self.message)}"
 
 
 class Silent_Mixin(object):
-    def __init__(self, message: str = "Silence is golden",
-                 language="de"):
+    def __init__(self, message: str = "Silence is golden", language="de"):
         self.message = message
         print("no TTS is installed on your system. Default to silence")
         from pyglet.media.synthesis import Silence
+
         self.source = Silence(duration=0.1)
         return
 
@@ -145,7 +120,6 @@ class Silent_Mixin(object):
 
 
 # conditional interface for Message
-
 if importlib.util.find_spec("pyttsx3") is None:  # pragma: no cover
     tts_Mixin = Silent_Mixin
 else:
@@ -153,4 +127,5 @@ else:
         tts_Mixin = Silent_Mixin
     else:
         import pyttsx3
+
         tts_Mixin = PlatformIndependentMessage

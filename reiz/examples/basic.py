@@ -1,4 +1,4 @@
-import reiz
+import reiz.api as reiz
 
 # start the MarkerServer which distributes markerstrings over LSL
 reiz.marker.start()
@@ -13,46 +13,54 @@ clock = reiz.Clock()
 # the Window where it will be shown -> canvas
 # auditory and visual stimuli, e.g. a tone (Hertz) or text (Mural)
 # and a markerstring to be send via LSL when .show() is called
-hello = reiz.Cue(canvas,
-                 audiostim=reiz.audio.Hertz(
-                     frequency=400, duration_in_ms=1000),
-                 visualstim=reiz.visual.Mural('Hello World!'),
-                 markerstr='hello')
+hello = reiz.Cue(
+    canvas,
+    audiostim=reiz.audio.Hertz(frequency=400, duration_in_ms=1000),
+    visualstim=reiz.visual.Mural("Hello World!"),
+    markerstr="hello",
+)
 
 # there is also a library of typical auditory and visual stimuli and
 # we can for example, take the visual "los" and the auditory "beep" stimuli
 # for convenience, we use the text of the go stimulus as marker message
-los = reiz.Cue(canvas,
-               audiostim=reiz.audio.library.beep,
-               visualstim=reiz.visual.library.go,
-               markerstr=reiz.visual.library.go.text)
+los = reiz.Cue(
+    canvas,
+    audiostim=reiz.audio.library.beep,
+    visualstim=reiz.visual.library.go,
+    markerstr=reiz.visual.library.go.text,
+)
 
 # here we show a fixation cross but don't want to play an auditory stimulus.
 # we can therefore either set it to None or just leave it out (defaults to None)
-fix = reiz.Cue(canvas,
-               visualstim=reiz.visual.library.fixation,
-               markerstr='Fixation')
+fix = reiz.Cue(
+    canvas, visualstim=reiz.visual.library.fixation, markerstr="Fixation"
+)
 
-shape = reiz.Cue(canvas,
-                 visualstim=reiz.visual.Trapezoid(xpos=(-.25, -.33, .33, .25),
-                                                  ypos=(-.25, .25), color='red'),
-                 markerstr='Shape')
+shape = reiz.Cue(
+    canvas,
+    visualstim=reiz.visual.Trapezoid(
+        xpos=(-0.25, -0.33, 0.33, 0.25), ypos=(-0.25, 0.25), color="red"
+    ),
+    markerstr="Shape",
+)
 
 # we can also use an iterable for the visual stimuli, and they are overlayed
 # from left to right
 farewell = reiz.audio.Message("Auf Wiedersehen!")
-overlay = reiz.Cue(canvas,
-                   audiostim=farewell,
-                   visualstim=[
-                       reiz.visual.library.logo,
-                       reiz.visual.Mural('Good Bye', fontsize=1),
-                   ],
-                   markerstr='Overlayed')
+overlay = reiz.Cue(
+    canvas,
+    audiostim=farewell,
+    visualstim=[
+        reiz.visual.library.logo,
+        reiz.visual.Mural("Good Bye", fontsize=1),
+    ],
+    markerstr="Overlayed",
+)
 
 # we create a named variable for a visual stimulus to allow later updating
 # because we will repeatedly call ball.show(), we don't use the markerstr
 # as these would be otherwise send everytime we .show()
-dynamic_ball = reiz.visual.Circle(zoom=1, color='red')
+dynamic_ball = reiz.visual.Circle(zoom=1, color="red")
 ball = reiz.Cue(canvas, visualstim=dynamic_ball)
 
 # we open a window, show the cues and close the window again
@@ -64,6 +72,8 @@ clock.sleep(1)
 # or use the duration parameter. this has the advantage that the window stays
 # responsive under Win10 and can e.g. be moved around or resized
 hello.show(duration=1)
+from time import sleep
+
 los.show(duration=1)
 shape.show(duration=1)
 # we continually update the size of the visualstim of the cue
@@ -74,7 +84,7 @@ clock.tick()
 for i in range(0, 100, 1):
 
     # we update the size of the ball
-    dynamic_ball.zoom = i/20
+    dynamic_ball.zoom = i / 20
     # and show it
     ball.show()
     # if the show duration is faster than the framerate of your graphics card

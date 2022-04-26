@@ -31,7 +31,7 @@ else:
 
 setup(
     name="Reiz",
-    version="v3.5.1",
+    version="v3.6.0",
     description="A Python toolbox for visual and auditory stimulation based on pyglet and pylsl.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -42,10 +42,18 @@ setup(
     license="MIT",
     include_package_data=True,
     package_data={"reiz": ["data/*.*"]},
-    packages=["reiz", "reiz._visual", "reiz._audio", "reiz.examples", "reiz._marker"],
+    packages=[
+        "reiz",
+        "reiz._visual",
+        "reiz._audio",
+        "reiz.examples",
+        "reiz._marker",
+    ],
     install_requires=install_requires,
-    extras_require={"tts": ["pyttsx3 >= 2.7"]},
-    entry_points={"console_scripts": ["reiz-marker=reiz._marker.__main__:main"]},
+    extras_require={"tts": ["pyttsx3 >= 2.9"]},
+    entry_points={
+        "console_scripts": ["reiz-marker=reiz._marker.__main__:main"]
+    },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",

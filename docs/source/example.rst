@@ -2,7 +2,7 @@ Example
 -------
  .. code-block:: python
 
-   import reiz
+   import reiz.api as reiz
    
    # start the MarkerServer which distributes markerstrings over LSL
    reiz.marker.start()
