@@ -55,7 +55,8 @@ class Canvas:
         self.origin = origin
         self.start_width = size[0]
         self.start_height = size[1]
-        self._create_window(antialias=antialias)
+        self.antialias = antialias
+        self._create_window()
 
     @property
     def paused(self):
@@ -76,7 +77,7 @@ class Canvas:
             pyglet.clock.tick()
         return pyglet.clock.get_fps()
 
-    def _create_window(self, antialias: bool):
+    def _create_window(self):
         def default_window(kwargs={}):
             if kwargs == {}:
                 # according to pyglet docs
@@ -101,7 +102,7 @@ class Canvas:
                 **kwargs
             )
 
-        if antialias:
+        if self.antialias:
             try:
                 # Try to create a window with multisampling for anti-aliasing
                 # see https://github.com/pyglet/pyglet/issues/247
