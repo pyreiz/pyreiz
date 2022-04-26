@@ -11,7 +11,6 @@ Overview
 .. toctree::
    :maxdepth: 2
 
-   package_info
    example
 
 API
@@ -22,11 +21,6 @@ API
 
    api
 
-
-
-You can also download a pdf_ of the documentation: 
-
-.. _pdf: http://reiz.agricolab.de/Reiz.pdf
 
 Indices and tables
 ==================
