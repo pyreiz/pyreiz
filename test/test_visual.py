@@ -3,6 +3,8 @@ import reiz
 
 def test_visual_library(canvas):
     "contains Image, Cross, Mural and Trapezoid"
+    import reiz.api as reiz
+
     for item in reiz.visual.library.__dict__.values():
         item.draw(canvas)
 
@@ -29,7 +31,9 @@ def test_smoke_complex(canvas):
 
 
 def test_circle(canvas):
-    v = reiz._visual.complex.Circle(zoom=0.1, color="white", stroke=1, opacity=0.1)
+    v = reiz._visual.complex.Circle(
+        zoom=0.1, color="white", stroke=1, opacity=0.1
+    )
     assert v.color == [1, 1, 1, 0.1]
     assert v.stroke == 1
     v.draw(canvas)

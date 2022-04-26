@@ -1,11 +1,12 @@
-import reiz
 import pytest
 import time
 from pyglet.window import key
+import reiz
+import reiz.api
 
 
 def test_canvas_keypress():
-    canvas = reiz.Canvas()
+    canvas = reiz.api.Canvas()
     canvas.open()
     assert canvas.start_run == False
     canvas.window.dispatch_event("on_key_press", key.F5, 0)
@@ -23,7 +24,7 @@ def test_canvas_keypress():
 
 
 def test_canvas_available(capsys):
-    canvas = reiz.Canvas(size=(5, 5))
+    canvas = reiz.api.Canvas(size=(5, 5))
     assert canvas.available == False
     canvas.open()
     assert canvas.available == True
@@ -44,7 +45,7 @@ def test_canvas_available(capsys):
 
 def test_canvas_properties(capsys):
     w, h = (1, 1)
-    canvas = reiz.Canvas(size=(w, h))
+    canvas = reiz.api.Canvas(size=(w, h))
     canvas.open()
     canvas.clear()
     canvas.get_diag()
@@ -63,9 +64,11 @@ def test_canvas_properties(capsys):
 
 
 def test_clock_sleep():
+    import reiz.api
+
     limit = 1.5 * 10 ** (-4)  # exact within a millisecond
     desired = 0.1
-    actual = reiz.clock.sleep(desired)
+    actual = reiz.api.clock.sleep(desired)
     deviance = abs(desired - actual)
     assert deviance < limit
 
@@ -73,13 +76,14 @@ def test_clock_sleep():
 def test_clock_sleep_debiased():
     import random
     import time
+    import reiz.api
 
     limit = 1.5 * 10 ** (-4)  # exact within a millisecond
     desired = 0.1
-    reiz.clock.reset()
+    reiz.api.clock.reset()
     for i in range(1, 11):
         time.sleep(random.random() * 0.05)
-        reiz.clock.sleep_debiased(desired)
-    actual = reiz.clock.now()
+        reiz.api.clock.sleep_debiased(desired)
+    actual = reiz.api.clock.now()
     deviance = abs(desired * i - actual)
     assert deviance < limit

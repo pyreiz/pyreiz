@@ -1,11 +1,12 @@
 from pytest import fixture
-import reiz
 from reiz._audio.primitives import Sound
 from reiz._audio.tts import Silent_Mixin
 
 
 @fixture
 def msg():
+    import reiz.api as reiz
+
     msg = reiz.audio.Message("test")
     msg.volume = 0
     return msg
@@ -21,13 +22,6 @@ def silence():
 
 def test_silence(silence):
     assert silence.duration == 0.1
-
-
-def test_play_stop(msg):
-    dur = msg.duration
-    played_time = msg.play()
-    msg.stop()
-    assert played_time < dur
 
 
 def test_play_blocking(msg):

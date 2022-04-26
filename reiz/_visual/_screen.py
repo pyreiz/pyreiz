@@ -33,7 +33,8 @@ class ExperimentalWindow(pyglet.window.Window):
         """Default on_key_press handler."""
         key = pyglet.window.key
         if symbol == key.ESCAPE and not (
-            modifiers & ~(key.MOD_NUMLOCK | key.MOD_CAPSLOCK | key.MOD_SCROLLLOCK)
+            modifiers
+            & ~(key.MOD_NUMLOCK | key.MOD_CAPSLOCK | key.MOD_SCROLLLOCK)
         ):
             self.dispatch_event("on_close")
 
@@ -46,7 +47,9 @@ class ExperimentalWindow(pyglet.window.Window):
 
 class Canvas:
     def __init__(
-        self, size: Tuple[int, int] = (640, 480), origin: Tuple[int, int] = (100, 100)
+        self,
+        size: Tuple[int, int] = (640, 480),
+        origin: Tuple[int, int] = (100, 100),
     ):
         self.origin = origin
         self.start_width = size[0]
@@ -91,7 +94,11 @@ class Canvas:
         if not hasattr(self, "window"):
             print("Window was closed")
             return
-        self.window.switch_to()
+        try:
+            self.window.switch_to()
+        except AttributeError as e:
+            print("Window was closed")
+            return
         if self.window.has_exit:
             print("Window was closed")
             return
@@ -159,5 +166,7 @@ class Canvas:
     @property
     def available(self):
         return (
-            hasattr(self, "window") and not self.window.has_exit and self.window.visible
+            hasattr(self, "window")
+            and not self.window.has_exit
+            and self.window.visible
         )

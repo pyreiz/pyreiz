@@ -1,5 +1,5 @@
 from pytest import fixture
-import reiz
+import reiz.api as reiz
 import logging
 
 logging.basicConfig(level=1)
@@ -11,7 +11,7 @@ def rmarker(capsys):
     assert reiz.marker.available(verbose=True) is False
     out, err = capsys.readouterr()
     assert "is not available" in out
-    assert "Connection refused" in out
+    assert "refused" in out
     reiz.clock.reset()
     reiz.marker.start()
     assert reiz.clock.now() < 10  # create within 10 secs

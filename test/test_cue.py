@@ -1,9 +1,10 @@
-import reiz
 from pytest import fixture
 
 
 @fixture
 def stimuli(canvas):
+    import reiz.api as reiz
+
     cue = reiz.Cue(
         canvas=canvas,
         audiostim=reiz.audio.library.beep,
@@ -15,6 +16,8 @@ def stimuli(canvas):
 
 def test_cue(canvas, stimuli):
     cue, N = stimuli
+    import reiz
+
     reiz.audio.library.beep.volume = 0
     cue.show(0.5)
     N.show(canvas=canvas)
@@ -23,6 +26,8 @@ def test_cue(canvas, stimuli):
 
 
 def test_collection(stimuli):
+    import reiz
+
     cue, N = stimuli
     lib = reiz.cue.collect(**{"N": N, "C": cue})
     assert "N" in lib.__dict__

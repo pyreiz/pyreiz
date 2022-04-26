@@ -1,4 +1,4 @@
-import reiz
+import reiz.api as reiz
 from pytest import fixture, raises
 from tempfile import TemporaryDirectory, NamedTemporaryFile
 import wave
